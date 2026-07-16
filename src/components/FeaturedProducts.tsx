@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { ShoppingBag, Star, ArrowRight } from "lucide-react";
 
 interface Product {
@@ -46,6 +47,7 @@ const featuredProducts: Product[] = [
     rating: 4.9,
     reviews: 156,
     badge: "-56%",
+    image: "/images/webcam-emeet.png",
   },
   {
     id: "4",
@@ -106,9 +108,11 @@ export function FeaturedProducts() {
                     {product.badge}
                   </div>
                 )}
-                <div className="w-32 h-32 rounded-2xl bg-dark-600 flex items-center justify-center">
+                {product.image ? (
+                  <Image src={product.image} alt={product.name} width={160} height={160} className="object-contain" unoptimized />
+                ) : (
                   <ShoppingBag className="w-12 h-12 text-neon-blue/30" />
-                </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-dark-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
                   <button
                     onClick={() => {

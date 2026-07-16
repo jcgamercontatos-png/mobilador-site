@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import {
   ShoppingBag,
   Search,
@@ -31,6 +32,7 @@ const products = [
     reviews: 342,
     badge: "-25%",
     description: "Mouse gamer com sensor óptico de 8000 DPI, 6 botões programáveis e RGB.",
+    image: "",
   },
   {
     id: "2",
@@ -109,6 +111,7 @@ const products = [
     reviews: 156,
     badge: "-56%",
     description: "Webcam 2K com sensor Sony, controle por gestos, AI tracking, autofocus e PTZ com tripé integrado. 1080P 60fps para streaming.",
+    image: "/images/webcam-emeet.png",
   },
 ];
 
@@ -254,7 +257,11 @@ export default function StorePage() {
                             {product.badge}
                           </div>
                         )}
-                        <ShoppingBag className="w-16 h-16 text-neon-blue/20" />
+                        {product.image ? (
+                          <Image src={product.image} alt={product.name} width={200} height={200} className="object-contain" unoptimized />
+                        ) : (
+                          <ShoppingBag className="w-16 h-16 text-neon-blue/20" />
+                        )}
                         <div className="absolute inset-0 bg-gradient-to-t from-dark-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
                           <button
                             onClick={() => buyProduct(product)}
@@ -303,8 +310,12 @@ export default function StorePage() {
                     </>
                   ) : (
                     <>
-                      <div className="w-24 h-24 rounded-xl bg-dark-700 flex items-center justify-center flex-shrink-0">
-                        <ShoppingBag className="w-8 h-8 text-neon-blue/30" />
+                      <div className="w-24 h-24 rounded-xl bg-dark-700 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                        {product.image ? (
+                          <Image src={product.image} alt={product.name} width={96} height={96} className="object-contain" unoptimized />
+                        ) : (
+                          <ShoppingBag className="w-8 h-8 text-neon-blue/30" />
+                        )}
                       </div>
                       <div className="flex-1">
                         <div className="flex items-start justify-between">
