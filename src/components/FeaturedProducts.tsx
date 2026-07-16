@@ -20,26 +20,6 @@ interface Product {
 const featuredProducts: Product[] = [
   {
     id: "1",
-    name: "Mouse Gamer Pro X1",
-    category: "Periféricos",
-    price: 149.9,
-    originalPrice: 199.9,
-    rating: 4.8,
-    reviews: 342,
-    badge: "-25%",
-  },
-  {
-    id: "2",
-    name: "Teclado Mecânico RGB K7",
-    category: "Periféricos",
-    price: 249.9,
-    originalPrice: 349.9,
-    rating: 4.9,
-    reviews: 521,
-    badge: "Mais Vendido",
-  },
-  {
-    id: "9",
     name: "Webcam EMEET PIXY 2K",
     category: "Periféricos",
     price: 349.9,
@@ -50,13 +30,14 @@ const featuredProducts: Product[] = [
     image: "/images/webcam-emeet.png",
   },
   {
-    id: "4",
-    name: "Adaptador USB-C Hub",
-    category: "Acessórios",
-    price: 89.9,
-    rating: 4.6,
-    reviews: 98,
+    id: "2",
+    name: "Headset Fifine H9",
+    category: "Periféricos",
+    price: 119.9,
+    rating: 4.7,
+    reviews: 230,
     badge: "Novo",
+    image: "/images/headset-fifine-h9.jpg",
   },
 ];
 
