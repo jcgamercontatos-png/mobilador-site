@@ -197,9 +197,9 @@ export default function APKPage() {
         <div className="text-center">
           <Link
             href="/apk/sucesso"
-            className="text-xs text-gray-600 hover:text-gray-400 transition-colors underline"
+            className="btn-outline text-sm py-2 px-6 inline-block"
           >
-            Testar página de download (após pagamento)
+            TESTAR PÁGINA DE DOWNLOAD (após pagamento)
           </Link>
         </div>
       </div>
