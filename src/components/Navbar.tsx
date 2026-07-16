@@ -23,19 +23,6 @@ const navLinks = [
     children: [
       { label: "Periféricos", href: "/loja?cat=perifericos" },
       { label: "APK JCGAMERFPS", href: "/apk" },
-      { label: "Cursos", href: "/cursos" },
-      { label: "Pack Mobilador", href: "/pack-mobilador" },
-      { label: "Pack Emulador", href: "/pack-emulador" },
-    ],
-  },
-  {
-    label: "Cursos",
-    href: "/cursos",
-    children: [
-      { label: "Sensibilidade Pro", href: "/cursos/sensibilidade-pro" },
-      { label: "Pack Mobilador", href: "/pack-mobilador" },
-      { label: "Pack Emulador", href: "/pack-emulador" },
-      { label: "Todos os Cursos", href: "/cursos" },
     ],
   },
   {
@@ -119,12 +106,6 @@ export function Navbar() {
           </div>
 
           <div className="hidden lg:flex items-center gap-3">
-            <Link
-              href="/cursos/sensibilidade-pro"
-              className="btn-neon text-xs py-2 px-4"
-            >
-              Quero Aprender
-            </Link>
             <Link href="/loja" className="p-2 text-gray-400 hover:text-neon-blue transition-colors">
               <ShoppingCart className="w-5 h-5" />
             </Link>
@@ -174,16 +155,9 @@ export function Navbar() {
               ))}
               <div className="pt-4 space-y-2">
                 <Link
-                  href="/cursos/sensibilidade-pro"
-                  onClick={() => setIsOpen(false)}
-                  className="btn-neon block text-center text-sm"
-                >
-                  Quero Aprender
-                </Link>
-                <Link
                   href="/loja"
                   onClick={() => setIsOpen(false)}
-                  className="btn-outline block text-center text-sm"
+                  className="btn-neon block text-center text-sm"
                 >
                   Ver Loja
                 </Link>
