@@ -11,7 +11,7 @@ import {
   Shield,
 } from "lucide-react";
 
-const GOOGLE_DRIVE_LINK = process.env.NEXT_PUBLIC_APK_DOWNLOAD_LINK || "#";
+const APK_DOWNLOAD_LINK = "https://www.mediafire.com/file/9coo8szm6pnsl90/MobiladorSensitivity.apk/file";
 
 export default function APKSuccessPage() {
   return (
@@ -41,7 +41,7 @@ export default function APKSuccessPage() {
           </p>
 
           <a
-            href={GOOGLE_DRIVE_LINK}
+            href={APK_DOWNLOAD_LINK}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-neon w-full flex items-center justify-center gap-2 mb-4 text-lg py-4"
