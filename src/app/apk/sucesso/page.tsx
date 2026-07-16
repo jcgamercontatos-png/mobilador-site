@@ -40,16 +40,13 @@ export default function APKSuccessPage() {
             baixar seu APK JCGAMERFPS.
           </p>
 
-          <a
-            href={APK_DOWNLOAD_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={() => window.open(APK_DOWNLOAD_LINK, "_blank")}
             className="btn-neon w-full flex items-center justify-center gap-2 mb-4 text-lg py-4"
           >
             <Download className="w-5 h-5" />
             BAIXAR APK AGORA
-            <ArrowRight className="w-5 h-5" />
-          </a>
+          </button>
 
           <div className="glass-card p-4 mb-6 text-left">
             <h3 className="font-orbitron text-sm font-semibold mb-3 text-gray-300">
