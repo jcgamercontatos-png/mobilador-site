@@ -22,6 +22,7 @@ const navLinks = [
     href: "/loja",
     children: [
       { label: "Periféricos", href: "/loja?cat=perifericos" },
+      { label: "APK JCGAMERFPS", href: "/apk" },
       { label: "Cursos", href: "/cursos" },
       { label: "Pack Mobilador", href: "/pack-mobilador" },
       { label: "Pack Emulador", href: "/pack-emulador" },
