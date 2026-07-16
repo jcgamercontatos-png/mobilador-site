@@ -41,14 +41,6 @@ const navLinks = [
     label: "Comunidade",
     href: "/comunidade",
   },
-  {
-    label: "Blog",
-    href: "/blog",
-  },
-  {
-    label: "Calculadora",
-    href: "/calculadora",
-  },
 ];
 
 export function Navbar() {
@@ -126,12 +118,6 @@ export function Navbar() {
           </div>
 
           <div className="hidden lg:flex items-center gap-3">
-            <Link
-              href="/calculadora"
-              className="btn-outline text-xs py-2 px-4"
-            >
-              Calculadora
-            </Link>
             <Link
               href="/cursos/sensibilidade-pro"
               className="btn-neon text-xs py-2 px-4"

@@ -18,10 +18,8 @@ const footerLinks = {
     { label: "Ofertas", href: "/loja?sort=sale" },
   ],
   conteudo: [
-    { label: "Blog", href: "/blog" },
     { label: "YouTube", href: "https://youtube.com/@mobilador" },
     { label: "Comunidade", href: "/comunidade" },
-    { label: "Calculadora", href: "/calculadora" },
   ],
   suporte: [
     { label: "FAQ", href: "/#faq" },
