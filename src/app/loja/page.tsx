@@ -99,6 +99,17 @@ const products = [
     reviews: 89,
     description: "Cabos reforçados com nylon e transferência de dados rápida.",
   },
+  {
+    id: "9",
+    name: "Webcam EMEET PIXY 2K AI Tracking",
+    category: "Periféricos",
+    price: 349.9,
+    originalPrice: 799.9,
+    rating: 4.9,
+    reviews: 156,
+    badge: "-56%",
+    description: "Webcam 2K com sensor Sony, controle por gestos, AI tracking, autofocus e PTZ com tripé integrado. 1080P 60fps para streaming.",
+  },
 ];
 
 export default function StorePage() {
