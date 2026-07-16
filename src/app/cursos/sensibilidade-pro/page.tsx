@@ -258,7 +258,13 @@ export default function SensibilidadeProPage() {
                   </span>
                 </div>
 
-                <button className="btn-neon w-full flex items-center justify-center gap-2 mb-4">
+                <button
+                  onClick={() => {
+                    const msg = encodeURIComponent("Olá! Vim pelo site Mobilador. Quero comprar o curso SENSIBILIDADE PRO - R$ 49,90");
+                    window.open(`https://wa.me/5521973199886?text=${msg}`, "_blank");
+                  }}
+                  className="btn-neon w-full flex items-center justify-center gap-2 mb-4"
+                >
                   <Zap className="w-4 h-4" />
                   Quero Esse Curso
                   <ArrowRight className="w-4 h-4" />

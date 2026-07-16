@@ -5,12 +5,9 @@ import { motion } from "framer-motion";
 import {
   ShoppingBag,
   Search,
-  Filter,
   Star,
-  ShoppingCart,
   Grid3X3,
   List,
-  X,
 } from "lucide-react";
 
 const categories = [
@@ -109,7 +106,6 @@ export default function StorePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sortBy, setSortBy] = useState("featured");
-  const [cart, setCart] = useState<string[]>([]);
 
   const filteredProducts = products
     .filter(
@@ -124,8 +120,11 @@ export default function StorePage() {
       return 0;
     });
 
-  const addToCart = (id: string) => {
-    setCart((prev) => [...prev, id]);
+  const buyProduct = (product: typeof products[0]) => {
+    const msg = encodeURIComponent(
+      `Olá! Vim pelo site Mobilador. Quero comprar: ${product.name} - R$ ${product.price.toFixed(2)}`
+    );
+    window.open(`https://wa.me/5521973199886?text=${msg}`, "_blank");
   };
 
   return (
@@ -206,34 +205,14 @@ export default function StorePage() {
                 {filteredProducts.length} produtos encontrados
               </p>
               <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setViewMode("grid")}
-                  className={`p-2 rounded-lg transition-colors ${
-                    viewMode === "grid"
-                      ? "bg-neon-blue/20 text-neon-blue"
-                      : "text-gray-500 hover:text-white"
-                  }`}
+                <a
+                  href="https://wa.me/5521973199886?text=Ol%C3%A1%2C%20vim%20pelo%20site%20Mobilador!"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-neon text-xs py-2 px-4 inline-flex items-center gap-2"
                 >
-                  <Grid3X3 className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode("list")}
-                  className={`p-2 rounded-lg transition-colors ${
-                    viewMode === "list"
-                      ? "bg-neon-blue/20 text-neon-blue"
-                      : "text-gray-500 hover:text-white"
-                  }`}
-                >
-                  <List className="w-4 h-4" />
-                </button>
-                <div className="ml-4 relative">
-                  <ShoppingCart className="w-5 h-5 text-gray-400" />
-                  {cart.length > 0 && (
-                    <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-neon-blue text-dark-900 text-xs font-bold flex items-center justify-center">
-                      {cart.length}
-                    </span>
-                  )}
-                </div>
+                  Falar no WhatsApp
+                </a>
               </div>
             </div>
 
@@ -267,10 +246,10 @@ export default function StorePage() {
                         <ShoppingBag className="w-16 h-16 text-neon-blue/20" />
                         <div className="absolute inset-0 bg-gradient-to-t from-dark-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
                           <button
-                            onClick={() => addToCart(product.id)}
+                            onClick={() => buyProduct(product)}
                             className="btn-neon text-xs py-2 px-6"
                           >
-                            Adicionar ao Carrinho
+                            Comprar Agora
                           </button>
                         </div>
                       </div>
@@ -357,7 +336,7 @@ export default function StorePage() {
                             </span>
                           </div>
                           <button
-                            onClick={() => addToCart(product.id)}
+                            onClick={() => buyProduct(product)}
                             className="btn-neon text-xs py-2 px-4"
                           >
                             Comprar

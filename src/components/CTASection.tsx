@@ -36,7 +36,7 @@ export function CTASection() {
               <ArrowRight className="w-5 h-5" />
             </Link>
             <a
-              href="https://wa.me/5521973199886"
+              href="https://wa.me/5521973199886?text=Ol%C3%A1%2C%20vim%20pelo%20site%20Mobilador!%20Quero%20saber%20mais%20sobre%20os%20cursos."
               target="_blank"
               rel="noopener noreferrer"
               className="btn-green text-lg px-8 py-4 inline-flex items-center gap-2"

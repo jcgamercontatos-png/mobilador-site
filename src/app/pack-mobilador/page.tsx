@@ -165,7 +165,13 @@ export default function PackMobiladorPage() {
                 </span>
               </div>
 
-              <button className="btn-neon w-full flex items-center justify-center gap-2 mb-4 text-lg py-4">
+              <button
+                onClick={() => {
+                  const msg = encodeURIComponent("Olá! Vim pelo site Mobilador. Quero comprar o PACK MOBILADOR - R$ 39,90");
+                  window.open(`https://wa.me/5521973199886?text=${msg}`, "_blank");
+                }}
+                className="btn-neon w-full flex items-center justify-center gap-2 mb-4 text-lg py-4"
+              >
                 <Zap className="w-5 h-5" />
                 Comprar Pack Agora
                 <ArrowRight className="w-5 h-5" />
