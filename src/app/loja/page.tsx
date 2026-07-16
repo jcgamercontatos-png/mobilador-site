@@ -1,14 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import {
   ShoppingBag,
   Search,
   Star,
-  Grid3X3,
-  List,
+  X,
+  Truck,
+  ShieldCheck,
+  Headphones,
+  PackageCheck,
 } from "lucide-react";
 
 const categories = [
@@ -31,7 +34,17 @@ const products = [
     rating: 4.9,
     reviews: 156,
     badge: "-56%",
-    description: "Webcam 2K com sensor Sony, controle por gestos, AI tracking, autofocus e PTZ com tripé integrado. 1080P 60fps para streaming.",
+    shortDesc: "Webcam 2K com AI tracking e controle por gestos.",
+    description: "Webcam EMEET PIXY 2K com sensor Sony, controle por gestos, AI tracking inteligente, autofocus automático e PTZ com tripé integrado. Resolução 1080P 60fps para streaming profissional.",
+    specs: [
+      "Resolução: 2K / 1080P 60fps",
+      "Sensor: Sony CMOS",
+      "Campo de visão: 73°",
+      "AI Tracking com controle por gestos",
+      "Conexão: USB-A / USB-C",
+      "Microfone integrado omnidirecional",
+      "Compatível com PC, Notebook e Console",
+    ],
     image: "/images/webcam-emeet.png",
   },
   {
@@ -42,7 +55,18 @@ const products = [
     rating: 4.7,
     reviews: 230,
     badge: "Novo",
-    description: "Headset gamer com som surround 7.1, USB, cancelamento de ruído passivo, microfone omnidirecional e almofadas confortáveis. Compatível com PC e console.",
+    shortDesc: "Surround 7.1 com cancelamento de ruído.",
+    description: "Headset Gamer Fifine H9 com som surround 7.1 por USB, cancelamento de ruído passivo, microfone omnidirecional com sensibilidade de -40±3dB e almofadas over-ear confortáveis para longas sessões. Formato ergonômico e compatível com PC e console.",
+    specs: [
+      "Som: Surround 7.1 Virtual",
+      "Driver: 50mm",
+      "Resposta de frequência: 20Hz - 20KHz",
+      "Sensibilidade: 95±3dB",
+      "Microfone: Omnidirecional -40±3dB",
+      "Conexão: USB 5V / 3.5mm",
+      "Compatível com PC e Console",
+      "Almofadas: Over-ear com espuma viscoelástica",
+    ],
     image: "/images/headset-fifine-h9.jpg",
   },
 ];
@@ -52,6 +76,7 @@ export default function StorePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sortBy, setSortBy] = useState("featured");
+  const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null);
 
   const filteredProducts = products
     .filter(
@@ -183,7 +208,10 @@ export default function StorePage() {
                 >
                   {viewMode === "grid" ? (
                     <>
-                      <div className="relative aspect-square bg-dark-700 p-6 flex items-center justify-center">
+                      <div
+                        className="relative aspect-square bg-dark-700 p-6 flex items-center justify-center cursor-pointer"
+                        onClick={() => setSelectedProduct(product)}
+                      >
                         {product.badge && (
                           <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-neon-blue text-dark-900 text-xs font-bold z-10">
                             {product.badge}
@@ -196,14 +224,17 @@ export default function StorePage() {
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-dark-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
                           <button
-                            onClick={() => buyProduct(product)}
+                            onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); }}
                             className="btn-neon text-xs py-2 px-6"
                           >
-                            Comprar Agora
+                            Ver Detalhes
                           </button>
                         </div>
                       </div>
-                      <div className="p-5">
+                      <div
+                        className="p-5 cursor-pointer"
+                        onClick={() => setSelectedProduct(product)}
+                      >
                         <p className="text-xs text-neon-blue uppercase tracking-wider mb-1">
                           {product.category}
                         </p>
@@ -211,7 +242,7 @@ export default function StorePage() {
                           {product.name}
                         </h3>
                         <p className="text-gray-500 text-xs mb-3 line-clamp-2">
-                          {product.description}
+                          {product.shortDesc}
                         </p>
                         <div className="flex items-center gap-1 mb-3">
                           {Array.from({ length: 5 }).map((_, i) => (
@@ -242,14 +273,20 @@ export default function StorePage() {
                     </>
                   ) : (
                     <>
-                      <div className="w-24 h-24 rounded-xl bg-dark-700 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                      <div
+                        className="w-24 h-24 rounded-xl bg-dark-700 flex items-center justify-center flex-shrink-0 overflow-hidden cursor-pointer"
+                        onClick={() => setSelectedProduct(product)}
+                      >
                         {product.image ? (
                           <Image src={product.image} alt={product.name} width={96} height={96} className="object-contain" unoptimized />
                         ) : (
                           <ShoppingBag className="w-8 h-8 text-neon-blue/30" />
                         )}
                       </div>
-                      <div className="flex-1">
+                      <div
+                        className="flex-1 cursor-pointer"
+                        onClick={() => setSelectedProduct(product)}
+                      >
                         <div className="flex items-start justify-between">
                           <div>
                             <p className="text-xs text-neon-blue uppercase tracking-wider mb-1">
@@ -259,7 +296,7 @@ export default function StorePage() {
                               {product.name}
                             </h3>
                             <p className="text-gray-500 text-sm">
-                              {product.description}
+                              {product.shortDesc}
                             </p>
                           </div>
                           <div className="text-right">
@@ -305,6 +342,152 @@ export default function StorePage() {
           </div>
         </div>
       </div>
+
+      {/* Modal de Detalhes do Produto */}
+      <AnimatePresence>
+        {selectedProduct && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+            onClick={() => setSelectedProduct(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 30 }}
+              className="glass-card max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-white/10">
+                <div>
+                  <p className="text-xs text-neon-blue uppercase tracking-wider mb-1">
+                    {selectedProduct.category}
+                  </p>
+                  <h2 className="font-orbitron font-bold text-2xl text-white">
+                    {selectedProduct.name}
+                  </h2>
+                </div>
+                <button
+                  onClick={() => setSelectedProduct(null)}
+                  className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+                >
+                  <X className="w-5 h-5 text-gray-400" />
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="grid md:grid-cols-2 gap-0">
+                {/* Imagem */}
+                <div className="bg-dark-700 p-8 flex items-center justify-center relative min-h-[300px]">
+                  {selectedProduct.badge && (
+                    <div className="absolute top-4 left-4 px-4 py-2 rounded-full bg-neon-blue text-dark-900 text-sm font-bold">
+                      {selectedProduct.badge}
+                    </div>
+                  )}
+                  {selectedProduct.image ? (
+                    <Image
+                      src={selectedProduct.image}
+                      alt={selectedProduct.name}
+                      width={300}
+                      height={300}
+                      className="object-contain"
+                      unoptimized
+                    />
+                  ) : (
+                    <ShoppingBag className="w-24 h-24 text-neon-blue/20" />
+                  )}
+                </div>
+
+                {/* Info */}
+                <div className="p-6 flex flex-col">
+                  {/* Avaliação */}
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-4 h-4 ${
+                            i < Math.floor(selectedProduct.rating)
+                              ? "text-yellow-400 fill-yellow-400"
+                              : "text-gray-600"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-sm text-gray-400">
+                      {selectedProduct.rating} ({selectedProduct.reviews} avaliações)
+                    </span>
+                  </div>
+
+                  {/* Preço */}
+                  <div className="flex items-center gap-4 mb-6">
+                    <span className="font-orbitron font-bold text-3xl text-gradient">
+                      R$ {selectedProduct.price.toFixed(2)}
+                    </span>
+                    {selectedProduct.originalPrice && (
+                      <span className="text-gray-500 text-lg line-through">
+                        R$ {selectedProduct.originalPrice.toFixed(2)}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Descrição */}
+                  <p className="text-gray-300 text-sm leading-relaxed mb-6">
+                    {selectedProduct.description}
+                  </p>
+
+                  {/* Especificações */}
+                  <div className="mb-6">
+                    <h4 className="font-orbitron text-xs font-semibold mb-3 text-gray-300 uppercase tracking-wider">
+                      Especificações
+                    </h4>
+                    <ul className="space-y-2">
+                      {selectedProduct.specs.map((spec, i) => (
+                        <li key={i} className="flex items-start gap-2 text-sm text-gray-400">
+                          <span className="text-neon-blue mt-0.5">•</span>
+                          {spec}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Vantagens */}
+                  <div className="grid grid-cols-2 gap-3 mb-6">
+                    <div className="flex items-center gap-2 text-xs text-gray-400">
+                      <Truck className="w-4 h-4 text-neon-blue" />
+                      Entrega rápida
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-400">
+                      <ShieldCheck className="w-4 h-4 text-neon-blue" />
+                      Garantia inclusa
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-400">
+                      <Headphones className="w-4 h-4 text-neon-blue" />
+                      Suporte via WhatsApp
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-400">
+                      <PackageCheck className="w-4 h-4 text-neon-blue" />
+                      Pagamento seguro
+                    </div>
+                  </div>
+
+                  {/* Botão Comprar */}
+                  <button
+                    onClick={() => buyProduct(selectedProduct)}
+                    className="btn-neon w-full py-3 text-base flex items-center justify-center gap-2"
+                  >
+                    <ShoppingBag className="w-5 h-5" />
+                    Comprar via WhatsApp
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
