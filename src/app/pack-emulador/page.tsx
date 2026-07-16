@@ -139,7 +139,7 @@ export default function PackEmuladorPage() {
 
               <button
                 onClick={() => {
-                  const msg = encodeURIComponent("Olá! Vim pelo site JC Gamer FPS. Quero comprar o PACK EMULADOR - R$ 35,00");
+                  const msg = encodeURIComponent("Olá! Vim pelo site JCGAMERFPS. Quero comprar o PACK EMULADOR - R$ 35,00");
                   window.open(`https://wa.me/5521973199886?text=${msg}`, "_blank");
                 }}
                 className="btn-neon w-full flex items-center justify-center gap-2 mb-4 text-lg py-4"
@@ -151,7 +151,7 @@ export default function PackEmuladorPage() {
 
               <button
                 onClick={() => {
-                  const msg = encodeURIComponent("Olá! Vim pelo site JC Gamer FPS. Tenho dúvidas sobre o PACK EMULADOR");
+                  const msg = encodeURIComponent("Olá! Vim pelo site JCGAMERFPS. Tenho dúvidas sobre o PACK EMULADOR");
                   window.open(`https://wa.me/5521973199886?text=${msg}`, "_blank");
                 }}
                 className="btn-green w-full flex items-center justify-center gap-2 mb-6"

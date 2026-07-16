@@ -93,7 +93,7 @@ export default function StorePage() {
 
   const buyProduct = (product: typeof products[0]) => {
     const msg = encodeURIComponent(
-      `Olá! Vim pelo site JC Gamer FPS. Quero comprar: ${product.name} - R$ ${product.price.toFixed(2)}`
+      `Olá! Vim pelo site JCGAMERFPS. Quero comprar: ${product.name} - R$ ${product.price.toFixed(2)}`
     );
     window.open(`https://wa.me/5521973199886?text=${msg}`, "_blank");
   };

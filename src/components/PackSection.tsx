@@ -67,7 +67,7 @@ export function PackSection() {
             <h2 className="font-orbitron text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
               PACK{" "}
               <span className="neon-text-purple text-gradient">
-                JC GAMER FPS.COM
+                JCGAMERFPS
               </span>
             </h2>
 

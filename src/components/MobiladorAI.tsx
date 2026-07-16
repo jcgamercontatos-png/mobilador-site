@@ -98,7 +98,7 @@ export function MobiladorAI() {
                   </div>
                   <div>
                     <h3 className="font-orbitron font-bold text-dark-900 text-sm">
-                      JC GAMER FPS AI
+                      JCGAMERFPS AI
                     </h3>
                     <p className="text-dark-900/70 text-xs">
                       Assistente Virtual

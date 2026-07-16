@@ -260,7 +260,7 @@ export default function SensibilidadeProPage() {
 
                 <button
                   onClick={() => {
-                    const msg = encodeURIComponent("Olá! Vim pelo site JC Gamer FPS. Quero comprar o curso SENSIBILIDADE PRO - R$ 49,90");
+                    const msg = encodeURIComponent("Olá! Vim pelo site JCGAMERFPS. Quero comprar o curso SENSIBILIDADE PRO - R$ 49,90");
                     window.open(`https://wa.me/5521973199886?text=${msg}`, "_blank");
                   }}
                   className="btn-neon w-full flex items-center justify-center gap-2 mb-4"

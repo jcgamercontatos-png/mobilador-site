@@ -20,7 +20,7 @@ export function CTASection() {
             PRONTO PARA{" "}
             <span className="text-gradient neon-text">DOMINAR</span>
             <br />
-            O JC GAMER FPS.COM?
+            O JCGAMERFPS?
           </h2>
           <p className="text-gray-400 text-lg mb-8">
             Junte-se a milhares de jogadores que já transformaram seu
