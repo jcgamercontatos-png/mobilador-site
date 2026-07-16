@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   Smartphone,
@@ -189,6 +190,17 @@ export default function APKPage() {
               </div>
             </div>
           </motion.div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 mt-8">
+        <div className="text-center">
+          <Link
+            href="/apk/sucesso"
+            className="text-xs text-gray-600 hover:text-gray-400 transition-colors underline"
+          >
+            Testar página de download (após pagamento)
+          </Link>
         </div>
       </div>
     </div>

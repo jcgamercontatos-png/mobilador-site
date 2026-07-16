@@ -102,11 +102,20 @@ export default function APKSuccessPage() {
           </div>
 
           <Link
-            href="/"
+            href="/apk"
             className="mt-6 inline-flex items-center gap-2 text-sm text-gray-500 hover:text-neon-blue transition-colors"
           >
             ← Voltar para o site
           </Link>
+
+          <div className="mt-6 pt-6 border-t border-white/5">
+            <button
+              onClick={() => window.location.reload()}
+              className="text-xs text-gray-600 hover:text-gray-400 transition-colors"
+            >
+              Testar novamente
+            </button>
+          </div>
         </motion.div>
       </div>
     </div>
