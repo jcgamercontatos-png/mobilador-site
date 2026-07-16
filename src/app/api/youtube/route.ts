@@ -1,30 +1,51 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
-  const channelId = process.env.YOUTUBE_CHANNEL_ID || "YOUR_CHANNEL_ID";
-  const apiKey = process.env.YOUTUBE_API_KEY || "YOUR_API_KEY";
+const CHANNEL_ID = "UCUUvs62lISeY-0ozWzYNnaA";
 
-  try {
-    const url = `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet&id=order=date&maxResults=8&type=video`;
+async function fetchFromRSS() {
+  const url = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
+  const res = await fetch(url, { next: { revalidate: 3600 } });
 
-    const res = await fetch(url);
+  if (!res.ok) return [];
 
-    if (!res.ok) {
-      return NextResponse.json(
-        { videos: getMockVideos() },
-        { status: 200 }
-      );
+  const text = await res.text();
+
+  const videos: any[] = [];
+  const entries = text.split("<entry>").slice(1);
+
+  for (const entry of entries) {
+    const title = entry.match(/<media:title>(.*?)<\/media:title>/)?.[1] || "";
+    const videoId =
+      entry.match(
+        /yt:videoId>(.*?)<\/yt:videoId/
+      )?.[1] || "";
+    const thumbnail =
+      entry.match(
+        /<media:thumbnail url="(.*?)"/
+      )?.[1] || "";
+    const published =
+      entry.match(/<published>(.*?)<\/published>/)?.[1] || "";
+
+    if (videoId) {
+      videos.push({
+        id: videoId,
+        title: title.replace(/&amp;/g, "&").replace(/&#39;/g, "'"),
+        thumbnail: thumbnail || `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+        date: published,
+      });
     }
+  }
 
-    const data = await res.json();
+  return videos;
+}
 
-    const videos = data.items?.map((item: any) => ({
-      id: item.id.videoId,
-      title: item.snippet.title,
-      thumbnail: item.snippet.thumbnails?.high?.url || "",
-      description: item.snippet.description,
-      date: item.snippet.publishedAt,
-    })) || [];
+export async function GET() {
+  try {
+    const videos = await fetchFromRSS();
+
+    if (videos.length === 0) {
+      return NextResponse.json({ videos: getMockVideos() });
+    }
 
     return NextResponse.json({ videos });
   } catch {
@@ -35,17 +56,9 @@ export async function GET(request: NextRequest) {
 function getMockVideos() {
   return [
     {
-      id: "mock1",
-      title: "CONFIG SENSIBILIDADE PERFEITA PARA MOBILADOR 2024",
-      thumbnail: "",
-      description: "A melhor configuração de sensibilidade para mobilador",
-      date: new Date().toISOString(),
-    },
-    {
-      id: "mock2",
-      title: "TOP 10 MACETES QUE VOCÊ NÃO SABIA NO FREE FIRE",
-      thumbnail: "",
-      description: "Macetes incríveis para Free Fire",
+      id: "vi415Rs4rDs",
+      title: "SENSIBILIDADE PRO: a config da IA que NINGUÉM está usando no GG Mouse Pro 3",
+      thumbnail: "https://i.ytimg.com/vi/vi415Rs4rDs/hqdefault.jpg",
       date: new Date().toISOString(),
     },
   ];
