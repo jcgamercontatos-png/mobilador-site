@@ -6,11 +6,10 @@ import {
   Check,
   Shield,
   Lock,
-  Settings,
+  Monitor,
   Zap,
   ArrowRight,
   MessageCircle,
-  Smartphone,
   Target,
 } from "lucide-react";
 
@@ -18,26 +17,26 @@ const packContents = [
   {
     icon: Target,
     title: "Macetinho XM8",
-    description: "Configuração completa da XM8 para mobilador",
+    description: "Configuração completa da XM8 para emulador",
   },
   {
     icon: Target,
     title: "Macetinho UMP",
-    description: "Ajustes otimizados da UMP com teclado e mouse",
+    description: "Ajustes otimizados da UMP no emulador",
   },
   {
     icon: Target,
     title: "Macetinho VSS",
-    description: "Macete da VSS para mira perfeita no celular",
+    description: "Macete da VSS para mira perfeita no emulador",
   },
   {
     icon: Target,
     title: "Macetinho MAC10",
-    description: "Configuração da MAC10 para mobilador",
+    description: "Configuração da MAC10 para emulador",
   },
 ];
 
-export default function PackMobiladorPage() {
+export default function PackEmuladorPage() {
   return (
     <div className="min-h-screen pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -46,21 +45,21 @@ export default function PackMobiladorPage() {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass neon-border-purple mb-6">
-              <Smartphone className="w-5 h-5 text-neon-purple" />
-              <span className="text-sm text-neon-purple font-medium">
-                Pack Mobilador
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass neon-border mb-6">
+              <Monitor className="w-5 h-5 text-neon-blue" />
+              <span className="text-sm text-neon-blue font-medium">
+                Pack Emulador
               </span>
             </div>
 
             <h1 className="font-orbitron font-bold text-3xl md:text-5xl mb-4">
               PACK{" "}
-              <span className="text-gradient neon-text-purple">MOBILADOR</span>
+              <span className="text-gradient">EMULADOR</span>
             </h1>
 
             <p className="text-gray-400 text-lg mb-8 leading-relaxed">
               Plano completo com todos os métodos que utilizo para jogar Free Fire
-              de mobilador (celular com teclado e mouse). Tenha acesso a todos os
+              no emulador (BlueStacks, LDPlayer, etc.). Tenha acesso a todos os
               macetes das armas e domine o jogo!
             </p>
 
@@ -73,8 +72,8 @@ export default function PackMobiladorPage() {
                   transition={{ delay: i * 0.1 }}
                   className="glass-card p-4 flex items-start gap-3"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-neon-purple/10 flex items-center justify-center flex-shrink-0">
-                    <item.icon className="w-5 h-5 text-neon-purple" />
+                  <div className="w-10 h-10 rounded-lg bg-neon-blue/10 flex items-center justify-center flex-shrink-0">
+                    <item.icon className="w-5 h-5 text-neon-blue" />
                   </div>
                   <div>
                     <h4 className="font-semibold text-sm mb-1">{item.title}</h4>
@@ -94,15 +93,15 @@ export default function PackMobiladorPage() {
                   "Macetinho UMP completo",
                   "Macetinho VSS completo",
                   "Macetinho MAC10 completo",
-                  "Configuração personalizada para seu dispositivo",
+                  "Configuração personalizada para emulador",
                   "Suporte via WhatsApp",
                 ].map((item, i) => (
                   <div
                     key={i}
                     className="flex items-center gap-3 text-sm text-gray-300"
                   >
-                    <div className="w-5 h-5 rounded-full bg-neon-purple/20 flex items-center justify-center flex-shrink-0">
-                      <Check className="w-3 h-3 text-neon-purple" />
+                    <div className="w-5 h-5 rounded-full bg-neon-blue/20 flex items-center justify-center flex-shrink-0">
+                      <Check className="w-3 h-3 text-neon-blue" />
                     </div>
                     {item}
                   </div>
@@ -116,16 +115,16 @@ export default function PackMobiladorPage() {
             animate={{ opacity: 1, x: 0 }}
             className="sticky top-24"
           >
-            <div className="glass-card p-8 neon-border-purple">
+            <div className="glass-card p-8 neon-border">
               <div className="text-center mb-8">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-neon-purple to-pink-500 flex items-center justify-center mx-auto mb-4">
-                  <Smartphone className="w-10 h-10 text-white" />
+                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-neon-blue to-cyan-500 flex items-center justify-center mx-auto mb-4">
+                  <Monitor className="w-10 h-10 text-white" />
                 </div>
                 <h2 className="font-orbitron font-bold text-2xl">
-                  PACK MOBILADOR
+                  PACK EMULADOR
                 </h2>
                 <p className="text-gray-400 text-sm mt-2">
-                  Plano Completo - Celular
+                  Plano Completo - PC/Emulador
                 </p>
               </div>
 
@@ -140,7 +139,7 @@ export default function PackMobiladorPage() {
 
               <button
                 onClick={() => {
-                  const msg = encodeURIComponent("Olá! Vim pelo site Mobilador. Quero comprar o PACK MOBILADOR (Celular) - R$ 35,00");
+                  const msg = encodeURIComponent("Olá! Vim pelo site Mobilador. Quero comprar o PACK EMULADOR - R$ 35,00");
                   window.open(`https://wa.me/5521973199886?text=${msg}`, "_blank");
                 }}
                 className="btn-neon w-full flex items-center justify-center gap-2 mb-4 text-lg py-4"
@@ -152,7 +151,7 @@ export default function PackMobiladorPage() {
 
               <button
                 onClick={() => {
-                  const msg = encodeURIComponent("Olá! Vim pelo site Mobilador. Tenho dúvidas sobre o PACK MOBILADOR (Celular)");
+                  const msg = encodeURIComponent("Olá! Vim pelo site Mobilador. Tenho dúvidas sobre o PACK EMULADOR");
                   window.open(`https://wa.me/5521973199886?text=${msg}`, "_blank");
                 }}
                 className="btn-green w-full flex items-center justify-center gap-2 mb-6"
@@ -165,7 +164,7 @@ export default function PackMobiladorPage() {
                 {[
                   "Acesso imediato após pagamento",
                   "4 macetes completos de armas",
-                  "Configuração para seu dispositivo",
+                  "Configuração para emulador",
                   "Suporte via WhatsApp",
                   "Garantia de 7 dias",
                 ].map((item, i) => (

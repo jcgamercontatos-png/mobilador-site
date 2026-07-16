@@ -24,6 +24,7 @@ const navLinks = [
       { label: "Periféricos", href: "/loja?cat=perifericos" },
       { label: "Cursos", href: "/cursos" },
       { label: "Pack Mobilador", href: "/pack-mobilador" },
+      { label: "Pack Emulador", href: "/pack-emulador" },
     ],
   },
   {
@@ -31,6 +32,8 @@ const navLinks = [
     href: "/cursos",
     children: [
       { label: "Sensibilidade Pro", href: "/cursos/sensibilidade-pro" },
+      { label: "Pack Mobilador", href: "/pack-mobilador" },
+      { label: "Pack Emulador", href: "/pack-emulador" },
       { label: "Todos os Cursos", href: "/cursos" },
     ],
   },
