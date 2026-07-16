@@ -1,7 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Keyboard,
   Mouse,
@@ -13,7 +15,26 @@ import {
   Play,
 } from "lucide-react";
 
+interface LatestVideo {
+  id: string;
+  title: string;
+  thumbnail: string;
+}
+
 export function HeroSection() {
+  const [latestVideo, setLatestVideo] = useState<LatestVideo | null>(null);
+
+  useEffect(() => {
+    fetch("/api/youtube")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.videos && data.videos.length > 0) {
+          setLatestVideo(data.videos[0]);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       <div className="absolute inset-0 grid-bg opacity-50" />
@@ -125,31 +146,45 @@ export function HeroSection() {
 
               <div className="relative glass-card p-8 neon-border">
                 <div className="relative aspect-video rounded-xl overflow-hidden bg-dark-700">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="w-20 h-20 rounded-full bg-gradient-neon flex items-center justify-center mx-auto mb-4 animate-glow-pulse">
-                        <Play className="w-8 h-8 text-dark-900 ml-1" />
+                  {latestVideo ? (
+                    <a
+                      href={`https://youtube.com/watch?v=${latestVideo.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block relative w-full h-full"
+                    >
+                      <Image
+                        src={latestVideo.thumbnail}
+                        alt={latestVideo.title}
+                        fill
+                        className="object-cover hover:scale-105 transition-transform duration-500"
+                        unoptimized
+                      />
+                      <div className="absolute inset-0 bg-black/20 hover:bg-black/10 transition-all flex items-center justify-center">
+                        <div className="w-20 h-20 rounded-full bg-red-500/90 flex items-center justify-center hover:scale-110 transition-transform animate-glow-pulse">
+                          <Play className="w-8 h-8 text-white ml-1" />
+                        </div>
                       </div>
-                      <p className="font-orbitron text-sm text-neon-blue">
-                        ÚLTIMO VÍDEO
-                      </p>
+                    </a>
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="w-20 h-20 rounded-full bg-gradient-neon flex items-center justify-center mx-auto mb-4 animate-glow-pulse">
+                          <Play className="w-8 h-8 text-dark-900 ml-1" />
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
 
                 <div className="mt-6 flex items-center justify-between">
-                  <div>
-                    <h3 className="font-orbitron font-bold text-lg">
-                      CONFIG SENSIBILIDADE 2024
+                  <div className="flex-1 mr-4">
+                    <p className="text-xs text-red-500 font-orbitron font-bold uppercase mb-1">
+                      Último Vídeo
+                    </p>
+                    <h3 className="font-rajdhani font-bold text-lg leading-tight line-clamp-2">
+                      {latestVideo?.title || "Carregando..."}
                     </h3>
-                    <p className="text-gray-400 text-sm">
-                      Configuração Perfeita para Mobilador
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-neon-blue font-orbitron text-sm font-bold">
-                      250K views
-                    </p>
                   </div>
                 </div>
 
