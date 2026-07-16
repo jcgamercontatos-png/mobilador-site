@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Smartphone,
@@ -11,49 +10,15 @@ import {
   Lock,
   Star,
   Users,
-  ArrowRight,
   MessageCircle,
   Clock,
   CreditCard,
   Settings,
 } from "lucide-react";
 
+const MERCADO_PAGO_LINK = "https://mpago.la/1rXKWUh";
+
 export default function APKPage() {
-  const [loading, setLoading] = useState(false);
-
-  const handleBuy = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/create-payment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: "APK JCGAMERFPS - Mobilador",
-          price: 49.9,
-          quantity: 1,
-          description: "APK exclusivo do JCGAMERFPS com configurações profissionais para mobilador.",
-        }),
-      });
-      const data = await res.json();
-      if (data.init_point) {
-        window.location.href = data.init_point;
-      } else {
-        alert("Erro ao criar pagamento. Tente novamente.");
-      }
-    } catch (err) {
-      alert("Erro ao conectar com o servidor.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const features = [
-    { icon: Zap, title: "Performance Otimizada", desc: "Configurações que maximizam o FPS e reduzem lag" },
-    { icon: Shield, title: "100% Seguro", desc: "APK testado e sem vírus. Seguro para seu dispositivo" },
-    { icon: Settings, title: "Configurações Profissionais", desc: "Sensibilidade e ajustes usados por players pro" },
-    { icon: Download, title: "Download Instantâneo", desc: "Receba o APK imediatamente após o pagamento" },
-  ];
-
   return (
     <div className="min-h-screen pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -81,7 +46,12 @@ export default function APKPage() {
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-              {features.map((item, i) => (
+              {[
+                { icon: Zap, title: "Performance Otimizada", desc: "Configurações que maximizam o FPS e reduzem lag" },
+                { icon: Shield, title: "100% Seguro", desc: "APK testado e sem vírus. Seguro para seu dispositivo" },
+                { icon: Settings, title: "Configurações Profissionais", desc: "Sensibilidade e ajustes usados por players pro" },
+                { icon: Download, title: "Download Instantâneo", desc: "Receba o APK imediatamente após o pagamento" },
+              ].map((item, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
@@ -158,31 +128,22 @@ export default function APKPage() {
 
               <div className="text-center mb-8">
                 <div className="font-orbitron font-bold text-5xl text-gradient">
-                  R$ 49,90
+                  R$ 25,00
                 </div>
                 <span className="text-neon-green text-sm">
                   Pagamento único • Acesso vitalício
                 </span>
               </div>
 
-              <button
-                onClick={handleBuy}
-                disabled={loading}
-                className="btn-neon w-full flex items-center justify-center gap-2 mb-4 text-lg py-4 disabled:opacity-50"
+              <a
+                href={MERCADO_PAGO_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-neon w-full flex items-center justify-center gap-2 mb-4 text-lg py-4"
               >
-                {loading ? (
-                  <span className="flex items-center gap-2">
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Processando...
-                  </span>
-                ) : (
-                  <>
-                    <CreditCard className="w-5 h-5" />
-                    Comprar Agora
-                    <ArrowRight className="w-5 h-5" />
-                  </>
-                )}
-              </button>
+                <CreditCard className="w-5 h-5" />
+                Comprar Agora
+              </a>
 
               <button
                 onClick={() => {
@@ -201,7 +162,6 @@ export default function APKPage() {
                   "Pagamento via PIX ou Cartão",
                   "Suporte via WhatsApp",
                   "Garantia de 7 dias",
-                  "Atualizações gratuitas",
                 ].map((item, i) => (
                   <div
                     key={i}
