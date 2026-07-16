@@ -140,7 +140,7 @@ export default function PackMobiladorPage() {
 
               <button
                 onClick={() => {
-                  const msg = encodeURIComponent("Olá! Vim pelo site Mobilador. Quero comprar o PACK MOBILADOR (Celular) - R$ 35,00");
+                  const msg = encodeURIComponent("Olá! Vim pelo site JC Gamer FPS. Quero comprar o PACK MOBILADOR (Celular) - R$ 35,00");
                   window.open(`https://wa.me/5521973199886?text=${msg}`, "_blank");
                 }}
                 className="btn-neon w-full flex items-center justify-center gap-2 mb-4 text-lg py-4"
@@ -152,7 +152,7 @@ export default function PackMobiladorPage() {
 
               <button
                 onClick={() => {
-                  const msg = encodeURIComponent("Olá! Vim pelo site Mobilador. Tenho dúvidas sobre o PACK MOBILADOR (Celular)");
+                  const msg = encodeURIComponent("Olá! Vim pelo site JC Gamer FPS. Tenho dúvidas sobre o PACK MOBILADOR (Celular)");
                   window.open(`https://wa.me/5521973199886?text=${msg}`, "_blank");
                 }}
                 className="btn-green w-full flex items-center justify-center gap-2 mb-6"

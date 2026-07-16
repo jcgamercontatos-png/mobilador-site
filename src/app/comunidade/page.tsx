@@ -70,7 +70,7 @@ export default function CommunityPage() {
             <span className="text-sm text-gray-300">Comunidade</span>
           </div>
           <h1 className="font-orbitron font-bold text-4xl md:text-5xl text-gradient mb-4">
-            COMUNIDADE MOBILADORES
+            COMUNIDADE JC GAMER
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Conecte-se com outros jogadores, compartilhe configurações e suba

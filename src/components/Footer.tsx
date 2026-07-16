@@ -44,7 +44,7 @@ export function Footer() {
                 <Gamepad2 className="w-6 h-6 text-dark-900" />
               </div>
               <span className="font-orbitron font-bold text-xl text-gradient">
-                MOBILADOR
+                JC GAMER FPS.COM
               </span>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-md">

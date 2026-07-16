@@ -70,7 +70,7 @@ export function HeroSection() {
               DOMINE O{" "}
               <span className="text-gradient neon-text">FREE FIRE</span>
               <br />
-              NO MOBILADOR
+              NO JC GAMER FPS.COM
             </motion.h1>
 
             <motion.p

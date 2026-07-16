@@ -97,7 +97,7 @@ export function FeaturedProducts() {
                 <div className="absolute inset-0 bg-gradient-to-t from-dark-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
                   <button
                     onClick={() => {
-                      const msg = encodeURIComponent(`Olá! Vim pelo site Mobilador. Quero comprar: ${product.name} - R$ ${product.price.toFixed(2)}`);
+                      const msg = encodeURIComponent(`Olá! Vim pelo site JC Gamer FPS. Quero comprar: ${product.name} - R$ ${product.price.toFixed(2)}`);
                       window.open(`https://wa.me/5521973199886?text=${msg}`, "_blank");
                     }}
                     className="btn-neon text-xs py-2 px-6"

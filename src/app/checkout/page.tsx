@@ -21,7 +21,7 @@ export default function CheckoutPage() {
   const [couponApplied, setCouponApplied] = useState(false);
 
   const applyCoupon = () => {
-    if (couponCode.toUpperCase() === "MOBILADOR10") {
+    if (couponCode.toUpperCase() === "JCGAMER10") {
       setCouponApplied(true);
     }
   };
