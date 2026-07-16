@@ -57,7 +57,7 @@ export function Footer() {
               {[
                 { icon: Youtube, href: "https://youtube.com/@mobilador", color: "hover:text-red-500" },
                 { icon: Instagram, href: "https://instagram.com/mobilador", color: "hover:text-pink-500" },
-                { icon: MessageCircle, href: "https://wa.me/5500000000000", color: "hover:text-green-500" },
+                { icon: MessageCircle, href: "https://wa.me/5521973199886", color: "hover:text-green-500" },
               ].map((social, i) => (
                 <a
                   key={i}
