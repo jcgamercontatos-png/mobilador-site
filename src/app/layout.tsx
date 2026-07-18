@@ -6,22 +6,24 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { ParticleBackground } from "@/components/ParticleBackground";
 
 export const metadata: Metadata = {
-  title: "Mobilador | Domine o Free Fire com Teclado e Mouse",
+  title: "JCGAMERFPS | Domine o Free Fire com Teclado e Mouse",
   description:
-    "Aprenda a jogar Free Fire com teclado e mouse no celular. Cursos de sensibilidade, periféricos gamer e packs de configurações exclusivas.",
+    "APK exclusivo, periféricos gamer e packs de configurações profissionais para mobilador e emulador Free Fire.",
   keywords: [
-    "mobilador",
+    "jcgamerfps",
     "free fire",
+    "mobilador",
     "teclado e mouse",
+    "apk",
     "sensibilidade",
     "configuração",
     "gamer",
     "periféricos",
   ],
   openGraph: {
-    title: "Mobilador | Domine o Free Fire com Teclado e Mouse",
+    title: "JCGAMERFPS | Domine o Free Fire com Teclado e Mouse",
     description:
-      "Aprenda a jogar Free Fire com teclado e mouse no celular. Cursos, periféricos e packs exclusivos.",
+      "APK exclusivo, periféricos e packs de configurações profissionais.",
     type: "website",
     locale: "pt_BR",
   },
