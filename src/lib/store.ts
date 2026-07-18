@@ -3,7 +3,7 @@ import path from "path";
 import bcrypt from "bcryptjs";
 
 export type LicenseData = {
-  id: string;
+  id: number;
   username: string;
   password: string;
   displayName: string;
@@ -34,6 +34,11 @@ function writeAll(data: LicenseData[]) {
   fs.writeFileSync(getStorePath(), JSON.stringify(data, null, 2));
 }
 
+function nextId(all: LicenseData[]): number {
+  if (all.length === 0) return 1;
+  return Math.max(...all.map((l) => l.id)) + 1;
+}
+
 export function getAllLicenses(): LicenseData[] {
   return readAll().sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
@@ -42,7 +47,7 @@ export function findByUsername(username: string): LicenseData | undefined {
   return readAll().find((l) => l.username === username);
 }
 
-export function findById(id: string): LicenseData | undefined {
+export function findById(id: number): LicenseData | undefined {
   return readAll().find((l) => l.id === id);
 }
 
@@ -50,7 +55,7 @@ export async function createLicense(data: { username: string; password: string; 
   const all = readAll();
   const hashed = await bcrypt.hash(data.password, 10);
   const license: LicenseData = {
-    id: crypto.randomUUID(),
+    id: nextId(all),
     username: data.username,
     password: hashed,
     displayName: data.displayName || data.username,
@@ -67,13 +72,13 @@ export async function createLicense(data: { username: string; password: string; 
   return { ...license, password: data.password };
 }
 
-export function deleteLicense(id: string): boolean {
+export function deleteLicense(id: number): boolean {
   const all = readAll().filter((l) => l.id !== id);
   writeAll(all);
   return true;
 }
 
-export function updateLicense(id: string, updates: Partial<LicenseData>): LicenseData | undefined {
+export function updateLicense(id: number, updates: Partial<LicenseData>): LicenseData | undefined {
   const all = readAll();
   const idx = all.findIndex((l) => l.id === id);
   if (idx === -1) return undefined;

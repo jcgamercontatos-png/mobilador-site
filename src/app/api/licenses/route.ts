@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAllLicenses, createLicense, deleteLicense } from "@/lib/store";
+import { getAllLicenses, createLicense, deleteLicense, findByUsername } from "@/lib/store";
 
 function checkAdmin(req: NextRequest) {
   const auth = req.headers.get("authorization");
@@ -25,11 +25,9 @@ export async function POST(req: NextRequest) {
   }
 }
 
-import { findByUsername } from "@/lib/store";
-
 export async function DELETE(req: NextRequest) {
   if (!checkAdmin(req)) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
-  const id = new URL(req.url).searchParams.get("id");
+  const id = Number(new URL(req.url).searchParams.get("id"));
   if (!id) return NextResponse.json({ error: "ID obrigatório" }, { status: 400 });
   deleteLicense(id);
   return NextResponse.json({ ok: true });

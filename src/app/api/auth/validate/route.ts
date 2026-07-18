@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   try {
     const auth = req.headers.get("authorization");
     if (!auth) return NextResponse.json({ valid: false }, { status: 401 });
-    const decoded = jwt.verify(auth.replace("Bearer ", ""), SECRET) as { id: string };
+    const decoded = jwt.verify(auth.replace("Bearer ", ""), SECRET) as { id: number };
     const user = findById(decoded.id);
     if (!user) return NextResponse.json({ valid: false }, { status: 401 });
     return NextResponse.json({
