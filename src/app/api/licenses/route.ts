@@ -9,7 +9,7 @@ function checkAdmin(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   if (!checkAdmin(req)) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
-  return NextResponse.json(getAllLicenses());
+  return NextResponse.json(await getAllLicenses());
 }
 
 export async function POST(req: NextRequest) {
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   try {
     const { username, password, displayName, licenseType, licenseDays } = await req.json();
     if (!username || !password) return NextResponse.json({ error: "Username e senha obrigatórios" }, { status: 400 });
-    if (findByUsername(username)) return NextResponse.json({ error: "Username já existe" }, { status: 400 });
+    if (await findByUsername(username)) return NextResponse.json({ error: "Username já existe" }, { status: 400 });
     const lic = await createLicense({ username, password, displayName, licenseType, licenseDays });
     return NextResponse.json(lic, { status: 201 });
   } catch (err: any) {
@@ -29,6 +29,6 @@ export async function DELETE(req: NextRequest) {
   if (!checkAdmin(req)) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
   const id = Number(new URL(req.url).searchParams.get("id"));
   if (!id) return NextResponse.json({ error: "ID obrigatório" }, { status: 400 });
-  deleteLicense(id);
+  await deleteLicense(id);
   return NextResponse.json({ ok: true });
 }

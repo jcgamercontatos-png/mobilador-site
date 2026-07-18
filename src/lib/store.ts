@@ -1,5 +1,4 @@
-import fs from "fs";
-import path from "path";
+import { put, get, del } from "@vercel/blob";
 import bcrypt from "bcryptjs";
 
 export type LicenseData = {
@@ -16,46 +15,46 @@ export type LicenseData = {
   createdAt: string;
 };
 
-function getStorePath(): string {
-  const dir = process.env.STORE_DIR || "/tmp/mobilador-data";
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  return path.join(dir, "licenses.json");
-}
+const BLOB_PATH = "mobilador-licenses.json";
 
-function readAll(): LicenseData[] {
+async function readAll(): Promise<LicenseData[]> {
   try {
-    const p = getStorePath();
-    if (!fs.existsSync(p)) return [];
-    return JSON.parse(fs.readFileSync(p, "utf-8"));
+    const blob = await get(BLOB_PATH);
+    if (!blob) return [];
+    const text = await blob.text();
+    return JSON.parse(text);
   } catch { return []; }
 }
 
-function writeAll(data: LicenseData[]) {
-  fs.writeFileSync(getStorePath(), JSON.stringify(data, null, 2));
+async function writeAll(data: LicenseData[]) {
+  await put(BLOB_PATH, JSON.stringify(data), { access: "private", addRandomSuffix: false });
 }
 
-function nextId(all: LicenseData[]): number {
+async function nextId(all: LicenseData[]): Promise<number> {
   if (all.length === 0) return 1;
   return Math.max(...all.map((l) => l.id)) + 1;
 }
 
-export function getAllLicenses(): LicenseData[] {
-  return readAll().sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+export async function getAllLicenses(): Promise<LicenseData[]> {
+  const all = await readAll();
+  return all.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
-export function findByUsername(username: string): LicenseData | undefined {
-  return readAll().find((l) => l.username === username);
+export async function findByUsername(username: string): Promise<LicenseData | undefined> {
+  const all = await readAll();
+  return all.find((l) => l.username === username);
 }
 
-export function findById(id: number): LicenseData | undefined {
-  return readAll().find((l) => l.id === id);
+export async function findById(id: number): Promise<LicenseData | undefined> {
+  const all = await readAll();
+  return all.find((l) => l.id === id);
 }
 
 export async function createLicense(data: { username: string; password: string; displayName?: string; licenseType?: string; licenseDays?: number }): Promise<LicenseData> {
-  const all = readAll();
+  const all = await readAll();
   const hashed = await bcrypt.hash(data.password, 10);
   const license: LicenseData = {
-    id: nextId(all),
+    id: await nextId(all),
     username: data.username,
     password: hashed,
     displayName: data.displayName || data.username,
@@ -68,21 +67,21 @@ export async function createLicense(data: { username: string; password: string; 
     createdAt: new Date().toISOString(),
   };
   all.push(license);
-  writeAll(all);
+  await writeAll(all);
   return { ...license, password: data.password };
 }
 
-export function deleteLicense(id: number): boolean {
-  const all = readAll().filter((l) => l.id !== id);
-  writeAll(all);
+export async function deleteLicense(id: number): Promise<boolean> {
+  const all = (await readAll()).filter((l) => l.id !== id);
+  await writeAll(all);
   return true;
 }
 
-export function updateLicense(id: number, updates: Partial<LicenseData>): LicenseData | undefined {
-  const all = readAll();
+export async function updateLicense(id: number, updates: Partial<LicenseData>): Promise<LicenseData | undefined> {
+  const all = await readAll();
   const idx = all.findIndex((l) => l.id === id);
   if (idx === -1) return undefined;
   all[idx] = { ...all[idx], ...updates };
-  writeAll(all);
+  await writeAll(all);
   return all[idx];
 }
