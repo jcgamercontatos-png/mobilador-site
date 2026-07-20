@@ -1,29 +1,22 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { ParticleBackground } from "@/components/ParticleBackground";
 
 export const metadata: Metadata = {
-  title: "JCGAMERFPS | Domine o Free Fire com Teclado e Mouse",
+  title: "MOBILADOR | App de Sensibilidade Free Fire",
   description:
-    "APK exclusivo, periféricos gamer e packs de configurações profissionais para mobilador e emulador Free Fire.",
+    "MOBILADOR - O app de sensibilidade definitivo para jogar Free Fire com teclado e mouse no celular. Baixe o APK e ative sua key.",
   keywords: [
-    "jcgamerfps",
-    "free fire",
     "mobilador",
+    "jcgamer",
+    "free fire",
+    "sensibilidade",
     "teclado e mouse",
     "apk",
-    "sensibilidade",
-    "configuração",
-    "gamer",
-    "periféricos",
   ],
   openGraph: {
-    title: "JCGAMERFPS | Domine o Free Fire com Teclado e Mouse",
+    title: "MOBILADOR | App de Sensibilidade Free Fire",
     description:
-      "APK exclusivo, periféricos e packs de configurações profissionais.",
+      "O app de sensibilidade definitivo para Free Fire com teclado e mouse no celular.",
     type: "website",
     locale: "pt_BR",
   },
@@ -36,12 +29,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body className="bg-dark-900 text-white min-h-screen">
-        <ParticleBackground />
-        <Navbar />
-        <main className="relative z-10">{children}</main>
-        <Footer />
-        <WhatsAppButton />
+      <body className="bg-[#000000] text-[#FFFFFF] min-h-screen overflow-x-hidden">
+        <main className="min-h-screen">{children}</main>
       </body>
     </html>
   );

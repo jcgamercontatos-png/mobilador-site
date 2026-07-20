@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     const { username, password, device_id } = await req.json();
     if (!username || !password) return NextResponse.json({ detail: "Usuario ou senha invalidos" }, { status: 401 });
 
-    const user = findByUsername(username);
+    const user = await findByUsername(username);
     if (!user || !(await bcrypt.compare(password, user.password))) return NextResponse.json({ detail: "Usuario ou senha invalidos" }, { status: 401 });
     if (!user.isValid) return NextResponse.json({ detail: "Licenca expirada" }, { status: 403 });
 

@@ -19,9 +19,10 @@ const BLOB_PATH = "mobilador-licenses.json";
 
 async function readAll(): Promise<LicenseData[]> {
   try {
-    const blob = await get(BLOB_PATH);
-    if (!blob) return [];
-    const text = await blob.text();
+    const result = await get(BLOB_PATH, { access: "private" });
+    if (!result) return [];
+    const res = await fetch(result.blob.downloadUrl);
+    const text = await res.text();
     return JSON.parse(text);
   } catch { return []; }
 }

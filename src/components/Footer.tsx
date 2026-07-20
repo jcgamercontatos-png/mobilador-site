@@ -2,21 +2,13 @@
 
 import Link from "next/link";
 import {
-  Gamepad2,
   Youtube,
   Instagram,
   MessageCircle,
   Mail,
-  MapPin,
 } from "lucide-react";
 
 const footerLinks = {
-  loja: [
-    { label: "Periféricos Gamer", href: "/loja?cat=perifericos" },
-    { label: "Cursos Online", href: "/cursos" },
-    { label: "Pack Mobilador", href: "/pack-mobilador" },
-    { label: "Ofertas", href: "/loja?sort=sale" },
-  ],
   conteudo: [
     { label: "YouTube", href: "https://youtube.com/@mobilador" },
     { label: "Comunidade", href: "/comunidade" },
@@ -31,40 +23,34 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="relative bg-dark-900 border-t border-white/5">
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon-blue/50 to-transparent" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
+    <footer className="bg-[#000000] border-t border-[#333333] mt-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-2 mb-6">
-              <div className="w-10 h-10 rounded-lg bg-gradient-neon flex items-center justify-center">
-                <Gamepad2 className="w-6 h-6 text-dark-900" />
+            <Link href="/" className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded bg-[#e50914] flex items-center justify-center">
+                <span className="text-white font-bold text-lg">J</span>
               </div>
-              <span className="font-orbitron font-bold text-xl text-gradient">
-                JCGAMERFPS
-              </span>
+              <span className="font-bold text-lg text-white">JCGAMERFPS</span>
             </Link>
-            <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-md">
-              Domine o Free Fire com teclado e mouse. Aprenda as melhores
-              configurações de sensibilidade, techniques de gameplay e alcance
-              o nível profissional no mobilador.
+            <p className="text-[#CCCCCC] text-sm leading-relaxed mb-6 max-w-md">
+              Domine o Free Fire com teclado e mouse. Aprenda as melhores configurações de sensibilidade e técnicas de gameplay.
             </p>
 
-            <div className="flex gap-3">
+            <div className="flex gap-4">
               {[
-                { icon: Youtube, href: "https://youtube.com/@mobilador", color: "hover:text-red-500" },
-                { icon: Instagram, href: "https://instagram.com/mobilador", color: "hover:text-pink-500" },
-                { icon: MessageCircle, href: "https://wa.me/5521973199886", color: "hover:text-green-500" },
+                { icon: Youtube, href: "https://youtube.com/@mobilador" },
+                { icon: Instagram, href: "https://instagram.com/mobilador" },
+                { icon: MessageCircle, href: "https://wa.me/5521973199886" },
               ].map((social, i) => (
                 <a
                   key={i}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`w-10 h-10 rounded-lg glass flex items-center justify-center text-gray-400 ${social.color} transition-all hover:scale-110`}
+                  className="w-8 h-8 rounded bg-[#1a1a1a] flex items-center justify-center text-[#CCCCCC] hover:text-[#ffffff] transition-colors"
                 >
-                  <social.icon className="w-5 h-5" />
+                  <social.icon className="w-4 h-4" />
                 </a>
               ))}
             </div>
@@ -72,19 +58,15 @@ export function Footer() {
 
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
-              <h3 className="font-orbitron font-semibold text-sm uppercase tracking-wider text-white mb-4">
-                {title === "loja"
-                  ? "Loja"
-                  : title === "conteudo"
-                  ? "Conteúdo"
-                  : "Suporte"}
+              <h3 className="font-semibold text-sm uppercase tracking-wider text-white mb-3">
+                {title === "conteudo" ? "Conteúdo" : "Suporte"}
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-2">
                 {links.map((link) => (
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-gray-400 text-sm hover:text-neon-blue transition-colors"
+                      className="text-sm text-[#CCCCCC] hover:text-[#ffffff] transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -95,19 +77,14 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-gray-500 text-sm">
-            <Mail className="w-4 h-4" />
+        <div className="mt-8 pt-6 border-t border-[#333333] flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-xs text-[#777777]">
+            <Mail className="w-3 h-3" />
             <span>contato@mobilador.com.br</span>
           </div>
-          <p className="text-gray-500 text-sm text-center">
-            &copy; {new Date().getFullYear()} Mobilador. Todos os direitos
-            reservados.
+          <p className="text-xs text-[#777777] text-center">
+            © 2026 Mobilador. Todos os direitos reservados.
           </p>
-          <div className="flex items-center gap-2 text-gray-500 text-sm">
-            <MapPin className="w-4 h-4" />
-            <span>Brasil</span>
-          </div>
         </div>
       </div>
     </footer>
