@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
 import {
   Gamepad2,
   Mail,
@@ -16,6 +17,18 @@ import {
 } from "lucide-react";
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-[#000000]">
+        <div className="w-8 h-8 border-2 border-[#e50914] border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
   const searchParams = useSearchParams();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -27,6 +40,23 @@ export default function LoginPage() {
     text: string;
   } | null>(null);
   const [loading, setLoading] = useState(false);
+
+  function getUsers(): { name: string; email: string; password: string }[] {
+    if (typeof window === "undefined") return [];
+    const data = localStorage.getItem("jcgamer_users");
+    return data ? JSON.parse(data) : [];
+  }
+
+  function saveUser(user: { name: string; email: string; password: string }) {
+    const users = getUsers();
+    users.push(user);
+    localStorage.setItem("jcgamer_users", JSON.stringify(users));
+  }
+
+  const handleGoogleSignIn = () => {
+    const redirect = searchParams.get("redirect") || "/";
+    signIn("google", { callbackUrl: redirect });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,6 +80,23 @@ export default function LoginPage() {
         setLoading(false);
         return;
       }
+
+      const existingUsers = getUsers();
+      if (existingUsers.some((u) => u.email === email)) {
+        setMessage({ type: "error", text: "Este email já está cadastrado. Faça login." });
+        setLoading(false);
+        return;
+      }
+
+      saveUser({ name, email, password });
+    } else {
+      const users = getUsers();
+      const found = users.find((u) => u.email === email && u.password === password);
+      if (!found) {
+        setMessage({ type: "error", text: "Email ou senha incorretos. Crie uma conta se ainda não tiver." });
+        setLoading(false);
+        return;
+      }
     }
 
     try {
@@ -60,7 +107,6 @@ export default function LoginPage() {
           action: isLogin ? "login" : "register",
           name,
           email,
-          password,
         }),
       });
 
@@ -134,6 +180,28 @@ export default function LoginPage() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          <button
+            onClick={handleGoogleSignIn}
+            className="w-full bg-white text-gray-900 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center justify-center gap-3 mb-6"
+          >
+            <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Entrar com Google
+          </button>
+
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-[#333]" />
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-[#0d0d0d] px-3 text-[#777]">ou continue com email</span>
+            </div>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <AnimatePresence>

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Download, Smartphone, Shield, Gamepad2, Star } from "lucide-react";
 import Link from "next/link";
 
-const API = "https://mobilador-api.onrender.com/api/site/downloads";
+const API = "https://mobilador-api.vercel.app/api/site/downloads";
 
 type DownloadItem = {
   id: number;

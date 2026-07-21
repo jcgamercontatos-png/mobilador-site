@@ -3,6 +3,7 @@ import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { Providers } from "@/components/Providers";
 
 export const metadata: Metadata = {
   title: "JCGAMER | Loja Gamer & Periféricos",
@@ -35,10 +36,12 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className="bg-[#000000] text-[#FFFFFF] min-h-screen overflow-x-hidden">
-        <Navbar />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
-        <WhatsAppButton />
+        <Providers>
+          <Navbar />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+          <WhatsAppButton />
+        </Providers>
       </body>
     </html>
   );

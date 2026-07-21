@@ -53,11 +53,11 @@ export default function Home() {
   const [downloadTitle, setDownloadTitle] = useState("GG Mouse Pro");
 
   useEffect(() => {
-    fetch("https://mobilador-api.onrender.com/api/site/settings")
+    fetch("https://mobilador-api.vercel.app/api/site/settings")
       .then(r => r.json())
       .then(data => setSettings(data))
       .catch(() => {});
-    fetch("https://mobilador-api.onrender.com/api/site/downloads")
+    fetch("https://mobilador-api.vercel.app/api/site/downloads")
       .then(r => r.json())
       .then(data => {
         const active = data?.find((d: any) => d.is_active);
