@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const CHANNEL_ID = "UCUUvs62lISeY-0ozWzYNnaA";
+const CHANNEL_ID = "UC835FbsSjT9bDt6os1nuu7g";
 
 async function fetchFromRSS() {
   const url = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;

@@ -16,19 +16,15 @@ import {
 
 const categories = [
   "Todos",
-  "Periféricos",
-  "Teclados",
-  "Mouse",
-  "Mouse Pads",
-  "Acessórios",
-  "Adaptadores",
+  "Webcam",
+  "Fone",
 ];
 
 const products = [
   {
     id: "1",
     name: "Webcam EMEET PIXY 2K AI Tracking",
-    category: "Periféricos",
+    category: "Webcam",
     price: 349.9,
     originalPrice: 799.9,
     rating: 4.9,
@@ -50,7 +46,7 @@ const products = [
   {
     id: "2",
     name: "Headset Gamer Fifine H9 Surround 7.1",
-    category: "Periféricos",
+    category: "Fone",
     price: 119.9,
     rating: 4.7,
     reviews: 230,
@@ -93,7 +89,7 @@ export default function StorePage() {
 
   const buyProduct = (product: typeof products[0]) => {
     const msg = encodeURIComponent(
-      `Olá! Vim pelo site JCGAMERFPS. Quero comprar: ${product.name} - R$ ${product.price.toFixed(2)}`
+      `Olá! Vim pelo site JCGAMER e quero comprar um periférico: ${product.name} - R$ ${product.price.toFixed(2)}`
     );
     window.open(`https://wa.me/5521973199886?text=${msg}`, "_blank");
   };
@@ -107,11 +103,11 @@ export default function StorePage() {
           className="mb-12"
         >
           <h1 className="font-orbitron font-bold text-4xl md:text-5xl text-gradient mb-4">
-            LOJA GAMER
+            LOJA JCGAMER
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl">
-            Periféricos gamer selecionados para a melhor experiência de
-            mobilador. Qualidade garantida!
+            Periféricos gamer selecionados para elevar seu gameplay. Qualidade
+            garantida!
           </p>
         </motion.div>
 
@@ -177,7 +173,7 @@ export default function StorePage() {
               </p>
               <div className="flex items-center gap-2">
                 <a
-                  href="https://wa.me/5521973199886?text=Ol%C3%A1%2C%20vim%20pelo%20site%20Mobilador!"
+                  href="https://wa.me/5521973199886?text=Ol%C3%A1!%20Vim%20pelo%20site%20JCGAMER%20e%20quero%20comprar%20um%20perif%C3%A9rico"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-neon text-xs py-2 px-4 inline-flex items-center gap-2"

@@ -1,22 +1,27 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 export const metadata: Metadata = {
-  title: "MOBILADOR | App de Sensibilidade Free Fire",
+  title: "JCGAMER | Loja Gamer & Periféricos",
   description:
-    "MOBILADOR - O app de sensibilidade definitivo para jogar Free Fire com teclado e mouse no celular. Baixe o APK e ative sua key.",
+    "JCGAMER - Periféricos gamer, teclado e mouse para Free Fire. Dicas, gameplay e configurações. Inscreva-se no canal @Jcgamerofc no YouTube.",
   keywords: [
-    "mobilador",
     "jcgamer",
+    "loja gamer",
+    "periféricos",
     "free fire",
-    "sensibilidade",
-    "teclado e mouse",
-    "apk",
+    "teclado",
+    "mouse",
+    "headset",
+    "canal youtube",
   ],
   openGraph: {
-    title: "MOBILADOR | App de Sensibilidade Free Fire",
+    title: "JCGAMER | Loja Gamer & Periféricos",
     description:
-      "O app de sensibilidade definitivo para Free Fire com teclado e mouse no celular.",
+      "Periféricos gamer selecionados para elevar seu gameplay. Acesse nossa loja e inscreva-se no canal!",
     type: "website",
     locale: "pt_BR",
   },
@@ -30,7 +35,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className="bg-[#000000] text-[#FFFFFF] min-h-screen overflow-x-hidden">
+        <Navbar />
         <main className="min-h-screen">{children}</main>
+        <Footer />
+        <WhatsAppButton />
       </body>
     </html>
   );

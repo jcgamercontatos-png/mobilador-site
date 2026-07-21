@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   Gamepad2,
   Mail,
@@ -15,36 +15,8 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-interface UserData {
-  name: string;
-  email: string;
-  password: string;
-}
-
-function getUsers(): UserData[] {
-  if (typeof window === "undefined") return [];
-  const data = localStorage.getItem("mobilador_users");
-  return data ? JSON.parse(data) : [];
-}
-
-function saveUser(user: UserData) {
-  const users = getUsers();
-  users.push(user);
-  localStorage.setItem("mobilador_users", JSON.stringify(users));
-}
-
-function findUser(email: string, password: string): UserData | null {
-  const users = getUsers();
-  return (
-    users.find((u) => u.email === email && u.password === password) || null
-  );
-}
-
-function setCurrentUser(user: UserData) {
-  localStorage.setItem("mobilador_current_user", JSON.stringify(user));
-}
-
 export default function LoginPage() {
+  const searchParams = useSearchParams();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
@@ -56,92 +28,85 @@ export default function LoginPage() {
   } | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
 
-    setTimeout(() => {
-      if (isLogin) {
-        if (!email || !password) {
-          setMessage({ type: "error", text: "Preencha todos os campos." });
-          setLoading(false);
-          return;
-        }
-
-        const user = findUser(email, password);
-        if (user) {
-          setCurrentUser(user);
-          setMessage({
-            type: "success",
-            text: `Bem-vindo de volta, ${user.name}!`,
-          });
-          setTimeout(() => {
-            window.location.href = "/";
-          }, 1500);
-        } else {
-          setMessage({
-            type: "error",
-            text: "Email ou senha incorretos. Crie uma conta se ainda não tiver.",
-          });
-        }
-      } else {
-        if (!name || !email || !password) {
-          setMessage({ type: "error", text: "Preencha todos os campos." });
-          setLoading(false);
-          return;
-        }
-
-        if (password.length < 6) {
-          setMessage({
-            type: "error",
-            text: "A senha deve ter pelo menos 6 caracteres.",
-          });
-          setLoading(false);
-          return;
-        }
-
-        const existingUsers = getUsers();
-        if (existingUsers.some((u) => u.email === email)) {
-          setMessage({
-            type: "error",
-            text: "Este email já está cadastrado. Faça login.",
-          });
-          setLoading(false);
-          return;
-        }
-
-        const newUser = { name, email, password };
-        saveUser(newUser);
-        setCurrentUser(newUser);
-        setMessage({
-          type: "success",
-          text: "Conta criada com sucesso! Redirecionando...",
-        });
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 1500);
-      }
+    if (!email || !password) {
+      setMessage({ type: "error", text: "Preencha todos os campos." });
       setLoading(false);
-    }, 800);
+      return;
+    }
+
+    if (!isLogin) {
+      if (!name) {
+        setMessage({ type: "error", text: "Preencha todos os campos." });
+        setLoading(false);
+        return;
+      }
+      if (password.length < 6) {
+        setMessage({ type: "error", text: "A senha deve ter pelo menos 6 caracteres." });
+        setLoading(false);
+        return;
+      }
+    }
+
+    try {
+      const res = await fetch("/api/auth/site", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: isLogin ? "login" : "register",
+          name,
+          email,
+          password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMessage({ type: "error", text: data.error || "Erro ao processar." });
+        setLoading(false);
+        return;
+      }
+
+      setMessage({
+        type: "success",
+        text: isLogin
+          ? `Bem-vindo de volta, ${data.user.name}!`
+          : "Conta criada com sucesso! Redirecionando...",
+      });
+
+      setTimeout(() => {
+        const redirect = searchParams.get("redirect") || "/";
+        window.location.href = redirect;
+      }, 1500);
+    } catch {
+      setMessage({ type: "error", text: "Erro de conexão. Tente novamente." });
+    }
+
+    setLoading(false);
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
-      <div className="max-w-md w-full mx-auto px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#000000]">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,#1a0306_0%,#000000_55%)] z-0" />
+      <div className="max-w-md w-full mx-auto px-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-card p-8 neon-border"
+          className="bg-[#0d0d0d] border border-[#222] rounded-lg p-8"
         >
           <div className="text-center mb-8">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-neon flex items-center justify-center mx-auto mb-4">
-              <Gamepad2 className="w-8 h-8 text-dark-900" />
+            <div className="w-16 h-16 rounded-2xl bg-[#e50914]/10 flex items-center justify-center mx-auto mb-4 border border-[#e50914]/30">
+              <Gamepad2 className="w-8 h-8 text-[#e50914]" />
             </div>
-            <h1 className="font-orbitron font-bold text-2xl">
+            <h1 className="text-2xl font-bold text-white">
               {isLogin ? "ENTRAR" : "CRIAR CONTA"}
             </h1>
-            <p className="text-gray-400 text-sm mt-2">
+            <p className="text-[#a0a0a0] text-sm mt-2">
               {isLogin
                 ? "Acesse sua conta para continuar"
                 : "Crie sua conta gratuitamente"}
@@ -156,7 +121,7 @@ export default function LoginPage() {
                 exit={{ opacity: 0 }}
                 className={`mb-4 p-3 rounded-lg flex items-center gap-2 text-sm ${
                   message.type === "success"
-                    ? "bg-neon-green/10 border border-neon-green/30 text-neon-green"
+                    ? "bg-green-500/10 border border-green-500/30 text-green-400"
                     : "bg-red-500/10 border border-red-500/30 text-red-400"
                 }`}
               >
@@ -178,7 +143,7 @@ export default function LoginPage() {
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                 >
-                  <label className="block text-sm text-gray-300 mb-2">
+                  <label className="block text-sm text-[#a0a0a0] mb-2">
                     Nome completo
                   </label>
                   <div className="relative">
@@ -188,7 +153,7 @@ export default function LoginPage() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Seu nome"
-                      className="w-full bg-dark-700 border border-white/10 rounded-lg pl-10 pr-4 py-3 text-white text-sm placeholder:text-gray-500 focus:outline-none focus:border-neon-blue transition-colors"
+                      className="w-full bg-[#111] border border-[#333] rounded-lg pl-10 pr-4 py-3 text-white text-sm placeholder:text-gray-500 focus:outline-none focus:border-[#e50914] transition-colors"
                     />
                   </div>
                 </motion.div>
@@ -196,7 +161,7 @@ export default function LoginPage() {
             </AnimatePresence>
 
             <div>
-              <label className="block text-sm text-gray-300 mb-2">Email</label>
+              <label className="block text-sm text-[#a0a0a0] mb-2">Email</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                 <input
@@ -204,13 +169,13 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="seu@email.com"
-                  className="w-full bg-dark-700 border border-white/10 rounded-lg pl-10 pr-4 py-3 text-white text-sm placeholder:text-gray-500 focus:outline-none focus:border-neon-blue transition-colors"
+                  className="w-full bg-[#111] border border-[#333] rounded-lg pl-10 pr-4 py-3 text-white text-sm placeholder:text-gray-500 focus:outline-none focus:border-[#e50914] transition-colors"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm text-gray-300 mb-2">Senha</label>
+              <label className="block text-sm text-[#a0a0a0] mb-2">Senha</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                 <input
@@ -218,7 +183,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Sua senha"
-                  className="w-full bg-dark-700 border border-white/10 rounded-lg pl-10 pr-10 py-3 text-white text-sm placeholder:text-gray-500 focus:outline-none focus:border-neon-blue transition-colors"
+                  className="w-full bg-[#111] border border-[#333] rounded-lg pl-10 pr-10 py-3 text-white text-sm placeholder:text-gray-500 focus:outline-none focus:border-[#e50914] transition-colors"
                 />
                 <button
                   type="button"
@@ -237,10 +202,10 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-neon w-full flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full bg-[#e50914] text-white py-3 rounded-lg font-semibold hover:bg-[#f40612] transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-dark-900 border-t-transparent rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
                   {isLogin ? "Entrar" : "Criar Conta"}
@@ -259,7 +224,7 @@ export default function LoginPage() {
                 setEmail("");
                 setPassword("");
               }}
-              className="text-sm text-gray-400 hover:text-neon-blue transition-colors"
+              className="text-sm text-[#a0a0a0] hover:text-white transition-colors"
             >
               {isLogin
                 ? "Não tem conta? Criar conta"

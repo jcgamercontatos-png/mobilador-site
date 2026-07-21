@@ -10,14 +10,13 @@ import {
 
 const footerLinks = {
   conteudo: [
-    { label: "YouTube", href: "https://youtube.com/@mobilador" },
-    { label: "Comunidade", href: "/comunidade" },
+    { label: "YouTube", href: "https://www.youtube.com/@Jcgamerofc" },
+    { label: "Loja", href: "/loja" },
+    { label: "Download", href: "/download" },
   ],
   suporte: [
-    { label: "FAQ", href: "/#faq" },
-    { label: "Contato", href: "mailto:contato@mobilador.com.br" },
-    { label: "Termos de Uso", href: "/termos" },
-    { label: "Privacidade", href: "/privacidade" },
+    { label: "Contato", href: "mailto:contato@jcgamer.com.br" },
+    { label: "WhatsApp", href: "https://wa.me/5521973199886" },
   ],
 };
 
@@ -31,16 +30,16 @@ export function Footer() {
               <div className="w-8 h-8 rounded bg-[#e50914] flex items-center justify-center">
                 <span className="text-white font-bold text-lg">J</span>
               </div>
-              <span className="font-bold text-lg text-white">JCGAMERFPS</span>
+              <span className="font-bold text-lg text-white">JCGAMER</span>
             </Link>
             <p className="text-[#CCCCCC] text-sm leading-relaxed mb-6 max-w-md">
-              Domine o Free Fire com teclado e mouse. Aprenda as melhores configurações de sensibilidade e técnicas de gameplay.
+              Periféricos gamer selecionados para elevar seu gameplay. Acesse nossa loja e inscreva-se no canal @Jcgamerofc!
             </p>
 
             <div className="flex gap-4">
               {[
-                { icon: Youtube, href: "https://youtube.com/@mobilador" },
-                { icon: Instagram, href: "https://instagram.com/mobilador" },
+                { icon: Youtube, href: "https://www.youtube.com/@Jcgamerofc" },
+                { icon: Instagram, href: "https://instagram.com/jcgamer" },
                 { icon: MessageCircle, href: "https://wa.me/5521973199886" },
               ].map((social, i) => (
                 <a
@@ -80,10 +79,10 @@ export function Footer() {
         <div className="mt-8 pt-6 border-t border-[#333333] flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-xs text-[#777777]">
             <Mail className="w-3 h-3" />
-            <span>contato@mobilador.com.br</span>
+            <span>contato@jcgamer.com.br</span>
           </div>
           <p className="text-xs text-[#777777] text-center">
-            © 2026 Mobilador. Todos os direitos reservados.
+            © 2026 JCGAMER. Todos os direitos reservados.
           </p>
         </div>
       </div>

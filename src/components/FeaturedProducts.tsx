@@ -20,8 +20,8 @@ interface Product {
 const featuredProducts: Product[] = [
   {
     id: "1",
-    name: "Webcam EMEET PIXY 2K",
-    category: "Periféricos",
+    name: "Webcam EMEET PIXY 2K AI Tracking",
+    category: "Webcam",
     price: 349.9,
     originalPrice: 799.9,
     rating: 4.9,
@@ -31,8 +31,8 @@ const featuredProducts: Product[] = [
   },
   {
     id: "2",
-    name: "Headset Fifine H9",
-    category: "Periféricos",
+    name: "Headset Gamer Fifine H9 Surround 7.1",
+    category: "Fone",
     price: 119.9,
     rating: 4.7,
     reviews: 230,
@@ -97,7 +97,7 @@ export function FeaturedProducts() {
                 <div className="absolute inset-0 bg-gradient-to-t from-dark-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
                   <button
                     onClick={() => {
-                      const msg = encodeURIComponent(`Olá! Vim pelo site JCGAMERFPS. Quero comprar: ${product.name} - R$ ${product.price.toFixed(2)}`);
+                      const msg = encodeURIComponent(`Olá! Vim pelo site JCGAMER e quero comprar um periférico: ${product.name} - R$ ${product.price.toFixed(2)}`);
                       window.open(`https://wa.me/5521973199886?text=${msg}`, "_blank");
                     }}
                     className="btn-neon text-xs py-2 px-6"
