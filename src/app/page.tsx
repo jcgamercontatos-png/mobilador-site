@@ -21,13 +21,6 @@ type Produto = {
   specs: string[]; image: string; is_active: boolean;
 };
 
-const categories = [
-  { icon: Mouse, label: "Mouse", href: "/loja" },
-  { icon: Gamepad2, label: "Teclado", href: "/loja" },
-  { icon: Headphones, label: "Fone", href: "/loja" },
-  { icon: ShoppingBag, label: "Acessórios", href: "/loja" },
-];
-
 export default function Home() {
   const [settings, setSettings] = useState<Record<string, string>>({});
   const [downloadUrl, setDownloadUrl] = useState("");
@@ -82,23 +75,24 @@ export default function Home() {
             </div>
 
             <h1 className="text-[clamp(2rem,4vw,3.75rem)] font-bold leading-[1.1] tracking-[-0.02em] text-white mb-5">
-              {settings.hero_title || 'Bem-vindo à'}{" "}
+              Bem-vindo à{" "}
               <span className="bg-gradient-to-r from-[#e50914] to-[#ff4444] bg-clip-text text-transparent font-bold">
                 JCGAMER
               </span>
             </h1>
 
             <p className="text-lg text-[#a0a0a0] max-w-2xl mb-8">
-              {settings.hero_subtitle || 'Sua loja de periféricos gamer. Aqui você encontra mouse, teclado, fone e muito mais para elevar seu gameplay.'}
+              Produtos digitais e periféricos gamer para elevar seu gameplay.
+              Confira apps, configurações de sensibilidade e muito mais!
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                href="/loja"
+                href="/produtos"
                 className="bg-[#e50914] text-white px-6 py-3 rounded font-semibold hover:bg-[#f40612] transition-all flex items-center justify-center gap-2"
               >
-                <ShoppingBag className="w-5 h-5" />
-                Ver Loja
+                <Star className="w-5 h-5" />
+                Ver Produtos
               </Link>
               <a
                 href="https://www.youtube.com/@Jcgamerofc"
@@ -119,8 +113,8 @@ export default function Home() {
             className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-14"
           >
             {[
-              { label: "Produtos", value: "2", icon: ShoppingBag },
-              { label: "Categorias", value: "2", icon: Gamepad2 },
+              { label: "Produtos", value: "3", icon: Star },
+              { label: "Periféricos", value: "2", icon: ShoppingBag },
               { label: "Clientes", value: "500+", icon: Star },
               { label: "Canal YouTube", value: "@Jcgamerofc", icon: Youtube },
             ].map((s) => (
@@ -154,21 +148,21 @@ export default function Home() {
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#e50914]/40 bg-[#e50914]/10 mb-4">
                 <ShoppingBag className="w-4 h-4 text-[#e50914]" />
                 <span className="text-xs font-semibold tracking-wider uppercase text-[#e50914]">
-                  Loja
+                  Periféricos
                 </span>
               </div>
               <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-white">
-                Produtos em Destaque
+                Periféricos em Destaque
               </h2>
               <p className="text-[#a0a0a0] text-sm mt-1">
-                Periféricos gamer selecionados para você
+                Mouse, teclado, fone e mais para seu setup gamer
               </p>
             </div>
             <Link
               href="/loja"
               className="mt-4 md:mt-0 text-sm text-[#a0a0a0] hover:text-white transition-colors flex items-center gap-1"
             >
-              Ver loja completa <ChevronRight className="w-4 h-4" />
+              Ver todos os periféricos <ChevronRight className="w-4 h-4" />
             </Link>
           </motion.div>
 

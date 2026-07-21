@@ -40,7 +40,7 @@ export default function StorePage() {
       .catch(() => setLoading(false));
   }, []);
 
-  const categories = ["Todos", ...new Set(allProducts.map(p => p.category).filter(Boolean))];
+  const categories = ["Todos"].concat(Array.from(new Set(allProducts.map(p => p.category).filter(Boolean))));
   const products = allProducts;
 
   const filteredProducts = products
@@ -75,8 +75,7 @@ export default function StorePage() {
             LOJA JCGAMER
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl">
-            Periféricos gamer selecionados para elevar seu gameplay. Qualidade
-            garantida!
+            Periféricos gamer selecionados para elevar seu gameplay.
           </p>
         </motion.div>
 
@@ -207,7 +206,7 @@ export default function StorePage() {
                           {product.name}
                         </h3>
                         <p className="text-gray-500 text-xs mb-3 line-clamp-2">
-                          {product.shortDesc}
+                          {product.short_desc}
                         </p>
                         <div className="flex items-center gap-1 mb-3">
                           {Array.from({ length: 5 }).map((_, i) => (
@@ -228,9 +227,9 @@ export default function StorePage() {
                           <span className="font-orbitron font-bold text-xl text-gradient">
                             R$ {product.price.toFixed(2)}
                           </span>
-                          {product.originalPrice && (
+                          {product.original_price && (
                             <span className="text-gray-500 text-sm line-through">
-                              R$ {product.originalPrice.toFixed(2)}
+                              R$ {product.original_price.toFixed(2)}
                             </span>
                           )}
                         </div>
@@ -261,16 +260,16 @@ export default function StorePage() {
                               {product.name}
                             </h3>
                             <p className="text-gray-500 text-sm">
-                              {product.shortDesc}
+                              {product.short_desc}
                             </p>
                           </div>
                           <div className="text-right">
                             <span className="font-orbitron font-bold text-xl text-gradient">
                               R$ {product.price.toFixed(2)}
                             </span>
-                            {product.originalPrice && (
+                            {product.original_price && (
                               <span className="block text-gray-500 text-sm line-through">
-                                R$ {product.originalPrice.toFixed(2)}
+                                R$ {product.original_price.toFixed(2)}
                               </span>
                             )}
                           </div>
@@ -392,9 +391,9 @@ export default function StorePage() {
                     <span className="font-orbitron font-bold text-3xl text-gradient">
                       R$ {selectedProduct.price.toFixed(2)}
                     </span>
-                    {selectedProduct.originalPrice && (
+                    {selectedProduct.original_price && (
                       <span className="text-gray-500 text-lg line-through">
-                        R$ {selectedProduct.originalPrice.toFixed(2)}
+                        R$ {selectedProduct.original_price.toFixed(2)}
                       </span>
                     )}
                   </div>
