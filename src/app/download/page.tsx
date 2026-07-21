@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Download, Smartphone, Shield, Gamepad2, Star } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const API = "https://mobilador-api.vercel.app/api/site/downloads";
 
@@ -14,11 +15,8 @@ type DownloadItem = {
   version: string;
   file_size: string;
   icon: string;
+  image: string;
   is_active: boolean;
-};
-
-const iconMap: Record<string, React.ElementType> = {
-  download: Download, smartphone: Smartphone, shield: Shield, gamepad: Gamepad2, star: Star,
 };
 
 export default function DownloadPage() {
@@ -70,21 +68,36 @@ export default function DownloadPage() {
         ) : null}
 
         {active && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-[#0d0d0d] border border-[#222] rounded-lg p-8 md:p-12 text-center max-w-2xl mx-auto">
-            <div className="w-20 h-20 rounded-full bg-[#e50914]/10 flex items-center justify-center mx-auto mb-6">
-              <Download className="w-10 h-10 text-[#e50914]" />
-            </div>
-            <h2 className="text-2xl font-bold text-white mb-3">{active.title} APK</h2>
-            <p className="text-[#a0a0a0] text-sm mb-6">{active.description}</p>
-            <a href={active.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#e50914] text-white px-8 py-3 rounded font-semibold hover:bg-[#f40612] transition-colors">
-              <Download className="w-5 h-5" />
-              Baixar {active.title}
-            </a>
-            <div className="flex items-center justify-center gap-4 mt-6 text-xs text-[#777]">
-              {active.version && <span className="flex items-center gap-1"><Star className="w-3 h-3 text-[#e50914]" /> {active.version}</span>}
-              {active.file_size && <span>{active.file_size}</span>}
-            </div>
-          </motion.div>
+          <>
+            {active.image && (
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
+                <Image
+                  src={active.image}
+                  alt={active.title}
+                  width={300}
+                  height={200}
+                  className="mx-auto rounded-lg shadow-lg"
+                  unoptimized
+                />
+              </motion.div>
+            )}
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-[#0d0d0d] border border-[#222] rounded-lg p-8 md:p-12 text-center max-w-2xl mx-auto">
+              <div className="w-20 h-20 rounded-full bg-[#e50914]/10 flex items-center justify-center mx-auto mb-6">
+                <Download className="w-10 h-10 text-[#e50914]" />
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-3">{active.title} APK</h2>
+              <p className="text-[#a0a0a0] text-sm mb-6">{active.description}</p>
+              <a href={active.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#e50914] text-white px-8 py-3 rounded font-semibold hover:bg-[#f40612] transition-colors">
+                <Download className="w-5 h-5" />
+                Baixar {active.title}
+              </a>
+              <div className="flex items-center justify-center gap-4 mt-6 text-xs text-[#777]">
+                {active.version && <span className="flex items-center gap-1"><Star className="w-3 h-3 text-[#e50914]" /> {active.version}</span>}
+                {active.file_size && <span>{active.file_size}</span>}
+              </div>
+            </motion.div>
+          </>
         )}
 
         {!loading && !active && (
