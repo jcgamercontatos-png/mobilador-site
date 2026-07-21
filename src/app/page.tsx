@@ -10,35 +10,16 @@ import {
   Youtube,
   Download,
   Gamepad2,
-  Mouse,
-  Headphones,
   Play,
 } from "lucide-react";
 import Image from "next/image";
 
-const featuredProducts = [
-  {
-    id: "1",
-    name: "Webcam EMEET PIXY 2K AI Tracking",
-    category: "Webcam",
-    price: 349.9,
-    originalPrice: 799.9,
-    rating: 4.9,
-    reviews: 156,
-    badge: "-56%",
-    image: "/images/webcam-emeet.png",
-  },
-  {
-    id: "2",
-    name: "Headset Gamer Fifine H9 Surround 7.1",
-    category: "Fone",
-    price: 119.9,
-    rating: 4.7,
-    reviews: 230,
-    badge: "Novo",
-    image: "/images/headset-fifine-h9.jpg",
-  },
-];
+type Produto = {
+  id: number; name: string; category: string; price: number;
+  original_price: number; rating: number; reviews: number;
+  badge: string; short_desc: string; description: string;
+  specs: string[]; image: string; is_active: boolean;
+};
 
 const categories = [
   { icon: Mouse, label: "Mouse", href: "/loja" },
@@ -51,6 +32,7 @@ export default function Home() {
   const [settings, setSettings] = useState<Record<string, string>>({});
   const [downloadUrl, setDownloadUrl] = useState("");
   const [downloadTitle, setDownloadTitle] = useState("GG Mouse Pro");
+  const [featuredProducts, setFeaturedProducts] = useState<Produto[]>([]);
 
   useEffect(() => {
     fetch("https://mobilador-api.vercel.app/api/site/settings")
@@ -63,6 +45,10 @@ export default function Home() {
         const active = data?.find((d: any) => d.is_active);
         if (active) { setDownloadUrl(active.url); setDownloadTitle(active.title); }
       })
+      .catch(() => {});
+    fetch("https://mobilador-api.vercel.app/api/site/products")
+      .then(r => r.json())
+      .then(data => setFeaturedProducts(data?.slice(0, 4) || []))
       .catch(() => {});
   }, []);
 
@@ -252,9 +238,9 @@ export default function Home() {
                     <span className="text-xl font-bold text-white">
                       R$ {product.price.toFixed(2)}
                     </span>
-                    {product.originalPrice && (
+                    {product.original_price > 0 && (
                       <span className="text-gray-500 text-sm line-through">
-                        R$ {product.originalPrice.toFixed(2)}
+                        R$ {product.original_price.toFixed(2)}
                       </span>
                     )}
                   </div>

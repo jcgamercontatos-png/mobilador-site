@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import {
@@ -14,65 +14,34 @@ import {
   PackageCheck,
 } from "lucide-react";
 
-const categories = [
-  "Todos",
-  "Webcam",
-  "Fone",
-];
+const API = "https://mobilador-api.vercel.app/api/site/products";
+type Produto = {
+  id: number; name: string; category: string; price: number;
+  original_price: number; rating: number; reviews: number;
+  badge: string; short_desc: string; description: string;
+  specs: string[]; image: string; is_active: boolean;
+};
 
-const products = [
-  {
-    id: "1",
-    name: "Webcam EMEET PIXY 2K AI Tracking",
-    category: "Webcam",
-    price: 349.9,
-    originalPrice: 799.9,
-    rating: 4.9,
-    reviews: 156,
-    badge: "-56%",
-    shortDesc: "Webcam 2K com AI tracking e controle por gestos.",
-    description: "Webcam EMEET PIXY 2K com sensor Sony, controle por gestos, AI tracking inteligente, autofocus automático e PTZ com tripé integrado. Resolução 1080P 60fps para streaming profissional.",
-    specs: [
-      "Resolução: 2K / 1080P 60fps",
-      "Sensor: Sony CMOS",
-      "Campo de visão: 73°",
-      "AI Tracking com controle por gestos",
-      "Conexão: USB-A / USB-C",
-      "Microfone integrado omnidirecional",
-      "Compatível com PC, Notebook e Console",
-    ],
-    image: "/images/webcam-emeet.png",
-  },
-  {
-    id: "2",
-    name: "Headset Gamer Fifine H9 Surround 7.1",
-    category: "Fone",
-    price: 119.9,
-    rating: 4.7,
-    reviews: 230,
-    badge: "Novo",
-    shortDesc: "Surround 7.1 com cancelamento de ruído.",
-    description: "Headset Gamer Fifine H9 com som surround 7.1 por USB, cancelamento de ruído passivo, microfone omnidirecional com sensibilidade de -40±3dB e almofadas over-ear confortáveis para longas sessões. Formato ergonômico e compatível com PC e console.",
-    specs: [
-      "Som: Surround 7.1 Virtual",
-      "Driver: 50mm",
-      "Resposta de frequência: 20Hz - 20KHz",
-      "Sensibilidade: 95±3dB",
-      "Microfone: Omnidirecional -40±3dB",
-      "Conexão: USB 5V / 3.5mm",
-      "Compatível com PC e Console",
-      "Almofadas: Over-ear com espuma viscoelástica",
-    ],
-    image: "/images/headset-fifine-h9.jpg",
-  },
-];
+const products: Produto[] = [];
 
 export default function StorePage() {
+  const [allProducts, setAllProducts] = useState<Produto[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("Todos");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sortBy, setSortBy] = useState("featured");
-  const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Produto | null>(null);
+
+  useEffect(() => {
+    fetch(API)
+      .then(r => r.json())
+      .then(data => { setAllProducts(data || []); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const categories = ["Todos", ...new Set(allProducts.map(p => p.category).filter(Boolean))];
+  const products = allProducts;
 
   const filteredProducts = products
     .filter(

@@ -36,7 +36,7 @@ export default function CanalPage() {
             <iframe
               width="100%"
               height="100%"
-              src="https://www.youtube.com/embed?listType=user_uploads&list=Jcgamerofc"
+              src="https://www.youtube.com/embed/videoseries?list=UU835FbsSjT9bDt6os1nuu7g"
               title="JCGAMER - YouTube"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
