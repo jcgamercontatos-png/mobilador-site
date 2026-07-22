@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Download, Smartphone, Shield, Gamepad2, Star } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import AdBanner from "@/components/AdBanner";
 
 const API = "https://mobilador-api.vercel.app/api/site/downloads";
 
@@ -68,7 +69,11 @@ export default function DownloadPage() {
         {loading ? (
           <div className="text-center text-[#a0a0a0] py-12">Carregando...</div>
         ) : downloads.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <>
+            <section className="max-w-7xl mx-auto">
+              <AdBanner layout="responsive" />
+            </section>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {downloads.map((item, i) => (
               <motion.div
                 key={item.id}
@@ -117,6 +122,7 @@ export default function DownloadPage() {
               </motion.div>
             ))}
           </div>
+          </>
         ) : (
           <div className="text-center text-[#a0a0a0] py-12">
             <p>Nenhum download disponível no momento.</p>

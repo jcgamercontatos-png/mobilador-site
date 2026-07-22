@@ -4,6 +4,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Providers } from "@/components/Providers";
+import AdSenseScript from "@/components/AdSenseScript";
 
 export const metadata: Metadata = {
   title: "JCGAMER | Loja Gamer & Periféricos",
@@ -35,6 +36,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
+      <head>
+        <AdSenseScript />
+        <meta name="google-adsense-account" content="ca-pub-6149055817227270" />
+      </head>
       <body className="bg-[#000000] text-[#FFFFFF] min-h-screen overflow-x-hidden">
         <Providers>
           <Navbar />

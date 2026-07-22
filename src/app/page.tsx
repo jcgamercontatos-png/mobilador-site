@@ -13,6 +13,7 @@ import {
   Play,
 } from "lucide-react";
 import Image from "next/image";
+import AdBanner from "@/components/AdBanner";
 
 type Produto = {
   id: number; name: string; category: string; price: number;
@@ -262,6 +263,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="h-px bg-gradient-to-r from-transparent via-[#e50914]/30 to-transparent" />
         </div>
+
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AdBanner layout="responsive" />
+        </section>
 
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <motion.div
