@@ -76,7 +76,7 @@ export default function ProdutosPage() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {digitalProducts.map((product, index) => (
             <motion.div
               key={product.id}
@@ -85,25 +85,25 @@ export default function ProdutosPage() {
               transition={{ delay: index * 0.1 }}
               className="bg-[#0d0d0d] border border-[#222] rounded-lg overflow-hidden group hover:border-[#e50914]/50 transition-all"
             >
-              <div className="p-8 flex flex-col items-center text-center border-b border-[#222]">
-                <div className="w-16 h-16 rounded-2xl bg-[#e50914]/10 flex items-center justify-center mb-4 border border-[#e50914]/30">
-                  <product.icon className="w-8 h-8 text-[#e50914]" />
+              <div className="p-4 flex flex-col items-center text-center border-b border-[#222]">
+                <div className="w-12 h-12 rounded-xl bg-[#e50914]/10 flex items-center justify-center mb-3 border border-[#e50914]/30">
+                  <product.icon className="w-6 h-6 text-[#e50914]" />
                 </div>
                 <span className="text-xs text-[#e50914] uppercase tracking-wider font-semibold mb-2">
                   {product.category}
                 </span>
-                <h3 className="text-xl font-bold text-white mb-2">
+                <h3 className="font-bold text-base mb-2">
                   {product.name}
                 </h3>
-                <p className="text-[#a0a0a0] text-sm leading-relaxed">
+                <p className="text-[#a0a0a0] text-xs leading-relaxed mb-3">
                   {product.description}
                 </p>
               </div>
 
-              <div className="p-6">
-                <div className="space-y-2 mb-6">
+              <div className="p-3">
+                <div className="space-y-1.5 mb-3">
                   {product.features.map((feature, i) => (
-                    <div key={i} className="flex items-center gap-2 text-sm text-[#a0a0a0]">
+                    <div key={i} className="flex items-center gap-2 text-xs text-[#a0a0a0]">
                       <div className="w-1.5 h-1.5 rounded-full bg-[#e50914]" />
                       {feature}
                     </div>
@@ -111,17 +111,17 @@ export default function ProdutosPage() {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-2xl font-bold text-white">
+                  <span className="text-lg font-bold text-white">
                     {product.price}
                   </span>
                   <a
                     href={product.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-[#e50914] text-white px-5 py-2 rounded font-semibold text-sm hover:bg-[#f40612] transition-colors flex items-center gap-1"
+                    className="bg-[#e50914] text-white px-3 py-1.5 rounded font-semibold text-xs hover:bg-[#f40612] transition-colors flex items-center gap-1"
                   >
                     {product.id === "1" ? "Baixar" : "Comprar"}
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronRight className="w-3 h-3" />
                   </a>
                 </div>
               </div>
