@@ -61,7 +61,7 @@ export default function Home() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,#1a0306_0%,#000000_55%)] z-0" />
 
       <main className="relative z-10">
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 lg:pt-16 pb-8">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 lg:pt-14 pb-6">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -111,7 +111,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.25 }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8"
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-6"
           >
             {[
               { label: "Produtos", value: "3", icon: Star },
@@ -138,12 +138,12 @@ export default function Home() {
           <div className="h-px bg-gradient-to-r from-transparent via-[#e50914]/30 to-transparent" />
         </div>
 
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-col md:flex-row items-start md:items-end justify-between mb-8"
+            className="flex flex-col md:flex-row items-start md:items-end justify-between mb-6"
           >
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#e50914]/40 bg-[#e50914]/10 mb-4">
@@ -167,7 +167,7 @@ export default function Home() {
             </Link>
           </motion.div>
 
-<div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {featuredProducts.map((product, index) => (
               <motion.div
                 key={product.id}
@@ -248,7 +248,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-center mt-10"
+            className="text-center mt-6"
           >
             <Link
               href="/loja"
@@ -268,12 +268,12 @@ export default function Home() {
           <AdBanner layout="responsive" />
         </section>
 
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-8"
+            className="text-center mb-6"
           >
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#e50914]/40 bg-[#e50914]/10 mb-4">
               <Youtube className="w-4 h-4 text-[#e50914]" />
@@ -365,7 +365,7 @@ function LatestVideos() {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="bg-[#0d0d0d] border border-[#222] rounded-lg overflow-hidden animate-pulse">
             <div className="aspect-video bg-[#1a1a1a]" />
@@ -380,7 +380,7 @@ function LatestVideos() {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {videos.slice(0, 4).map((video: any, index: number) => (
         <motion.a
           key={video.id}
