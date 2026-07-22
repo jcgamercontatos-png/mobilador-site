@@ -5,7 +5,7 @@ import { Youtube, ExternalLink } from "lucide-react";
 
 export default function CanalPage() {
   return (
-    <div className="min-h-screen pt-24 pb-16">
+    <div className="min-h-screen pt-12 lg:pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
