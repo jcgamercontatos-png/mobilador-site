@@ -39,7 +39,7 @@ export function Footer() {
             <div className="flex gap-4">
               {[
                 { icon: Youtube, href: "https://www.youtube.com/@Jcgamerofc" },
-                { icon: Instagram, href: "https://instagram.com/jcgamer" },
+                { icon: Instagram, href: "https://www.instagram.com/jcgamerofc/" },
                 { icon: MessageCircle, href: "https://wa.me/5521973199886" },
               ].map((social, i) => (
                 <a
