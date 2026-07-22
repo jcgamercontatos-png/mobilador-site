@@ -39,28 +39,28 @@ export default function DownloadPage() {
   return (
     <div className="min-h-screen pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
+          <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-bold text-white mb-4">
             Central de <span className="text-[#e50914]">Downloads</span>
           </h1>
-          <p className="text-[#a0a0a0] text-lg max-w-2xl mx-auto">
+          <p className="text-[#a0a0a0] text-base md:text-lg max-w-2xl mx-auto">
             Baixe todos os APKs, mods e ferramentas do JCGAMER.
           </p>
         </motion.div>
 
         {hero && !loading && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-12 md:mb-16">
             {[
               { icon: Smartphone, title: "Fácil de usar", desc: "Instalação rápida e interface intuitiva." },
               { icon: Shield, title: "100% Seguro", desc: "APK testado, leve e sem vírus." },
               { icon: Gamepad2, title: "Precisão Máxima", desc: "Jogue Free Fire com teclado e mouse." },
             ].map((item, i) => (
-              <motion.div key={item.title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="bg-[#0d0d0d] border border-[#222] rounded-lg p-6 text-center">
-                <div className="w-12 h-12 rounded-lg bg-[#e50914]/10 flex items-center justify-center mx-auto mb-4">
-                  <item.icon className="w-6 h-6 text-[#e50914]" />
+              <motion.div key={item.title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="bg-[#0d0d0d] border border-[#222] rounded-lg p-4 md:p-6 text-center">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-[#e50914]/10 flex items-center justify-center mx-auto mb-3 md:mb-4">
+                  <item.icon className="w-5 h-5 md:w-6 md:h-6 text-[#e50914]" />
                 </div>
-                <h3 className="text-white font-bold text-lg mb-2">{item.title}</h3>
-                <p className="text-[#a0a0a0] text-sm">{item.desc}</p>
+                <h3 className="text-white font-bold text-base md:text-lg mb-2">{item.title}</h3>
+                <p className="text-[#a0a0a0] text-sm md:text-base">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -70,10 +70,10 @@ export default function DownloadPage() {
           <div className="text-center text-[#a0a0a0] py-12">Carregando...</div>
         ) : downloads.length > 0 ? (
           <>
-            <section className="max-w-7xl mx-auto">
+            <section className="max-w-7xl mx-auto mb-8">
               <AdBanner layout="responsive" />
             </section>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {downloads.map((item, i) => (
               <motion.div
                 key={item.id}
@@ -88,22 +88,22 @@ export default function DownloadPage() {
                       src={item.image}
                       alt={item.title}
                       fill
-                      className="object-contain"
+                      className="object-contain p-2 md:p-4"
                       unoptimized
                     />
                   </div>
                 )}
-                <div className="p-6 flex flex-col flex-1 text-center">
-                  <div className="w-14 h-14 rounded-full bg-[#e50914]/10 flex items-center justify-center mx-auto mb-4">
-                    <Download className="w-7 h-7 text-[#e50914]" />
+                <div className="p-4 md:p-6 flex flex-col flex-1 text-center">
+                  <div className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-[#e50914]/10 flex items-center justify-center mx-auto mb-3 md:mb-4">
+                    <Download className="w-5 h-5 md:w-7 md:h-7 text-[#e50914]" />
                   </div>
-                  <h2 className="text-xl font-bold text-white mb-2">{item.title}</h2>
-                  <p className="text-[#a0a0a0] text-sm mb-5 flex-1">{item.description}</p>
+                  <h2 className="text-lg md:text-xl font-bold text-white mb-2">{item.title}</h2>
+                  <p className="text-[#a0a0a0] text-sm md:text-base mb-4 flex-1">{item.description}</p>
                   <a
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 bg-[#e50914] text-white px-6 py-3 rounded font-semibold hover:bg-[#f40612] transition-colors"
+                    className="inline-flex items-center justify-center gap-2 bg-[#e50914] text-white px-4 md:px-6 py-2 md:py-3 rounded font-semibold hover:bg-[#f40612] transition-colors"
                   >
                     <Download className="w-4 h-4" />
                     Baixar APK
@@ -121,7 +121,7 @@ export default function DownloadPage() {
                 </div>
               </motion.div>
             ))}
-          </div>
+            </div>
           </>
         ) : (
           <div className="text-center text-[#a0a0a0] py-12">
@@ -129,7 +129,7 @@ export default function DownloadPage() {
           </div>
         )}
 
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="text-center mt-12">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="text-center mt-8 md:mt-12">
           <Link href="/" className="text-[#a0a0a0] hover:text-white transition-colors text-sm">← Voltar para o início</Link>
         </motion.div>
       </div>
