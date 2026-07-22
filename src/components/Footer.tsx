@@ -16,7 +16,7 @@ const footerLinks = {
     { label: "Download", href: "/download" },
   ],
   suporte: [
-    { label: "Contato", href: "mailto:contato@jcgamer.com.br" },
+    { label: "jcgamercontatos@gmail.com", href: "mailto:jcgamercontatos@gmail.com" },
     { label: "WhatsApp", href: "https://wa.me/5521973199886" },
   ],
 };
@@ -80,7 +80,7 @@ export function Footer() {
 <div className="mt-8 pt-6 border-t border-[#333333] flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-xs text-[#777777]">
             <Mail className="w-3 h-3" />
-            <a href="mailto:contato@jcgamer.com.br" className="text-[#777777]">contato@jcgamer.com.br</a>
+            <a href="mailto:jcgamercontatos@gmail.com" className="text-[#777777] hover:text-[#ffffff] transition-colors">jcgamercontatos@gmail.com</a>
           </div>
           <p className="text-xs text-[#777777] text-center">
             © 2026 JCGAMER. Todos os direitos reservados.
