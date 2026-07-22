@@ -7,7 +7,7 @@ import {
   MessageCircle,
   Mail,
 } from "lucide-react";
-import { VisitorCounter } from "@/components/VisitorCounter";
+
 
 const footerLinks = {
   conteudo: [
@@ -15,10 +15,10 @@ const footerLinks = {
     { label: "Loja", href: "/loja" },
     { label: "Download", href: "/download" },
   ],
-  suporte: [
-    { label: "Contato", href: "mailto:contato@jcgamer.com.br" },
-    { label: "WhatsApp", href: "https://wa.me/5521973199886" },
-  ],
+suporte: [
+      { label: "Contato", href: "mailto:contato@jcgamer.com.br" },
+      { label: "WhatsApp", href: "https://wa.me/5521973199886" },
+    ],
 };
 
 export function Footer() {
@@ -81,8 +81,7 @@ export function Footer() {
           <div className="flex items-center gap-2 text-xs text-[#777777]">
             <Mail className="w-3 h-3" />
             <span>contato@jcgamer.com.br</span>
-         </div>
-          <VisitorCounter />
+          </div>
           <p className="text-xs text-[#777777] text-center">
             © 2026 JCGAMER. Todos os direitos reservados.
          </p>
