@@ -7,6 +7,7 @@ import {
   MessageCircle,
   Mail,
 } from "lucide-react";
+import { VisitorCounter } from "@/components/VisitorCounter";
 
 const footerLinks = {
   conteudo: [
@@ -80,11 +81,12 @@ export function Footer() {
           <div className="flex items-center gap-2 text-xs text-[#777777]">
             <Mail className="w-3 h-3" />
             <span>contato@jcgamer.com.br</span>
-          </div>
+         </div>
+          <VisitorCounter />
           <p className="text-xs text-[#777777] text-center">
             © 2026 JCGAMER. Todos os direitos reservados.
-          </p>
-        </div>
+         </p>
+       </div>
       </div>
     </footer>
   );
