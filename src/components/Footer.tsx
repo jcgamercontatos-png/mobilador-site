@@ -64,12 +64,23 @@ export function Footer() {
               <ul className="space-y-2">
                 {links.map((link) => (
                   <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-[#CCCCCC] hover:text-[#ffffff] transition-colors"
-                    >
-                      {link.label}
-                    </Link>
+                    {link.href.startsWith("mailto:") || link.href.startsWith("http") ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-[#CCCCCC] hover:text-[#ffffff] transition-colors"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-sm text-[#CCCCCC] hover:text-[#ffffff] transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -78,7 +89,7 @@ export function Footer() {
         </div>
 
 <div className="mt-8 pt-6 border-t border-[#333333] flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-xs text-[#777777]">
+<div className="flex items-center gap-2 text-xs text-[#777777]">
             <Mail className="w-3 h-3" />
             <a href="mailto:jcgamercontatos@gmail.com" className="text-[#777777] hover:text-[#ffffff] transition-colors">jcgamercontatos@gmail.com</a>
           </div>
