@@ -167,7 +167,7 @@ export default function Home() {
             </Link>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {featuredProducts.map((product, index) => (
               <motion.div
                 key={product.id}
@@ -177,7 +177,7 @@ export default function Home() {
                 transition={{ delay: index * 0.08 }}
                 className="bg-[#0d0d0d] border border-[#222] rounded-lg overflow-hidden group hover:border-[#e50914]/50 transition-all"
               >
-                <div className="relative aspect-square bg-[#111] p-8 flex items-center justify-center">
+                <div className="relative aspect-square bg-[#111] p-4 flex items-center justify-center">
                   {product.badge && (
                     <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#e50914] text-white text-xs font-bold">
                       {product.badge}
@@ -187,8 +187,8 @@ export default function Home() {
                     <Image
                       src={product.image}
                       alt={product.name}
-                      width={140}
-                      height={140}
+                      width={100}
+                      height={100}
                       className="object-contain opacity-80 group-hover:opacity-100 transition-opacity"
                       unoptimized
                     />
@@ -198,14 +198,14 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
                     <button
                       onClick={() => buyProduct(product.name, product.price)}
-                      className="bg-[#e50914] text-white text-xs py-2 px-6 rounded font-semibold hover:bg-[#f40612] transition-colors"
+                      className="bg-[#e50914] text-white text-xs py-1.5 px-4 rounded font-semibold hover:bg-[#f40612] transition-colors"
                     >
                       Comprar
                     </button>
                   </div>
                 </div>
 
-                <div className="p-5">
+                <div className="p-3">
                   <p className="text-xs text-[#e50914] uppercase tracking-wider mb-1">
                     {product.category}
                   </p>
