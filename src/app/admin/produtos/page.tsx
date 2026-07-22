@@ -221,7 +221,8 @@ export default function AdminProdutosPage() {
 
   const getStockStatus = (stock: number) => {
     if (stock === 0) return { label: "Esgotado", color: "text-red-400 bg-red-400/10" };
-    if (stock <= 5) return { label: `${stock} unidade${stock === 1 ? "" : "s"} (Baixo)`, color: "text-yellow-400 bg-yellow-400/10" };
+    if (stock === 1) return { label: "Última unidade disponível", color: "text-yellow-400 bg-yellow-400/10" };
+    if (stock <= 5) return { label: `${stock} unidades (Baixo)`, color: "text-yellow-400 bg-yellow-400/10" };
     return { label: `${stock} unidades`, color: "text-neon-green bg-neon-green/10" };
   };
 

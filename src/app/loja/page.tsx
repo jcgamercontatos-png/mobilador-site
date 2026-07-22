@@ -14,7 +14,10 @@ import {
   Headphones,
   PackageCheck,
   ChevronRight,
+  Plus,
+  Minus,
 } from "lucide-react";
+import { useCart } from "@/lib/cart";
 
 const API = "https://mobilador-api.vercel.app/api/site/products";
 
@@ -24,16 +27,18 @@ type Produto = {
   badge: string; short_desc: string; description: string;
   specs: string[]; image: string; is_active: boolean;
   stock?: number;
+  skus?: Array<{ id: string; name: string; price: number; stock: number }>;
 };
 
 export default function StorePage() {
-  const [allProducts, setAllProducts] = useState<Produto[]>([]);
+  const [allProducts, setAllProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("Todos");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sortBy, setSortBy] = useState("featured");
-  const [selectedProduct, setSelectedProduct] = useState<Produto | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
+  const { addToCart, isCartOpen, openCart, closeCart } = useCart();
 
   useEffect(() => {
     fetch(API)
@@ -57,15 +62,28 @@ export default function StorePage() {
       return 0;
     });
 
-  const buyProduct = (product: typeof allProducts[0]) => {
+const handleAddToCart = (product: any, quantity: number = 1) => {
     if (product.stock !== undefined && product.stock <= 0) {
       alert("Produto esgotado!");
       return;
     }
-    const msg = encodeURIComponent(
-      `Olá! Vim pelo site JCGAMER e quero comprar um periférico: ${product.name} - R$ ${product.price.toFixed(2)}`
-    );
-    window.open(`https://wa.me/5521973199886?text=${msg}`, "_blank");
+    if (quantity > (product.stock || 999)) {
+      alert(`Quantidade disponível: ${product.stock || 0} unidades`);
+      return;
+    }
+    const added = addToCart({
+      id: product.id.toString(),
+      productId: product.id.toString(),
+      name: product.name,
+      price: product.price,
+      originalPrice: product.original_price,
+      image: product.image,
+      category: product.category,
+      stock: product.stock,
+    }, quantity);
+    if (added) {
+      closeCart();
+    }
   };
 
   return (
@@ -239,7 +257,9 @@ export default function StorePage() {
                           )}
                           {(product.stock !== undefined && product.stock > 0) && (
                             <span className="text-xs text-neon-green bg-neon-green/10 px-2 py-1 rounded">
-                              {product.stock} {product.stock === 1 ? "unidade" : "unidades"} disponíveis
+                              {product.stock === 1
+                                ? "Última unidade disponível"
+                                : `${product.stock} unidades disponíveis`}
                             </span>
                           )}
                           {(product.stock !== undefined && product.stock === 0) && (
@@ -306,7 +326,7 @@ export default function StorePage() {
                             </span>
                           </div>
                           <button
-                            onClick={() => buyProduct(product)}
+                            onClick={() => handleAddToCart(product)}
                             className="btn-neon text-xs py-2 px-4"
                           >
                             Comprar

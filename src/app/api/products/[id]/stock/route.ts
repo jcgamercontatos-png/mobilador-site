@@ -59,13 +59,12 @@ export async function POST(
       await tx.stockMovement.create({
         data: {
           productId: id,
-          previousStock: product.stock,
-          newStock,
-          quantityChanged,
-          type: type as any,
-          reason: reason || "Ajuste manual",
-          orderId,
-          userId: (session.user as any).id,
+          quantidadeAnterior: product.stock,
+          quantidadeFinal: newStock,
+          quantidadeAlterada: quantityChanged,
+          motivo: reason || "Ajuste manual",
+          pedidoId: orderId,
+          usuarioAdminId: (session.user as any).id,
         },
       });
 

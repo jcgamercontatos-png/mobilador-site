@@ -252,9 +252,9 @@ export default function Home() {
                     )}
                     {product.stock !== undefined && product.stock > 0 && (
                       <span className="text-xs text-neon-green bg-neon-green/10 px-2 py-1 rounded">
-                        {product.stock}{" "}
-                        {product.stock === 1 ? "unidade" : "unidades"}{" "}
-                        disponíveis
+                        {product.stock === 1
+                          ? "Última unidade disponível"
+                          : `${product.stock} unidades disponíveis`}
                       </span>
                     )}
                     {product.stock !== undefined && product.stock === 0 && (

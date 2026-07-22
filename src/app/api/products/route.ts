@@ -47,6 +47,17 @@ export async function GET(request: NextRequest) {
         take,
         skip,
         include: {
+          skus: {
+            where: { active: true },
+            select: {
+              id: true,
+              sku: true,
+              name: true,
+              price: true,
+              stock: true,
+              attributes: true,
+            },
+          },
           _count: {
             select: { reviews: true, orderItems: true },
           },
@@ -122,12 +133,11 @@ export async function POST(request: NextRequest) {
       await prisma.stockMovement.create({
         data: {
           productId: product.id,
-          quantityChanged: parseInt(stock),
-          previousStock: 0,
-          newStock: parseInt(stock),
-          type: "ADD",
-          reason: "Cadastro inicial do produto",
-          userId: (session?.user as any)?.id,
+          quantidadeAlterada: parseInt(stock),
+          quantidadeAnterior: 0,
+          quantidadeFinal: parseInt(stock),
+          motivo: "Cadastro inicial do produto",
+          usuarioAdminId: (session?.user as any)?.id,
         },
       });
     }

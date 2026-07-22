@@ -57,7 +57,7 @@ async function handlePaymentApproved(externalReference: string, paymentId: strin
   try {
     const order = await prisma.order.findFirst({
       where: { paymentId },
-      include: { items: { include: { product: true } } },
+      include: { items: { include: { product: true, sku: true } } },
     });
 
     if (!order) {
@@ -72,37 +72,62 @@ async function handlePaymentApproved(externalReference: string, paymentId: strin
 
     await prisma.$transaction(async (tx) => {
       for (const item of order.items) {
-        const product = await tx.product.findUnique({
-          where: { id: item.productId },
-        });
+        let product;
+        let sku;
+        let stockToUpdate;
 
-        if (!product) {
-          throw new Error(`Produto ${item.productId} não encontrado`);
+        if (item.skuId) {
+          sku = await tx.productSKU.findUnique({
+            where: { id: item.skuId },
+          });
+          if (!sku) {
+            throw new Error(`SKU ${item.skuId} não encontrado`);
+          }
+          if (sku.stock < item.quantity) {
+            throw new Error(
+              `Estoque insuficiente para ${sku.name}. Disponível: ${sku.stock}, Solicitado: ${item.quantity}`
+            );
+          }
+          stockToUpdate = sku.stock;
+        } else {
+          product = await tx.product.findUnique({
+            where: { id: item.productId },
+          });
+          if (!product) {
+            throw new Error(`Produto ${item.productId} não encontrado`);
+          }
+          if (product.stock < item.quantity) {
+            throw new Error(
+              `Estoque insuficiente para ${product.name}. Disponível: ${product.stock}, Solicitado: ${item.quantity}`
+            );
+          }
+          stockToUpdate = product.stock;
         }
 
-        if (product.stock < item.quantity) {
-          throw new Error(
-            `Estoque insuficiente para ${product.name}. Disponível: ${product.stock}, Solicitado: ${item.quantity}`
-          );
+        const newStock = stockToUpdate - item.quantity;
+        const itemName = sku ? sku.name : product?.name || item.productId;
+
+        if (item.skuId) {
+          await tx.productSKU.update({
+            where: { id: item.skuId },
+            data: { stock: newStock },
+          });
+        } else {
+          await tx.product.update({
+            where: { id: item.productId },
+            data: { stock: newStock },
+          });
         }
-
-        const newStock = product.stock - item.quantity;
-
-        await tx.product.update({
-          where: { id: product.id },
-          data: { stock: newStock },
-        });
 
         await tx.stockMovement.create({
           data: {
-            productId: product.id,
-            previousStock: product.stock,
-            newStock,
-            quantityChanged: -item.quantity,
-            type: "REMOVE",
-            reason: `Venda - Pedido ${order.id}`,
-            orderId: order.id,
-            userId: order.userId,
+            productId: item.productId,
+            quantidadeAnterior: stockToUpdate,
+            quantidadeAlterada: -item.quantity,
+            quantidadeFinal: newStock,
+            motivo: `Venda - Pedido ${order.id}`,
+            pedidoId: order.id,
+            usuarioAdminId: order.userId,
           },
         });
       }

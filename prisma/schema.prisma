@@ -94,6 +94,25 @@ model Product {
   orderItems     OrderItem[]
   reviews        Review[]
   stockMovements StockMovement[]
+  skus           ProductSKU[]
+}
+
+model ProductSKU {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku       String   @unique
+  name      String
+  price     Float
+  stock     Int      @default(0)
+  attributes Json?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orderItems OrderItem[]
+
+  @@index([productId])
 }
 
 model Order {
@@ -124,14 +143,16 @@ enum OrderStatus {
 }
 
 model OrderItem {
-  id        String  @id @default(cuid())
+  id        String     @id @default(cuid())
   orderId   String
   productId String
+  skuId     String?
   quantity  Int
   price     Float
 
-  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id])
+  order   Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product    @relation(fields: [productId], references: [id])
+  sku     ProductSKU? @relation(fields: [skuId], references: [id])
 }
 
 model Course {
@@ -230,29 +251,22 @@ model Comment {
 }
 
 model StockMovement {
-  id             String           @id @default(cuid())
-  productId      String
-  previousStock  Int
-  newStock       Int
-  quantityChanged Int
-  type           StockMovementType
-  reason         String
-  orderId        String?
-  userId         String
-  createdAt      DateTime         @default(now())
+  id               String   @id @default(cuid())
+  productId        String
+  quantidadeAnterior Int
+  quantidadeAlterada Int
+  quantidadeFinal    Int
+  motivo           String
+  pedidoId         String?
+  usuarioAdminId   String?
+  createdAt        DateTime @default(now())
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id])
-  order   Order?  @relation(fields: [orderId], references: [id])
+  user    User?   @relation(fields: [usuarioAdminId], references: [id])
+  order   Order?  @relation(fields: [pedidoId], references: [id])
 
   @@index([productId])
   @@index([createdAt])
-}
-
-enum StockMovementType {
-  ADD
-  REMOVE
-  SET
 }
 
 model CommunityProfile {
