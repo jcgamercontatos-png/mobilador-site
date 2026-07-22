@@ -268,11 +268,11 @@ export default function Home() {
             ))}
           </div>
 
-          <motion.div
+<motion.div
             initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mt-4"
+            className="text-center mt-2"
           >
             <Link
               href="/loja"
@@ -288,16 +288,16 @@ export default function Home() {
           <div className="h-px bg-gradient-to-r from-transparent via-[#e50914]/30 to-transparent" />
         </div>
 
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
           <AdBanner layout="responsive" />
         </section>
 
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-5"
+            className="text-center mb-3"
           >
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#e50914]/40 bg-[#e50914]/10 mb-3">
               <Youtube className="w-4 h-4 text-[#e50914]" />
@@ -319,7 +319,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-center mt-4"
+            className="text-center mt-3"
           >
             <a
               href="https://www.youtube.com/@Jcgamerofc/videos"
@@ -338,7 +338,7 @@ export default function Home() {
           <div className="h-px bg-gradient-to-r from-transparent via-[#e50914]/30 to-transparent" />
         </div>
 
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
