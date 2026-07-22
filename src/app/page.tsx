@@ -284,14 +284,6 @@ export default function Home() {
           </motion.div>
         </section>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="h-px bg-gradient-to-r from-transparent via-[#e50914]/30 to-transparent" />
-        </div>
-
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-          <AdBanner layout="responsive" />
-        </section>
-
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -315,11 +307,11 @@ export default function Home() {
 
           <LatestVideos />
 
-          <motion.div
+<motion.div
             initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mt-3"
+            className="text-center mt-1"
           >
             <a
               href="https://www.youtube.com/@Jcgamerofc/videos"
