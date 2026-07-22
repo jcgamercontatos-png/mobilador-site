@@ -54,45 +54,45 @@ const digitalProducts = [
 
 export default function ProdutosPage() {
   return (
-    <div className="min-h-screen pt-12 lg:pt-16 pb-8">
+    <div className="min-h-screen pt-8 lg:pt-12 pb-6 lg:pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
+          className="text-center mb-8 lg:mb-10"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#e50914]/40 bg-[#e50914]/10 mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#e50914]/40 bg-[#e50914]/10 mb-3">
             <Star className="w-4 h-4 text-[#e50914]" />
             <span className="text-xs font-semibold tracking-wider uppercase text-[#e50914]">
               Produtos Digitais
             </span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">
+          <h1 className="text-[clamp(2rem,4vw,3rem)] font-bold text-white mb-2">
             Nossos <span className="text-[#e50914]">Produtos</span>
           </h1>
-          <p className="text-[#a0a0a0] text-lg max-w-2xl mx-auto">
+          <p className="text-[#a0a0a0] text-sm md:text-base max-w-2xl mx-auto">
             Apps, configurações e pacotes criados pela JCGAMER para elevar seu
             desempenho no Free Fire.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
           {digitalProducts.map((product, index) => (
             <motion.div
               key={product.id}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
+              transition={{ delay: index * 0.08 }}
               className="bg-[#0d0d0d] border border-[#222] rounded-lg overflow-hidden group hover:border-[#e50914]/50 transition-all"
             >
-              <div className="p-4 flex flex-col items-center text-center border-b border-[#222]">
-                <div className="w-12 h-12 rounded-xl bg-[#e50914]/10 flex items-center justify-center mb-3 border border-[#e50914]/30">
-                  <product.icon className="w-6 h-6 text-[#e50914]" />
+              <div className="p-3 flex flex-col items-center text-center border-b border-[#222]">
+                <div className="w-10 h-10 rounded-xl bg-[#e50914]/10 flex items-center justify-center mb-3 border border-[#e50914]/30">
+                  <product.icon className="w-5 h-5 text-[#e50914]" />
                 </div>
                 <span className="text-xs text-[#e50914] uppercase tracking-wider font-semibold mb-2">
                   {product.category}
                 </span>
-                <h3 className="font-bold text-base mb-2">
+                <h3 className="font-bold text-sm mb-2">
                   {product.name}
                 </h3>
                 <p className="text-[#a0a0a0] text-xs leading-relaxed mb-3">
@@ -111,7 +111,7 @@ export default function ProdutosPage() {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-lg font-bold text-white">
+                  <span className="text-base font-bold text-white">
                     {product.price}
                   </span>
                   <a
@@ -132,8 +132,8 @@ export default function ProdutosPage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="text-center mt-12"
+          transition={{ delay: 0.3 }}
+          className="text-center mt-8 lg:mt-10"
         >
           <Link
             href="/loja"
