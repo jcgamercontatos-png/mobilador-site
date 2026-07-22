@@ -28,7 +28,9 @@ async function readState(): Promise<VisitState> {
   try {
     const result = await get(BLOB_PATH, { access: "public" });
     if (!result) return { total: 0, visitors: {} };
-    const res = await fetch(result.url, { cache: "no-store" });
+    const downloadUrl = result.url || (result as any).blob?.downloadUrl;
+    if (!downloadUrl) return { total: 0, visitors: {} };
+    const res = await fetch(downloadUrl, { cache: "no-store" });
     if (!res.ok) return { total: 0, visitors: {} };
     const text = await res.text();
     const parsed = JSON.parse(text) as VisitState;
