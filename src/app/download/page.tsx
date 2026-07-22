@@ -83,12 +83,12 @@ export default function DownloadPage() {
                 className="bg-[#0d0d0d] border border-[#222] rounded-lg overflow-hidden hover:border-[#e50914]/50 transition-colors flex flex-col"
               >
                 {item.image && (
-                  <div className="relative w-full h-48 bg-[#1a1a1a]">
+                  <div className="relative w-full bg-[#1a1a1a]" style={{ aspectRatio: "1 / 1" }}>
                     <Image
                       src={item.image}
                       alt={item.title}
                       fill
-                      className="object-cover"
+                      className="object-contain"
                       unoptimized
                     />
                   </div>
