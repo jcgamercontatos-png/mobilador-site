@@ -1,75 +1,140 @@
 import { NextRequest, NextResponse } from "next/server";
-
-const products = [
-  {
-    id: "1",
-    name: "Mouse Gamer Pro X1",
-    slug: "mouse-gamer-pro-x1",
-    description: "Mouse gamer com sensor óptico de 8000 DPI, 6 botões programáveis e RGB.",
-    price: 149.9,
-    originalPrice: 199.9,
-    category: "Mouse",
-    badge: "-25%",
-    stock: 50,
-    featured: true,
-    rating: 4.8,
-    reviewCount: 342,
-  },
-  {
-    id: "2",
-    name: "Teclado Mecânico RGB K7",
-    slug: "teclado-mecanico-rgb-k7",
-    description: "Teclado mecânico com switches blue, iluminação RGB e layout compacto.",
-    price: 249.9,
-    originalPrice: 349.9,
-    category: "Teclados",
-    badge: "Mais Vendido",
-    stock: 30,
-    featured: true,
-    rating: 4.9,
-    reviewCount: 521,
-  },
-];
+import { getServerSession } from "next-auth";
+import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const category = searchParams.get("category");
-  const search = searchParams.get("search");
-  const sort = searchParams.get("sort");
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const category = searchParams.get("category");
+    const search = searchParams.get("search");
+    const sort = searchParams.get("sort");
+    const featured = searchParams.get("featured");
+    const active = searchParams.get("active") !== "false";
+    const limit = searchParams.get("limit");
+    const page = searchParams.get("page");
 
-  let filtered = [...products];
+    const where: any = { active };
+    
+    if (category && category !== "Todos") {
+      where.category = category;
+    }
+    
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { description: { contains: search, mode: "insensitive" } },
+      ];
+    }
+    
+    if (featured === "true") {
+      where.featured = true;
+    }
 
-  if (category && category !== "Todos") {
-    filtered = filtered.filter((p) => p.category === category);
+    let orderBy: any = { createdAt: "desc" };
+    if (sort === "price-low") orderBy = { price: "asc" };
+    else if (sort === "price-high") orderBy = { price: "desc" };
+    else if (sort === "rating") orderBy = { rating: "desc" };
+    else if (sort === "stock-low") orderBy = { stock: "asc" };
+
+    const take = limit ? parseInt(limit) : undefined;
+    const skip = page && limit ? (parseInt(page) - 1) * parseInt(limit) : undefined;
+
+    const [products, total] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        orderBy,
+        take,
+        skip,
+        include: {
+          _count: {
+            select: { reviews: true, orderItems: true },
+          },
+        },
+      }),
+      prisma.product.count({ where }),
+    ]);
+
+    return NextResponse.json({ 
+      products, 
+      total,
+      page: page ? parseInt(page) : 1,
+      totalPages: take ? Math.ceil(total / take) : 1,
+    });
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return NextResponse.json({ error: "Erro ao buscar produtos" }, { status: 500 });
   }
-
-  if (search) {
-    filtered = filtered.filter((p) =>
-      p.name.toLowerCase().includes(search.toLowerCase())
-    );
-  }
-
-  if (sort === "price-low") {
-    filtered.sort((a, b) => a.price - b.price);
-  } else if (sort === "price-high") {
-    filtered.sort((a, b) => b.price - a.price);
-  } else if (sort === "rating") {
-    filtered.sort((a, b) => b.rating - a.rating);
-  }
-
-  return NextResponse.json({ products: filtered });
 }
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || (session.user as any).role !== "ADMIN") {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
 
-  const newProduct = {
-    id: String(products.length + 1),
-    ...body,
-    slug: body.name.toLowerCase().replace(/\s+/g, "-"),
-    rating: 0,
-    reviewCount: 0,
-  };
+    const body = await request.json();
+    const {
+      name,
+      description,
+      price,
+      originalPrice,
+      category,
+      subcategory,
+      images,
+      badge,
+      stock,
+      featured,
+    } = body;
 
-  return NextResponse.json({ product: newProduct }, { status: 201 });
+    if (!name || price === undefined) {
+      return NextResponse.json({ error: "Nome e preço são obrigatórios" }, { status: 400 });
+    }
+
+    if (stock !== undefined && (isNaN(parseInt(stock)) || parseInt(stock) < 0)) {
+      return NextResponse.json({ error: "Estoque deve ser um número inteiro >= 0" }, { status: 400 });
+    }
+
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+    const existingSlug = await prisma.product.findUnique({ where: { slug } });
+    const finalSlug = existingSlug ? `${slug}-${Date.now()}` : slug;
+
+    const product = await prisma.product.create({
+      data: {
+        name,
+        slug: finalSlug,
+        description,
+        price: parseFloat(price),
+        originalPrice: originalPrice ? parseFloat(originalPrice) : null,
+        category,
+        subcategory,
+        images: images || [],
+        badge,
+        stock: parseInt(stock) || 0,
+        featured: featured || false,
+      },
+    });
+
+    if (stock && parseInt(stock) > 0) {
+      const session = await getServerSession(authOptions);
+      await prisma.stockMovement.create({
+        data: {
+          productId: product.id,
+          quantityChanged: parseInt(stock),
+          previousStock: 0,
+          newStock: parseInt(stock),
+          type: "ADD",
+          reason: "Cadastro inicial do produto",
+          userId: (session?.user as any)?.id,
+        },
+      });
+    }
+
+    return NextResponse.json({ product }, { status: 201 });
+  } catch (error) {
+    console.error("Error creating product:", error);
+    return NextResponse.json({ error: "Erro ao criar produto" }, { status: 500 });
+  }
 }

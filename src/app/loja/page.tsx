@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import {
   ShoppingBag,
   Search,
@@ -12,17 +13,18 @@ import {
   ShieldCheck,
   Headphones,
   PackageCheck,
+  ChevronRight,
 } from "lucide-react";
 
 const API = "https://mobilador-api.vercel.app/api/site/products";
+
 type Produto = {
   id: number; name: string; category: string; price: number;
   original_price: number; rating: number; reviews: number;
   badge: string; short_desc: string; description: string;
   specs: string[]; image: string; is_active: boolean;
+  stock?: number;
 };
-
-const products: Produto[] = [];
 
 export default function StorePage() {
   const [allProducts, setAllProducts] = useState<Produto[]>([]);
@@ -41,9 +43,8 @@ export default function StorePage() {
   }, []);
 
   const categories = ["Todos"].concat(Array.from(new Set(allProducts.map(p => p.category).filter(Boolean))));
-  const products = allProducts;
 
-  const filteredProducts = products
+  const filteredProducts = allProducts
     .filter(
       (p) =>
         (selectedCategory === "Todos" || p.category === selectedCategory) &&
@@ -56,7 +57,11 @@ export default function StorePage() {
       return 0;
     });
 
-  const buyProduct = (product: typeof products[0]) => {
+  const buyProduct = (product: typeof allProducts[0]) => {
+    if (product.stock !== undefined && product.stock <= 0) {
+      alert("Produto esgotado!");
+      return;
+    }
     const msg = encodeURIComponent(
       `Olá! Vim pelo site JCGAMER e quero comprar um periférico: ${product.name} - R$ ${product.price.toFixed(2)}`
     );
@@ -154,7 +159,7 @@ export default function StorePage() {
             <div
               className={
                 viewMode === "grid"
-                  ? "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"
+                  ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
                   : "space-y-4"
               }
             >
@@ -232,6 +237,16 @@ export default function StorePage() {
                               R$ {product.original_price.toFixed(2)}
                             </span>
                           )}
+                          {(product.stock !== undefined && product.stock > 0) && (
+                            <span className="text-xs text-neon-green bg-neon-green/10 px-2 py-1 rounded">
+                              {product.stock} {product.stock === 1 ? "unidade" : "unidades"} disponíveis
+                            </span>
+                          )}
+                          {(product.stock !== undefined && product.stock === 0) && (
+                            <span className="text-xs text-red-400 bg-red-400/10 px-2 py-1 rounded">
+                              Esgotado
+                            </span>
+                          )}
                         </div>
                       </div>
                     </>
@@ -303,155 +318,24 @@ export default function StorePage() {
                 </motion.div>
               ))}
             </div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-center mt-10"
+            >
+              <Link
+                href="/loja"
+                className="inline-flex items-center gap-2 border border-neon-blue/50 text-neon-blue px-6 py-2.5 rounded font-semibold hover:bg-neon-blue/10 transition-colors text-sm"
+              >
+                Ver Loja Completa
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
           </div>
         </div>
       </div>
-
-      {/* Modal de Detalhes do Produto */}
-      <AnimatePresence>
-        {selectedProduct && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
-            onClick={() => setSelectedProduct(null)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 30 }}
-              className="glass-card max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-white/10">
-                <div>
-                  <p className="text-xs text-neon-blue uppercase tracking-wider mb-1">
-                    {selectedProduct.category}
-                  </p>
-                  <h2 className="font-orbitron font-bold text-2xl text-white">
-                    {selectedProduct.name}
-                  </h2>
-                </div>
-                <button
-                  onClick={() => setSelectedProduct(null)}
-                  className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
-                >
-                  <X className="w-5 h-5 text-gray-400" />
-                </button>
-              </div>
-
-              {/* Content */}
-              <div className="grid md:grid-cols-2 gap-0">
-                {/* Imagem */}
-                <div className="bg-dark-700 p-8 flex items-center justify-center relative min-h-[300px]">
-                  {selectedProduct.badge && (
-                    <div className="absolute top-4 left-4 px-4 py-2 rounded-full bg-neon-blue text-dark-900 text-sm font-bold">
-                      {selectedProduct.badge}
-                    </div>
-                  )}
-                  {selectedProduct.image ? (
-                    <Image
-                      src={selectedProduct.image}
-                      alt={selectedProduct.name}
-                      width={300}
-                      height={300}
-                      className="object-contain"
-                      unoptimized
-                    />
-                  ) : (
-                    <ShoppingBag className="w-24 h-24 text-neon-blue/20" />
-                  )}
-                </div>
-
-                {/* Info */}
-                <div className="p-6 flex flex-col">
-                  {/* Avaliação */}
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="flex items-center gap-1">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i < Math.floor(selectedProduct.rating)
-                              ? "text-yellow-400 fill-yellow-400"
-                              : "text-gray-600"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-sm text-gray-400">
-                      {selectedProduct.rating} ({selectedProduct.reviews} avaliações)
-                    </span>
-                  </div>
-
-                  {/* Preço */}
-                  <div className="flex items-center gap-4 mb-6">
-                    <span className="font-orbitron font-bold text-3xl text-gradient">
-                      R$ {selectedProduct.price.toFixed(2)}
-                    </span>
-                    {selectedProduct.original_price && (
-                      <span className="text-gray-500 text-lg line-through">
-                        R$ {selectedProduct.original_price.toFixed(2)}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Descrição */}
-                  <p className="text-gray-300 text-sm leading-relaxed mb-6">
-                    {selectedProduct.description}
-                  </p>
-
-                  {/* Especificações */}
-                  <div className="mb-6">
-                    <h4 className="font-orbitron text-xs font-semibold mb-3 text-gray-300 uppercase tracking-wider">
-                      Especificações
-                    </h4>
-                    <ul className="space-y-2">
-                      {selectedProduct.specs.map((spec, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-gray-400">
-                          <span className="text-neon-blue mt-0.5">•</span>
-                          {spec}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Vantagens */}
-                  <div className="grid grid-cols-2 gap-3 mb-6">
-                    <div className="flex items-center gap-2 text-xs text-gray-400">
-                      <Truck className="w-4 h-4 text-neon-blue" />
-                      Entrega rápida
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-400">
-                      <ShieldCheck className="w-4 h-4 text-neon-blue" />
-                      Garantia inclusa
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-400">
-                      <Headphones className="w-4 h-4 text-neon-blue" />
-                      Suporte via WhatsApp
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-400">
-                      <PackageCheck className="w-4 h-4 text-neon-blue" />
-                      Pagamento seguro
-                    </div>
-                  </div>
-
-                  {/* Botão Comprar */}
-                  <button
-                    onClick={() => buyProduct(selectedProduct)}
-                    className="btn-neon w-full py-3 text-base flex items-center justify-center gap-2"
-                  >
-                    <ShoppingBag className="w-5 h-5" />
-                    Comprar via WhatsApp
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

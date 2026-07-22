@@ -27,6 +27,7 @@ model User {
   communityProfiles CommunityProfile[]
   enrollments      Enrollment[]
   packPurchases    PackPurchase[]
+  stockMovements   StockMovement[]
 }
 
 model Account {
@@ -90,8 +91,9 @@ model Product {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  orderItems OrderItem[]
-  reviews    Review[]
+  orderItems     OrderItem[]
+  reviews        Review[]
+  stockMovements StockMovement[]
 }
 
 model Order {
@@ -103,11 +105,13 @@ model Order {
   paymentId     String?
   couponCode    String?
   discount      Float       @default(0)
+  stockDeducted Boolean     @default(false)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 
   user  User        @relation(fields: [userId], references: [id])
   items OrderItem[]
+  stockMovements StockMovement[]
 }
 
 enum OrderStatus {
@@ -223,6 +227,32 @@ model Comment {
   user User @relation(fields: [userId], references: [id])
 
   @@index([postId])
+}
+
+model StockMovement {
+  id             String           @id @default(cuid())
+  productId      String
+  previousStock  Int
+  newStock       Int
+  quantityChanged Int
+  type           StockMovementType
+  reason         String
+  orderId        String?
+  userId         String
+  createdAt      DateTime         @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id])
+  order   Order?  @relation(fields: [orderId], references: [id])
+
+  @@index([productId])
+  @@index([createdAt])
+}
+
+enum StockMovementType {
+  ADD
+  REMOVE
+  SET
 }
 
 model CommunityProfile {

@@ -61,16 +61,16 @@ export default function Home() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,#1a0306_0%,#000000_55%)] z-0" />
 
       <main className="relative z-10">
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 lg:pt-14 pb-6">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 lg:pt-12 pb-6">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="max-w-3xl"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#e50914]/40 bg-[#e50914]/10 mb-6">
-              <Youtube className="w-4 h-4 text-[#e50914]" />
-              <span className="text-xs font-semibold tracking-widest uppercase text-[#e50914]">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full border border-[#e50914]/40 bg-[#e50914]/10 mb-5 overflow-hidden">
+              <Youtube className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#e50914] flex-shrink-0" />
+              <span className="text-xs font-semibold tracking-widest uppercase text-[#e50914] whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
                 @Jcgamerofc
               </span>
             </div>
@@ -111,7 +111,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.25 }}
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-6"
+            className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5"
           >
             {[
               { label: "Produtos", value: "3", icon: Star },
@@ -121,12 +121,12 @@ export default function Home() {
             ].map((s) => (
               <div
                 key={s.label}
-                className="relative bg-[#0d0d0d] border border-[#222] rounded-md p-5 overflow-hidden"
+                className="relative bg-[#0d0d0d] border border-[#222] rounded-md p-4 sm:p-5 overflow-hidden min-w-0"
               >
                 <div className="absolute top-0 left-0 w-[3px] h-full bg-[#e50914]" />
-                <s.icon className="w-5 h-5 text-[#e50914] mb-3" />
-                <div className="text-2xl font-bold text-white">{s.value}</div>
-                <div className="text-xs uppercase tracking-wider text-[#777] mt-1">
+                <s.icon className="w-4 h-4 sm:w-5 sm:h-5 text-[#e50914] mb-2" />
+                <div className="text-xl sm:text-2xl font-bold text-white truncate">{s.value}</div>
+                <div className="text-xs uppercase tracking-wider text-[#777] mt-1 truncate">
                   {s.label}
                 </div>
               </div>
