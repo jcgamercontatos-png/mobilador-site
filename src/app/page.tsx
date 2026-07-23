@@ -132,9 +132,9 @@ export default function Home() {
               {siteSettings.heroDescription}
             </p>
             <div className="mt-5 flex flex-col gap-2.5 min-[430px]:flex-row">
-              <Link href="/produtos" className="primary-button">
+              <Link href="/loja" className="primary-button">
                 <ShoppingBag className="h-3.5 w-3.5" />
-                Ver produtos
+                Ver loja
               </Link>
               <a
                 href="https://www.youtube.com/@Jcgamerofc"
