@@ -1,74 +1,109 @@
-"use client";
-import { Smartphone, Star, Zap, Gamepad2, ChevronRight } from "lucide-react";
+import { ChevronRight, Gamepad2, Smartphone, Sparkles, Star, Zap } from "lucide-react";
 import Link from "next/link";
 
 const products = [
-  { id: "1", name: "GG Mouse Pro", category: "App", price: "Gratis", desc: "App para sensibilidade, teclas e jogar Free Fire com mouse e teclado no celular.", feats: ["Sensibilidade pro", "Mapeamento de teclas", "Compativel com emuladores", "Interface intuitiva"], icon: Smartphone, href: "https://play.google.com/store/apps/details?id=com.zjx.ztezscreenshot&pcampaignid=web_share", btn: "Baixar" },
-  { id: "2", name: "Sensibilidade PRO", category: "Configuracao", price: "R$ 19,90", desc: "Configuracao calibrada para Free Fire com DPI, mira e grip otimizados.", feats: ["DPI customizado", "Mira e grip otimizados", "Suporte vitalicio", "Atualizacoes gratis"], icon: Zap, href: "https://wa.me/5521973199886?text=Ola", btn: "Comprar" },
-  { id: "3", name: "Pack de Configuracoes", category: "Pacote", price: "R$ 34,90", desc: "Pacote completo com multiplas configuracoes para diferentes estilos.", feats: ["5 configuracoes diferentes", "Todos os dispositivos", "Suporte VIP", "Atualizacoes mensais"], icon: Gamepad2, href: "https://wa.me/5521973199886?text=Ola", btn: "Comprar" }
+  {
+    id: "gg-mouse",
+    name: "GG Mouse Pro",
+    category: "Aplicativo",
+    price: "Grátis",
+    description:
+      "Configure sensibilidade e mapeie teclas para jogar Free Fire com teclado e mouse no celular.",
+    features: ["Sensibilidade profissional", "Mapeamento de teclas", "Interface simples"],
+    icon: Smartphone,
+    href: "https://play.google.com/store/apps/details?id=com.zjx.ztezscreenshot&pcampaignid=web_share",
+    buttonText: "Baixar",
+  },
+  {
+    id: "sensibilidade",
+    name: "Sensibilidade PRO",
+    category: "Configuração",
+    price: "R$ 19,90",
+    description:
+      "Configuração calibrada de DPI, mira e grip para combinar com seu aparelho e estilo de jogo.",
+    features: ["DPI customizado", "Mira otimizada", "Suporte vitalício"],
+    icon: Zap,
+    href: "https://wa.me/5521973199886?text=Ol%C3%A1!%20Quero%20comprar%20a%20Sensibilidade%20PRO",
+    buttonText: "Comprar",
+  },
+  {
+    id: "pack",
+    name: "Pack de Configurações",
+    category: "Pacote",
+    price: "R$ 34,90",
+    description:
+      "Várias configurações para diferentes estilos de gameplay e tamanhos de tela.",
+    features: ["5 configurações", "Todos os dispositivos", "Atualizações mensais"],
+    icon: Gamepad2,
+    href: "https://wa.me/5521973199886?text=Ol%C3%A1!%20Quero%20comprar%20o%20Pack%20de%20Configura%C3%A7%C3%B5es",
+    buttonText: "Comprar",
+  },
 ];
 
-export default function Page() {
+export default function ProdutosPage() {
   return (
-    <div className="min-h-screen pt-24 lg:pt-28 pb-12 lg:pb-20 bg-black">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10 lg:mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-600/40 bg-red-600/10 mb-5">
-            <Star className="w-4 h-4 text-red-600" />
-            <span className="text-sm font-semibold tracking-wider uppercase text-red-600">Produtos Digitais</span>
-         </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
-            Nossos <span className="text-red-600">Produtos</span>
-         </h1>
-          <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-            Apps, configuracoes e pacotes criados pela JCGAMER para elevar seu desempenho no Free Fire.
-         </p>
-       </div>
+    <div className="site-page">
+      <div className="page-shell">
+        <section className="panel p-5 sm:p-6">
+          <span className="eyebrow">
+            <Star className="h-3 w-3" />
+            Produtos digitais
+          </span>
+          <h1 className="route-title mt-3">
+            Produtos <span className="text-[#118cff]">JCGAMER</span>
+          </h1>
+          <p className="body-copy mt-3 max-w-2xl">
+            Apps, configurações e pacotes para deixar seu Free Fire mais preciso e organizado.
+          </p>
+        </section>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6 mb-12 lg:mb-16">
-          {products.map((p) => {
-            const Icon = p.icon;
-            return (
-              <div key={p.id} className="bg-[#0d0d0d] border border-[#222] rounded-xl hover:border-red-600/60 transition-all duration-300 flex flex-col">
-                <div className="p-6 sm:p-7 flex-1">
-                  <div className="flex flex-col items-center text-center">
-                    <div className="w-16 h-16 rounded-2xl bg-red-600/10 flex items-center justify-center mb-4 border border-red-600/30">
-                      <Icon className="w-8 h-8 text-red-600" />
-                   </div>
-                    <span className="text-xs text-red-600 uppercase tracking-widest font-bold mb-2">{p.category}</span>
-                    <h2 className="font-bold text-xl sm:text-2xl mb-3 text-white">{p.name}</h2>
-                    <p className="text-gray-400 text-sm leading-relaxed">{p.desc}</p>
-                 </div>
-               </div>
-                <div className="border-t border-[#222] p-6 sm:p-7">
-                  <ul className="space-y-2.5 mb-6">
-                    {p.feats.map((f, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-gray-300">
-                        <span className="w-2 h-2 rounded-full bg-red-600 flex-shrink-0 mt-1.5" />
-                        <span>{f}</span>
-                     </li>
-                    ))}
-                 </ul>
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-2xl font-bold text-white">{p.price}</span>
-                    <a href={p.href} target="_blank" rel="noopener noreferrer" className="bg-red-600 text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-red-700 transition-colors flex items-center gap-1">
-                      {p.btn}
-                      <ChevronRight className="w-4 h-4" />
-                   </a>
-                 </div>
-               </div>
-             </div>
-            );
-          })}
-       </div>
+        <section className="mt-4 grid gap-3 md:grid-cols-3">
+          {products.map(({ icon: Icon, ...product }) => (
+            <article key={product.id} className="product-card">
+              <div className="flex flex-1 flex-col p-4 sm:p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#118cff]/25 bg-[#118cff]/[0.08]">
+                    <Icon className="h-5 w-5 text-[#35b8ff]" />
+                  </span>
+                  <span className="eyebrow min-h-6 px-2 py-1">{product.category}</span>
+                </div>
+                <h2 className="mt-4 text-xl font-bold leading-tight text-white">{product.name}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-[#9d9da2]">{product.description}</p>
+                <ul className="mt-4 space-y-2">
+                  {product.features.map((feature) => (
+                    <li key={feature} className="flex items-center gap-2 text-sm text-[#b2b2b7]">
+                      <Sparkles className="h-3 w-3 shrink-0 text-[#35b8ff]" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-auto flex items-center justify-between gap-3 border-t border-white/[0.08] pt-5">
+                  <strong className="font-['Oxanium'] text-lg font-extrabold text-white">{product.price}</strong>
+                  <a
+                    href={product.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="primary-button min-h-10 px-4"
+                  >
+                    {product.buttonText}
+                    <ChevronRight className="h-3.5 w-3.5" />
+                  </a>
+                </div>
+              </div>
+            </article>
+          ))}
+        </section>
 
-        <div className="text-center">
-          <Link href="/loja" className="text-gray-400 hover:text-white transition-colors text-base sm:text-lg inline-flex items-center gap-2 font-medium">
-            Ver perifericos na loja
-            <ChevronRight className="w-5 h-5" />
-         </Link>
-       </div>
-     </div>
-   </div>
+        <div className="mt-5 text-center">
+          <Link
+            href="/loja"
+            className="inline-flex items-center gap-1.5 text-sm font-bold text-[#b5b5ba] transition-colors hover:text-white"
+          >
+            Ver periféricos na loja
+            <ChevronRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </div>
+    </div>
   );
 }
