@@ -1,95 +1,77 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/admin-session";
-import { prisma } from "@/lib/prisma";
-import { getSiteControl } from "@/lib/site-control";
-import {
-  decodeProductBadge,
-  encodeProductBadge,
-  normalizeProductCondition,
-} from "@/lib/product-meta";
+import { decodeProductBadge, encodeProductBadge, normalizeProductCondition } from "@/lib/product-meta";
+import { createStoredProduct, getProductStore, StoredProduct } from "@/lib/product-store";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
+function productResponse(product: StoredProduct) {
+  const storedBadge = decodeProductBadge(product.badge);
+  return {
+    ...product,
+    badge: storedBadge.badge,
+    condition: storedBadge.metadata?.condition || "NEW",
+    unit: storedBadge.metadata?.unit || "unidade",
+    image: product.images[0] || "",
+    original_price: product.originalPrice,
+    short_desc: product.description,
+    reviews: product.reviewCount,
+    is_active: product.active,
+    skus: [],
+    _count: { reviews: 0, orderItems: 0 },
+  };
+}
 
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const category = searchParams.get("category");
-    const search = searchParams.get("search");
+    const search = searchParams.get("search")?.trim().toLowerCase();
     const sort = searchParams.get("sort");
     const featured = searchParams.get("featured");
     const includeInactive =
       searchParams.get("includeInactive") === "true" && isAdminAuthenticated();
-    const limit = searchParams.get("limit");
-    const page = searchParams.get("page");
+    const limitValue = Number.parseInt(searchParams.get("limit") || "", 10);
+    const take = Number.isInteger(limitValue) && limitValue > 0 ? limitValue : null;
+    const currentPage = Math.max(
+      1,
+      Number.parseInt(searchParams.get("page") || "1", 10) || 1,
+    );
 
-    const where: any = includeInactive ? {} : { active: true };
+    const data = await getProductStore();
+    let products = data.products.filter((product) => includeInactive || product.active);
 
-    if (category && category !== "Todos") where.category = category;
-    if (search) {
-      where.OR = [
-        { name: { contains: search, mode: "insensitive" } },
-        { description: { contains: search, mode: "insensitive" } },
-      ];
+    if (category && category !== "Todos") {
+      products = products.filter((product) => product.category === category);
     }
-    if (featured === "true") where.featured = true;
+    if (search) {
+      products = products.filter(
+        (product) =>
+          product.name.toLowerCase().includes(search) ||
+          product.description.toLowerCase().includes(search),
+      );
+    }
+    if (featured === "true") {
+      products = products.filter((product) => product.featured);
+    }
 
-    let orderBy: any = { createdAt: "desc" };
-    if (sort === "price-low") orderBy = { price: "asc" };
-    else if (sort === "price-high") orderBy = { price: "desc" };
-    else if (sort === "rating") orderBy = { rating: "desc" };
-    else if (sort === "stock-low") orderBy = { stock: "asc" };
-
-    const take = limit ? Number.parseInt(limit, 10) : undefined;
-    const currentPage = page ? Math.max(1, Number.parseInt(page, 10)) : 1;
-    const skip = take ? (currentPage - 1) * take : undefined;
-
-    const [products, total, control] = await Promise.all([
-      prisma.product.findMany({
-        where,
-        orderBy,
-        take,
-        skip,
-        include: {
-          skus: {
-            where: { active: true },
-            select: {
-              id: true,
-              sku: true,
-              name: true,
-              price: true,
-              stock: true,
-              attributes: true,
-            },
-          },
-          _count: {
-            select: { reviews: true, orderItems: true },
-          },
-        },
-      }),
-      prisma.product.count({ where }),
-      getSiteControl(),
-    ]);
-
-    const enrichedProducts = products.map((product) => {
-      const storedBadge = decodeProductBadge(product.badge);
-      const metadata = storedBadge.metadata || control.productMeta[product.id] || {
-        condition: "NEW",
-        unit: "unidade",
-      };
-      return {
-        ...product,
-        badge: storedBadge.badge,
-        ...metadata,
-        image: product.images[0] || "",
-        original_price: product.originalPrice,
-        short_desc: product.description,
-        reviews: product.reviewCount,
-        is_active: product.active,
-      };
+    products.sort((left, right) => {
+      if (sort === "price-low") return left.price - right.price;
+      if (sort === "price-high") return right.price - left.price;
+      if (sort === "rating") return right.rating - left.rating;
+      if (sort === "stock-low") return left.stock - right.stock;
+      return right.createdAt.localeCompare(left.createdAt);
     });
 
+    const total = products.length;
+    if (take) {
+      const start = (currentPage - 1) * take;
+      products = products.slice(start, start + take);
+    }
+
     return NextResponse.json({
-      products: enrichedProducts,
+      products: products.map(productResponse),
       total,
       page: currentPage,
       totalPages: take ? Math.max(1, Math.ceil(total / take)) : 1,
@@ -130,7 +112,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const parsedPrice = Number.parseFloat(String(price));
+    const parsedOriginalPrice =
+      originalPrice === null || originalPrice === ""
+        ? null
+        : Number.parseFloat(String(originalPrice));
     const parsedStock = Number.parseInt(String(stock || 0), 10);
+    if (!Number.isFinite(parsedPrice) || parsedPrice < 0) {
+      return NextResponse.json({ error: "Preço inválido" }, { status: 400 });
+    }
+    if (
+      parsedOriginalPrice !== null &&
+      (!Number.isFinite(parsedOriginalPrice) || parsedOriginalPrice < 0)
+    ) {
+      return NextResponse.json({ error: "Preço anterior inválido" }, { status: 400 });
+    }
     if (!Number.isInteger(parsedStock) || parsedStock < 0) {
       return NextResponse.json(
         { error: "Estoque deve ser um número inteiro igual ou maior que zero" },
@@ -138,6 +134,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const normalizedCondition = normalizeProductCondition(condition);
+    const normalizedUnit = String(unit || "unidade").trim() || "unidade";
     const baseSlug =
       String(name)
         .normalize("NFD")
@@ -145,62 +143,29 @@ export async function POST(request: NextRequest) {
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "") || `produto-${Date.now()}`;
-    const existingSlug = await prisma.product.findUnique({ where: { slug: baseSlug } });
-    const slug = existingSlug ? `${baseSlug}-${Date.now()}` : baseSlug;
+    const store = await getProductStore();
+    const slug = store.products.some((product) => product.slug === baseSlug)
+      ? `${baseSlug}-${Date.now()}`
+      : baseSlug;
 
-    const normalizedCondition = normalizeProductCondition(condition);
-    const normalizedUnit = String(unit || "unidade").trim() || "unidade";
-    const product = await prisma.$transaction(async (database) => {
-      const createdProduct = await database.product.create({
-        data: {
-          name: String(name),
-          slug,
-          description: String(description || ""),
-          price: Number.parseFloat(String(price)),
-          originalPrice:
-            originalPrice === null || originalPrice === ""
-              ? null
-              : Number.parseFloat(String(originalPrice)),
-          category: String(category),
-          subcategory: subcategory ? String(subcategory) : null,
-          images: Array.isArray(images) ? images.filter(Boolean) : [],
-          badge: encodeProductBadge(
-            badge,
-            normalizedCondition,
-            normalizedUnit,
-          ),
-          stock: parsedStock,
-          featured: Boolean(featured),
-          active: active !== false,
-        },
-      });
-
-      if (parsedStock > 0) {
-        await database.stockMovement.create({
-          data: {
-            productId: createdProduct.id,
-            quantidadeAlterada: parsedStock,
-            quantidadeAnterior: 0,
-            quantidadeFinal: parsedStock,
-            motivo: "Cadastro inicial do produto",
-          },
-        });
-      }
-
-      return createdProduct;
+    const product = await createStoredProduct({
+      name: String(name),
+      slug,
+      description: String(description || ""),
+      price: parsedPrice,
+      originalPrice: parsedOriginalPrice,
+      category: String(category),
+      subcategory: subcategory ? String(subcategory) : null,
+      images: Array.isArray(images) ? images.filter(Boolean).map(String) : [],
+      badge: encodeProductBadge(badge, normalizedCondition, normalizedUnit),
+      stock: parsedStock,
+      featured: Boolean(featured),
+      active: active !== false,
+      rating: 0,
+      reviewCount: 0,
     });
 
-    return NextResponse.json(
-      {
-        product: {
-          ...product,
-          badge: String(badge || "").trim() || null,
-          condition: normalizedCondition,
-          unit: normalizedUnit,
-        },
-      },
-      { status: 201 },
-    );
+    return NextResponse.json({ product: productResponse(product) }, { status: 201 });
   } catch (error) {
     console.error("Error creating product:", error);
     return NextResponse.json({ error: "Erro ao criar produto" }, { status: 500 });
