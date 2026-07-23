@@ -399,13 +399,13 @@ export default function DashboardPage() {
   const currentTab = TAB_ITEMS.find((item) => item.id === tab)!;
 
   return (
-    <div className="min-h-screen bg-[#070707] text-white lg:grid lg:grid-cols-[238px_minmax(0,1fr)]">
-      <aside className="hidden border-r border-white/[0.08] bg-[#0b0b0d] lg:flex lg:min-h-screen lg:flex-col">
+    <div className="min-h-screen bg-[#030816] text-white lg:grid lg:grid-cols-[238px_minmax(0,1fr)]">
+      <aside className="hidden border-r border-white/[0.08] bg-[#050b1d] lg:flex lg:min-h-screen lg:flex-col">
         <DashboardNavigation tab={tab} setTab={setTab} logout={logout} />
       </aside>
 
       <div className="min-w-0">
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-white/[0.08] bg-[#08080a]/95 px-3 backdrop-blur-xl sm:px-5 lg:h-16 lg:px-7">
+        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-white/[0.08] bg-[#040a18]/95 px-3 backdrop-blur-xl sm:px-5 lg:h-16 lg:px-7">
           <div className="flex min-w-0 items-center gap-3">
             <button
               type="button"
@@ -448,7 +448,7 @@ export default function DashboardPage() {
               onClick={() => setMenuOpen(false)}
               aria-label="Fechar menu"
             />
-            <aside className="relative flex h-full w-[min(280px,86vw)] flex-col bg-[#0b0b0d] shadow-2xl">
+            <aside className="relative flex h-full w-[min(280px,86vw)] flex-col bg-[#050b1d] shadow-2xl">
               <button
                 type="button"
                 onClick={() => setMenuOpen(false)}
@@ -472,7 +472,7 @@ export default function DashboardPage() {
         <main className="mx-auto w-full max-w-7xl p-3 sm:p-5 lg:p-7">
           {loading && !settings ? (
             <div className="grid min-h-[55vh] place-items-center">
-              <RefreshCw className="h-6 w-6 animate-spin text-[#ff5962]" />
+              <RefreshCw className="h-6 w-6 animate-spin text-[#35b8ff]" />
             </div>
           ) : (
             <>
@@ -572,7 +572,7 @@ function DashboardNavigation({
   return (
     <>
       <div className="border-b border-white/[0.08] p-5">
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#ff2530]/35 bg-[#ff2530]/10 font-['Oxanium'] text-sm font-extrabold">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#118cff]/35 bg-[#118cff]/10 font-['Oxanium'] text-sm font-extrabold">
           JC
         </span>
         <p className="mt-3 font-['Oxanium'] text-base font-extrabold tracking-[0.08em]">
@@ -588,11 +588,11 @@ function DashboardNavigation({
             onClick={() => setTab(id)}
             className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-bold transition-colors ${
               tab === id
-                ? "bg-[#ff2530]/[0.13] text-white"
+                ? "bg-[#118cff]/[0.13] text-white"
                 : "text-[#99999f] hover:bg-white/[0.04] hover:text-white"
             }`}
           >
-            <Icon className={`h-4 w-4 ${tab === id ? "text-[#ff5962]" : ""}`} />
+            <Icon className={`h-4 w-4 ${tab === id ? "text-[#35b8ff]" : ""}`} />
             {label}
           </button>
         ))}
@@ -637,8 +637,8 @@ function Overview({
 
   return (
     <div className="space-y-4 sm:space-y-5">
-      <section className="rounded-2xl border border-white/[0.08] bg-[linear-gradient(135deg,#171012_0%,#0c0c0e_58%)] p-4 sm:p-6">
-        <p className="font-['Oxanium'] text-xs font-extrabold uppercase tracking-[0.14em] text-[#ff6870]">
+      <section className="rounded-2xl border border-white/[0.08] bg-[linear-gradient(135deg,#171012_0%,#050811_58%)] p-4 sm:p-6">
+        <p className="font-['Oxanium'] text-xs font-extrabold uppercase tracking-[0.14em] text-[#43c7ff]">
           Tudo em um só lugar
         </p>
         <div className="mt-2 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
@@ -660,9 +660,9 @@ function Overview({
 
       <section className="grid grid-cols-2 gap-2.5 xl:grid-cols-4">
         {cards.map(({ label, value, icon: Icon }) => (
-          <article key={label} className="rounded-xl border border-white/[0.08] bg-[#101012] p-3.5 sm:p-4">
+          <article key={label} className="rounded-xl border border-white/[0.08] bg-[#07101f] p-3.5 sm:p-4">
             <div className="flex items-center justify-between gap-2">
-              <Icon className="h-4 w-4 text-[#ff5962]" />
+              <Icon className="h-4 w-4 text-[#35b8ff]" />
               <BarChart3 className="h-3.5 w-3.5 text-[#55555b]" />
             </div>
             <strong className="mt-4 block font-['Oxanium'] text-xl font-extrabold sm:text-2xl">
@@ -674,13 +674,13 @@ function Overview({
       </section>
 
       <section className="grid gap-4 lg:grid-cols-[1.35fr_0.65fr]">
-        <div className="rounded-2xl border border-white/[0.08] bg-[#101012] p-4">
+        <div className="rounded-2xl border border-white/[0.08] bg-[#07101f] p-4">
           <div className="flex items-center justify-between">
             <h2 className="font-['Oxanium'] text-base font-extrabold">Estoque recente</h2>
             <button
               type="button"
               onClick={() => setTab("products")}
-              className="text-xs font-bold text-[#ff6870]"
+              className="text-xs font-bold text-[#43c7ff]"
             >
               Ver produtos
             </button>
@@ -712,31 +712,31 @@ function Overview({
             )}
           </div>
         </div>
-        <div className="rounded-2xl border border-white/[0.08] bg-[#101012] p-4">
+        <div className="rounded-2xl border border-white/[0.08] bg-[#07101f] p-4">
           <h2 className="font-['Oxanium'] text-base font-extrabold">Ações rápidas</h2>
           <div className="mt-3 grid gap-2">
             <button
               type="button"
               onClick={() => setTab("appearance")}
-              className="flex items-center gap-3 rounded-xl border border-white/[0.07] bg-white/[0.025] p-3 text-left text-sm font-bold hover:border-[#ff2530]/30"
+              className="flex items-center gap-3 rounded-xl border border-white/[0.07] bg-white/[0.025] p-3 text-left text-sm font-bold hover:border-[#118cff]/30"
             >
-              <ImageIcon className="h-4 w-4 text-[#ff5962]" />
+              <ImageIcon className="h-4 w-4 text-[#35b8ff]" />
               Trocar foto e perfil
             </button>
             <button
               type="button"
               onClick={() => setTab("ads")}
-              className="flex items-center gap-3 rounded-xl border border-white/[0.07] bg-white/[0.025] p-3 text-left text-sm font-bold hover:border-[#ff2530]/30"
+              className="flex items-center gap-3 rounded-xl border border-white/[0.07] bg-white/[0.025] p-3 text-left text-sm font-bold hover:border-[#118cff]/30"
             >
-              <Megaphone className="h-4 w-4 text-[#ff5962]" />
+              <Megaphone className="h-4 w-4 text-[#35b8ff]" />
               Gerenciar anúncios
             </button>
             <button
               type="button"
               onClick={() => setTab("products")}
-              className="flex items-center gap-3 rounded-xl border border-white/[0.07] bg-white/[0.025] p-3 text-left text-sm font-bold hover:border-[#ff2530]/30"
+              className="flex items-center gap-3 rounded-xl border border-white/[0.07] bg-white/[0.025] p-3 text-left text-sm font-bold hover:border-[#118cff]/30"
             >
-              <Package className="h-4 w-4 text-[#ff5962]" />
+              <Package className="h-4 w-4 text-[#35b8ff]" />
               Editar produtos
             </button>
           </div>
@@ -763,7 +763,7 @@ function ProductsSection({
   );
 
   return (
-    <section className="rounded-2xl border border-white/[0.08] bg-[#101012] p-3 sm:p-4">
+    <section className="rounded-2xl border border-white/[0.08] bg-[#07101f] p-3 sm:p-4">
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <div>
           <h1 className="font-['Oxanium'] text-xl font-extrabold">Produtos da loja</h1>
@@ -788,9 +788,9 @@ function ProductsSection({
         {filtered.map((product) => (
           <article
             key={product.id}
-            className="grid gap-3 rounded-xl border border-white/[0.07] bg-[#0b0b0d] p-3 sm:grid-cols-[64px_minmax(0,1fr)_auto] sm:items-center"
+            className="grid gap-3 rounded-xl border border-white/[0.07] bg-[#050b1d] p-3 sm:grid-cols-[64px_minmax(0,1fr)_auto] sm:items-center"
           >
-            <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-lg bg-[#171719]">
+            <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-lg bg-[#0d1930]">
               {product.images[0] ? (
                 <img
                   src={product.images[0]}
@@ -879,9 +879,9 @@ function AppearanceSection({
       onSubmit={saveSettings}
       className="grid gap-4 lg:grid-cols-[300px_minmax(0,1fr)]"
     >
-      <section className="rounded-2xl border border-white/[0.08] bg-[#101012] p-4">
+      <section className="rounded-2xl border border-white/[0.08] bg-[#07101f] p-4">
         <h1 className="font-['Oxanium'] text-lg font-extrabold">Foto de perfil</h1>
-        <div className="mt-4 flex aspect-square items-center justify-center overflow-hidden rounded-2xl border border-white/[0.08] bg-[#171719]">
+        <div className="mt-4 flex aspect-square items-center justify-center overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0d1930]">
           {settings.profileImage ? (
             <img
               src={settings.profileImage}
@@ -889,7 +889,7 @@ function AppearanceSection({
               className="h-full w-full object-cover"
             />
           ) : (
-            <span className="font-['Oxanium'] text-5xl font-extrabold text-[#ff5962]">
+            <span className="font-['Oxanium'] text-5xl font-extrabold text-[#35b8ff]">
               JC
             </span>
           )}
@@ -910,7 +910,7 @@ function AppearanceSection({
         </p>
       </section>
 
-      <section className="rounded-2xl border border-white/[0.08] bg-[#101012] p-4 sm:p-5">
+      <section className="rounded-2xl border border-white/[0.08] bg-[#07101f] p-4 sm:p-5">
         <h2 className="font-['Oxanium'] text-lg font-extrabold">Informações do site</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <DashboardField label="Nome do site">
@@ -1009,7 +1009,7 @@ function AdsSection({
 }) {
   return (
     <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_390px]">
-      <section className="rounded-2xl border border-white/[0.08] bg-[#101012] p-4">
+      <section className="rounded-2xl border border-white/[0.08] bg-[#07101f] p-4">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="font-['Oxanium'] text-xl font-extrabold">Anúncios do site</h1>
@@ -1017,7 +1017,7 @@ function AdsSection({
               Ative, edite ou remova campanhas sem alterar o código.
             </p>
           </div>
-          <span className="rounded-full bg-[#ff2530]/10 px-2.5 py-1 text-xs font-extrabold text-[#ff6870]">
+          <span className="rounded-full bg-[#118cff]/10 px-2.5 py-1 text-xs font-extrabold text-[#43c7ff]">
             {ads.length}
           </span>
         </div>
@@ -1025,7 +1025,7 @@ function AdsSection({
           {ads.map((advertisement) => (
             <article
               key={advertisement.id}
-              className="overflow-hidden rounded-xl border border-white/[0.07] bg-[#0b0b0d]"
+              className="overflow-hidden rounded-xl border border-white/[0.07] bg-[#050b1d]"
             >
               {advertisement.imageUrl && (
                 <img
@@ -1037,7 +1037,7 @@ function AdsSection({
               <div className="p-3.5">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-wide text-[#ff6870]">
+                    <span className="text-[10px] font-extrabold uppercase tracking-wide text-[#43c7ff]">
                       {PLACEMENT_LABELS[advertisement.placement]}
                     </span>
                     <h2 className="mt-1 font-bold">{advertisement.title}</h2>
@@ -1078,7 +1078,7 @@ function AdsSection({
           ))}
           {!ads.length && (
             <div className="rounded-xl border border-dashed border-white/10 px-4 py-10 text-center">
-              <Megaphone className="mx-auto h-5 w-5 text-[#ff5962]" />
+              <Megaphone className="mx-auto h-5 w-5 text-[#35b8ff]" />
               <p className="mt-2 text-sm text-[#88888e]">Nenhum anúncio criado.</p>
             </div>
           )}
@@ -1088,7 +1088,7 @@ function AdsSection({
       <form
         id="ad-form"
         onSubmit={saveAdvertisement}
-        className="h-fit rounded-2xl border border-white/[0.08] bg-[#101012] p-4 xl:sticky xl:top-20"
+        className="h-fit rounded-2xl border border-white/[0.08] bg-[#07101f] p-4 xl:sticky xl:top-20"
       >
         <div className="flex items-center justify-between gap-3">
           <h2 className="font-['Oxanium'] text-lg font-extrabold">
@@ -1173,7 +1173,7 @@ function AdsSection({
               />
             </label>
           </DashboardField>
-          <label className="flex items-center justify-between rounded-xl border border-white/[0.07] bg-[#0b0b0d] p-3 text-sm font-bold">
+          <label className="flex items-center justify-between rounded-xl border border-white/[0.07] bg-[#050b1d] p-3 text-sm font-bold">
             Mostrar no site
             <input
               type="checkbox"
@@ -1181,7 +1181,7 @@ function AdsSection({
               onChange={(event) =>
                 setAdForm({ ...adForm, active: event.target.checked })
               }
-              className="h-4 w-4 accent-[#ff2530]"
+              className="h-4 w-4 accent-[#118cff]"
             />
           </label>
         </div>
@@ -1250,11 +1250,11 @@ function SecuritySection({
 
   return (
     <div className="grid gap-4 lg:grid-cols-[0.75fr_1.25fr]">
-      <section className="rounded-2xl border border-white/[0.08] bg-[linear-gradient(145deg,#1b0c0f,#101012_60%)] p-5">
-        <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#ff2530]/30 bg-[#ff2530]/10">
-          <ShieldCheck className="h-5 w-5 text-[#ff5962]" />
+      <section className="rounded-2xl border border-white/[0.08] bg-[linear-gradient(145deg,#071733,#07101f_60%)] p-5">
+        <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#118cff]/30 bg-[#118cff]/10">
+          <ShieldCheck className="h-5 w-5 text-[#35b8ff]" />
         </span>
-        <p className="mt-5 font-['Oxanium'] text-xs font-extrabold uppercase tracking-[0.13em] text-[#ff6870]">
+        <p className="mt-5 font-['Oxanium'] text-xs font-extrabold uppercase tracking-[0.13em] text-[#43c7ff]">
           Segurança do painel
         </p>
         <h1 className="mt-2 font-['Oxanium'] text-2xl font-extrabold">
@@ -1274,7 +1274,7 @@ function SecuritySection({
 
       <form
         onSubmit={updateCredentials}
-        className="rounded-2xl border border-white/[0.08] bg-[#101012] p-4 sm:p-5"
+        className="rounded-2xl border border-white/[0.08] bg-[#07101f] p-4 sm:p-5"
       >
         <h2 className="font-['Oxanium'] text-lg font-extrabold">
           Trocar usuário ou senha
@@ -1369,11 +1369,11 @@ function ProductDialog({
       />
       <form
         onSubmit={onSubmit}
-        className="relative max-h-[94vh] w-full max-w-3xl overflow-y-auto rounded-t-2xl border border-white/[0.1] bg-[#101012] p-4 shadow-2xl sm:rounded-2xl sm:p-5"
+        className="relative max-h-[94vh] w-full max-w-3xl overflow-y-auto rounded-t-2xl border border-white/[0.1] bg-[#07101f] p-4 shadow-2xl sm:rounded-2xl sm:p-5"
       >
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="font-['Oxanium'] text-xs font-extrabold uppercase tracking-[0.12em] text-[#ff6870]">
+            <p className="font-['Oxanium'] text-xs font-extrabold uppercase tracking-[0.12em] text-[#43c7ff]">
               Catálogo
             </p>
             <h2 className="mt-1 font-['Oxanium'] text-xl font-extrabold">
@@ -1515,16 +1515,16 @@ function ProductDialog({
               />
             </label>
           </DashboardField>
-          <label className="flex items-center justify-between rounded-xl border border-white/[0.07] bg-[#0b0b0d] p-3 text-sm font-bold">
+          <label className="flex items-center justify-between rounded-xl border border-white/[0.07] bg-[#050b1d] p-3 text-sm font-bold">
             Mostrar no site
             <input
               type="checkbox"
               checked={form.active}
               onChange={(event) => setForm({ ...form, active: event.target.checked })}
-              className="h-4 w-4 accent-[#ff2530]"
+              className="h-4 w-4 accent-[#118cff]"
             />
           </label>
-          <label className="flex items-center justify-between rounded-xl border border-white/[0.07] bg-[#0b0b0d] p-3 text-sm font-bold">
+          <label className="flex items-center justify-between rounded-xl border border-white/[0.07] bg-[#050b1d] p-3 text-sm font-bold">
             Produto em destaque
             <input
               type="checkbox"
@@ -1532,7 +1532,7 @@ function ProductDialog({
               onChange={(event) =>
                 setForm({ ...form, featured: event.target.checked })
               }
-              className="h-4 w-4 accent-[#ff2530]"
+              className="h-4 w-4 accent-[#118cff]"
             />
           </label>
         </div>
