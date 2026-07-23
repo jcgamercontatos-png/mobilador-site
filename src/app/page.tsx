@@ -155,15 +155,11 @@ export default function Home() {
             className="compact-panel flex min-h-64 flex-col items-center justify-center p-5 text-center lg:min-h-[360px]"
           >
             <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-[#ff2530]/[0.55] bg-[radial-gradient(circle,#291012_0%,#0b0b0d_65%)] shadow-[0_0_34px_rgba(255,37,48,0.18)] sm:h-28 sm:w-28">
-              {siteSettings.profileImage ? (
-                <img
-                  src={siteSettings.profileImage}
-                  alt={`Foto de perfil ${siteSettings.siteName}`}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <Gamepad2 className="h-10 w-10 text-[#ff4b54] sm:h-12 sm:w-12" strokeWidth={1.6} />
-              )}
+              <img
+                src={siteSettings.profileImage || "/images/jcgamer-profile.png"}
+                alt={`Foto de perfil ${siteSettings.siteName}`}
+                className="h-full w-full object-cover"
+              />
             </div>
             <strong className="mt-4 font-['Oxanium'] text-lg font-extrabold tracking-[0.1em]">
               {siteSettings.siteName}
