@@ -93,6 +93,14 @@ const EMPTY_PRODUCT: ProductForm = {
   active: true,
 };
 
+const PRODUCT_CATEGORIES = [
+  "Free Fire",
+  "Acessórios",
+  "Periféricos",
+  "Produtos digitais",
+  "Outros",
+];
+
 const EMPTY_AD: AdvertisementForm = {
   id: "",
   title: "",
@@ -154,6 +162,10 @@ export default function DashboardPage() {
   );
 
   useEffect(() => {
+    const requestedTab = new URLSearchParams(window.location.search).get("tab");
+    if (TAB_ITEMS.some((item) => item.id === requestedTab)) {
+      setTab(requestedTab as DashboardTab);
+    }
     void loadDashboard();
   }, []);
 
@@ -309,7 +321,11 @@ export default function DashboardPage() {
           }),
         },
       );
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
+      if (response.status === 401) {
+        router.replace("/painel-jcgamer/login");
+        return;
+      }
       if (!response.ok) throw new Error(data.error || "Falha ao salvar produto.");
       setProductModal(false);
       await loadDashboard();
@@ -1433,13 +1449,25 @@ function ProductDialog({
             />
           </DashboardField>
           <DashboardField label="Categoria">
-            <input
+            <select
               value={form.category}
               onChange={(event) => setForm({ ...form, category: event.target.value })}
               className="input-dark"
-              placeholder="Ex.: Headset"
               required
-            />
+            >
+              <option value="" disabled>
+                Selecione uma categoria
+              </option>
+              {form.category &&
+                !PRODUCT_CATEGORIES.some((category) => category === form.category) && (
+                  <option value={form.category}>{form.category}</option>
+                )}
+              {PRODUCT_CATEGORIES.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
           </DashboardField>
           <DashboardField label="Subcategoria">
             <input
