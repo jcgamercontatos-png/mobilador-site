@@ -1523,13 +1523,13 @@ function ProductDialog({
           </DashboardField>
           <DashboardField label="Imagem do produto" wide>
             <input
-              type="url"
+              type="text"
               value={form.imageUrl}
               onChange={(event) =>
                 setForm({ ...form, imageUrl: event.target.value })
               }
               className="input-dark"
-              placeholder="Cole uma URL ou envie uma imagem"
+              placeholder="Cole uma URL, um caminho de imagem ou envie um arquivo"
             />
             <label className="secondary-button mt-2 w-fit cursor-pointer">
               <Upload className="h-3.5 w-3.5" />
