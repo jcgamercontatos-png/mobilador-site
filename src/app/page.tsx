@@ -1,441 +1,344 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import {
-  ShoppingBag,
-  Star,
   ChevronRight,
-  Youtube,
   Download,
   Gamepad2,
   Play,
+  ShoppingBag,
+  Star,
+  Youtube,
 } from "lucide-react";
 import Image from "next/image";
-import AdBanner from "@/components/AdBanner";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { ManagedAd } from "@/components/ManagedAd";
 
-type Produto = {
-  id: number;
+const PRODUCTS_API = "/api/products?featured=true&limit=3";
+
+type Product = {
+  id: number | string;
   name: string;
   category: string;
   price: number;
-  original_price: number;
-  rating: number;
-  reviews: number;
-  badge: string;
-  short_desc: string;
-  description: string;
-  specs: string[];
-  image: string;
-  is_active: boolean;
+  original_price?: number;
+  rating?: number;
+  reviews?: number;
+  badge?: string;
+  short_desc?: string;
+  image?: string;
   stock?: number;
+  condition?: "NEW" | "USED";
+  unit?: string;
 };
 
+type Video = {
+  id: string;
+  title: string;
+  thumbnail: string;
+  viewCount?: string;
+};
+
+const fallbackProducts: Product[] = [
+  {
+    id: "headset",
+    name: "Headset Gamer FIFINE H9",
+    category: "Headset",
+    price: 299.9,
+    rating: 5,
+    reviews: 48,
+    badge: "Destaque",
+    short_desc: "Áudio limpo e conforto para jogar por horas.",
+    image: "/images/headset-fifine-h9.jpg",
+  },
+  {
+    id: "webcam",
+    name: "Webcam EMEET",
+    category: "Webcam",
+    price: 249.9,
+    rating: 5,
+    reviews: 31,
+    badge: "Setup",
+    short_desc: "Imagem nítida para conteúdo, live e chamadas.",
+    image: "/images/webcam-emeet.png",
+  },
+  {
+    id: "pack",
+    name: "Pack de Setas JCGAMER",
+    category: "Pack",
+    price: 19.9,
+    rating: 5,
+    reviews: 76,
+    badge: "Digital",
+    short_desc: "Visual pronto para deixar sua configuração completa.",
+    image: "/images/download_pack_setas_800x800.png",
+  },
+];
+
+const formatPrice = (value: number) =>
+  new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(value);
+
 export default function Home() {
-  const [settings, setSettings] = useState<Record<string, string>>({});
-  const [downloadUrl, setDownloadUrl] = useState("");
-  const [downloadTitle, setDownloadTitle] = useState("GG Mouse Pro");
-  const [featuredProducts, setFeaturedProducts] = useState<Produto[]>([]);
+  const [products, setProducts] = useState<Product[]>(fallbackProducts);
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [siteSettings, setSiteSettings] = useState({
+    siteName: "JCGAMER",
+    profileImage: "",
+    heroTitle: "Bem-vindo à JCGAMER",
+    heroDescription:
+      "Produtos digitais, periféricos e conteúdo direto para elevar seu gameplay no Free Fire.",
+  });
 
   useEffect(() => {
-    fetch("https://mobilador-api.vercel.app/api/site/settings")
-      .then((r) => r.json())
-      .then((data) => setSettings(data))
-      .catch(() => {});
-    fetch("https://mobilador-api.vercel.app/api/site/downloads")
-      .then((r) => r.json())
+    fetch(PRODUCTS_API)
+      .then((response) => (response.ok ? response.json() : Promise.reject()))
       .then((data) => {
-        const active = data?.find((d: any) => d.is_active);
-        if (active) {
-          setDownloadUrl(active.url);
-          setDownloadTitle(active.title);
+        const list = Array.isArray(data) ? data : data.products;
+        if (Array.isArray(list) && list.length) setProducts(list.slice(0, 3));
+      })
+      .catch(() => {});
+
+    fetch("/api/site/settings")
+      .then((response) => (response.ok ? response.json() : Promise.reject()))
+      .then((data) => {
+        if (data.settings) {
+          setSiteSettings((current) => ({ ...current, ...data.settings }));
         }
       })
       .catch(() => {});
-    fetch("https://mobilador-api.vercel.app/api/site/products")
-      .then((r) => r.json())
-      .then((data) => setFeaturedProducts(data?.slice(0, 4) || []))
+
+    fetch("/api/youtube")
+      .then((response) => (response.ok ? response.json() : Promise.reject()))
+      .then((data) => setVideos(Array.isArray(data?.videos) ? data.videos.slice(0, 4) : []))
       .catch(() => {});
   }, []);
 
-  const buyProduct = (name: string, price: number) => {
-    const msg = encodeURIComponent(
-      `Olá! Vim pelo site JCGAMER e quero comprar um periférico: ${name} - R$ ${price.toFixed(2)}`,
-    );
-    window.open(`https://wa.me/5521973199886?text=${msg}`, "_blank");
-  };
-
   return (
-    <div className="min-h-screen bg-[#000000] relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,#1a0306_0%,#000000_55%)] z-0" />
-
-      <main className="relative z-10">
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 lg:pt-10 pb-4">
+    <div className="site-page">
+      <div className="page-shell">
+        <section className="panel grid gap-5 p-4 sm:p-5 lg:grid-cols-[1.45fr_0.85fr] lg:items-stretch lg:p-6">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="max-w-3xl"
+            className="flex min-w-0 flex-col justify-center py-2 lg:py-6"
           >
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full border border-[#e50914]/40 bg-[#e50914]/10 mb-4 overflow-hidden">
-              <Youtube className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#e50914] flex-shrink-0" />
-              <span className="text-xs font-semibold tracking-widest uppercase text-[#e50914] whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
-                @Jcgamerofc
-              </span>
-            </div>
-
-            <h1 className="text-[clamp(2rem,4vw,3.5rem)] font-bold leading-[1.1] tracking-[-0.02em] text-white mb-4">
-              Bem-vindo à{" "}
-              <span className="bg-gradient-to-r from-[#e50914] to-[#ff4444] bg-clip-text text-transparent font-bold">
-                JCGAMER
-              </span>
-            </h1>
-
-            <p className="text-lg text-[#a0a0a0] max-w-2xl mb-6">
-              Produtos digitais e periféricos gamer para elevar seu gameplay.
-              Confira apps, configurações de sensibilidade e muito mais!
+            <span className="eyebrow">@Jcgamerofc</span>
+            <h1 className="display-title mt-4">{siteSettings.heroTitle}</h1>
+            <p className="body-copy mt-4 max-w-2xl">
+              {siteSettings.heroDescription}
             </p>
-
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link
-                href="/produtos"
-                className="bg-[#e50914] text-white px-5 py-2.5 rounded font-semibold hover:bg-[#f40612] transition-all flex items-center justify-center gap-2"
-              >
-                <Star className="w-4 h-4" />
-                Ver Produtos
+            <div className="mt-5 flex flex-col gap-2.5 min-[430px]:flex-row">
+              <Link href="/produtos" className="primary-button">
+                <ShoppingBag className="h-3.5 w-3.5" />
+                Ver produtos
               </Link>
               <a
                 href="https://www.youtube.com/@Jcgamerofc"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border-2 border-white/50 text-white px-5 py-2.5 rounded font-semibold hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                className="secondary-button"
               >
-                <Youtube className="w-4 h-4" />
+                <Youtube className="h-3.5 w-3.5" />
                 Canal no YouTube
               </a>
             </div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4"
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.08 }}
+            className="compact-panel flex min-h-64 flex-col items-center justify-center p-5 text-center lg:min-h-[360px]"
           >
-            {[
-              { label: "Produtos", value: "3", icon: Star },
-              { label: "Periféricos", value: "2", icon: ShoppingBag },
-              { label: "Clientes", value: "500+", icon: Star },
-              { label: "Canal YouTube", value: "@Jcgamerofc", icon: Youtube },
-            ].map((s) => (
-              <div
-                key={s.label}
-                className="relative bg-[#0d0d0d] border border-[#222] rounded-md p-3 sm:p-4 overflow-hidden min-w-0"
-              >
-                <div className="absolute top-0 left-0 w-[3px] h-full bg-[#e50914]" />
-                <s.icon className="w-4 h-4 sm:w-5 sm:h-5 text-[#e50914] mb-2" />
-                <div className="text-lg sm:text-xl font-bold text-white truncate">
-                  {s.value}
-                </div>
-                <div className="text-xs uppercase tracking-wider text-[#777] mt-1 truncate">
-                  {s.label}
-                </div>
-              </div>
-            ))}
+            <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-[#ff2530]/[0.55] bg-[radial-gradient(circle,#291012_0%,#0b0b0d_65%)] shadow-[0_0_34px_rgba(255,37,48,0.18)] sm:h-28 sm:w-28">
+              {siteSettings.profileImage ? (
+                <img
+                  src={siteSettings.profileImage}
+                  alt={`Foto de perfil ${siteSettings.siteName}`}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <Gamepad2 className="h-10 w-10 text-[#ff4b54] sm:h-12 sm:w-12" strokeWidth={1.6} />
+              )}
+            </div>
+            <strong className="mt-4 font-['Oxanium'] text-lg font-extrabold tracking-[0.1em]">
+              {siteSettings.siteName}
+            </strong>
+            <p className="mt-2 max-w-xs text-sm leading-relaxed text-[#a0a0a5]">
+              Free Fire, configurações, downloads e periféricos em um portal gamer mais limpo.
+            </p>
           </motion.div>
         </section>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="h-px bg-gradient-to-r from-transparent via-[#e50914]/30 to-transparent" />
-        </div>
+        <ManagedAd placement="HOME_TOP" />
 
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex flex-col md:flex-row items-start md:items-end justify-between mb-5"
-          >
+        <section className="mt-3 grid grid-cols-2 gap-2.5 md:grid-cols-4 md:gap-3" aria-label="Números da JCGAMER">
+          {[
+            { value: "3", label: "Produtos digitais" },
+            { value: "Loja", label: "Periféricos selecionados" },
+            { value: "10K+", label: "Inscritos no canal" },
+            { value: "100+", label: "Vídeos publicados" },
+          ].map((stat) => (
+            <article key={stat.label} className="compact-panel border-l-2 border-l-[#ff2530] p-3.5 sm:p-4">
+              <strong className="font-['Oxanium'] text-lg font-extrabold sm:text-xl">{stat.value}</strong>
+              <p className="mt-1 text-xs leading-snug text-[#96969b] sm:text-sm">{stat.label}</p>
+            </article>
+          ))}
+        </section>
+
+        <section className="section-block">
+          <div className="section-heading">
             <div>
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#e50914]/40 bg-[#e50914]/10 mb-3">
-                <ShoppingBag className="w-4 h-4 text-[#e50914]" />
-                <span className="text-xs font-semibold tracking-wider uppercase text-[#e50914]">
-                  Periféricos
-                </span>
-              </div>
-              <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-white">
-                Periféricos em Destaque
-              </h2>
-              <p className="text-[#a0a0a0] text-sm mt-1">
-                Mouse, teclado, fone e mais para seu setup gamer
+              <span className="eyebrow">Periféricos</span>
+              <h2 className="section-title mt-2">Periféricos em destaque</h2>
+              <p className="mt-1 text-sm text-[#96969b]">
+                Fotos reais, preços visíveis e cards mais compactos em qualquer tela.
               </p>
             </div>
-            <Link
-              href="/loja"
-              className="mt-3 md:mt-0 text-sm text-[#a0a0a0] hover:text-white transition-colors flex items-center gap-1"
-            >
-              Ver todos os periféricos <ChevronRight className="w-4 h-4" />
+            <Link href="/loja" className="inline-flex items-center gap-1 text-sm font-bold text-[#d2d2d5] hover:text-white">
+              Ver todos <ChevronRight className="h-4 w-4" />
             </Link>
-          </motion.div>
+          </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            {featuredProducts.map((product, index) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.06 }}
-                className="bg-[#0d0d0d] border border-[#222] rounded-lg overflow-hidden group hover:border-[#e50914]/50 transition-all"
-              >
-                <div className="relative aspect-square bg-[#111] p-3 flex items-center justify-center">
-                  {product.badge && (
-                    <div className="absolute top-2 left-2 px-2 py-1 rounded-full bg-[#e50914] text-white text-xs font-bold">
-                      {product.badge}
-                    </div>
-                  )}
+          <ManagedAd placement="HOME_PRODUCTS" />
+
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {products.map((product) => (
+              <article key={product.id} className="product-card">
+                <div className="product-media">
+                  {product.badge && <span className="product-badge">{product.badge}</span>}
                   {product.image ? (
                     <Image
                       src={product.image}
                       alt={product.name}
-                      width={80}
-                      height={80}
-                      className="object-contain opacity-85 group-hover:opacity-100 transition-opacity"
+                      width={320}
+                      height={240}
+                      className="h-full w-full object-contain"
                       unoptimized
                     />
                   ) : (
-                    <ShoppingBag className="w-10 h-10 text-[#e50914]/30" />
+                    <ShoppingBag className="h-10 w-10 text-[#ff5962]/[0.35]" />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-3">
-                    <button
-                      onClick={() => buyProduct(product.name, product.price)}
-                      className="bg-[#e50914] text-white text-xs py-1.5 px-3 rounded font-semibold hover:bg-[#f40612] transition-colors"
-                    >
-                      Comprar
-                    </button>
-                  </div>
                 </div>
-
-                <div className="p-3">
-                  <p className="text-xs text-[#e50914] uppercase tracking-wider mb-1">
+                <div className="flex flex-1 flex-col p-4">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#ff656d]">
                     {product.category}
                   </p>
-                  <h3 className="font-semibold text-white text-sm mb-2 group-hover:text-[#e50914] transition-colors line-clamp-1">
-                    {product.name}
-                  </h3>
-
-                  <div className="flex items-center gap-1 mb-3">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-3 h-3 ${
-                          i < Math.floor(product.rating)
-                            ? "text-yellow-400 fill-yellow-400"
-                            : "text-gray-600"
-                        }`}
-                      />
-                    ))}
-                    <span className="text-xs text-gray-500 ml-1">
-                      ({product.reviews})
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    <span className="rounded-full bg-white/[0.05] px-2 py-1 text-[9px] font-extrabold uppercase text-[#c7c7cb]">
+                      {product.condition === "USED" ? "Usado" : "Novo"}
                     </span>
+                    {typeof product.stock === "number" && (
+                      <span className="rounded-full bg-[#d4ff62]/10 px-2 py-1 text-[9px] font-extrabold uppercase text-[#d4ff62]">
+                        {product.stock} {product.unit || "unidade"}
+                      </span>
+                    )}
                   </div>
-
-                  <div className="flex items-center gap-3">
-                    <span className="text-lg font-bold text-white">
-                      R$ {product.price.toFixed(2)}
-                    </span>
-                    {product.original_price > 0 && (
-                      <span className="text-gray-500 text-sm line-through">
-                        R$ {product.original_price.toFixed(2)}
-                      </span>
-                    )}
-                    {product.stock !== undefined && product.stock > 0 && (
-                      <span className="text-xs text-neon-green bg-neon-green/10 px-2 py-1 rounded">
-                        {product.stock === 1
-                          ? "Última unidade disponível"
-                          : `${product.stock} unidades disponíveis`}
-                      </span>
-                    )}
-                    {product.stock !== undefined && product.stock === 0 && (
-                      <span className="text-xs text-red-400 bg-red-400/10 px-2 py-1 rounded">
-                        Esgotado
-                      </span>
-                    )}
+                  <h3 className="mt-1.5 text-lg font-bold leading-tight text-white">{product.name}</h3>
+                  <div className="mt-2 flex items-center gap-1 text-xs text-[#85858b]">
+                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                    <span>{product.rating || 5}</span>
+                    <span>({product.reviews || 0} avaliações)</span>
+                  </div>
+                  <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-[#9d9da2]">
+                    {product.short_desc || "Periférico selecionado para completar seu setup gamer."}
+                  </p>
+                  <div className="mt-auto flex items-end justify-between gap-3 pt-4">
+                    <div>
+                      <strong className="text-xl font-extrabold text-white">{formatPrice(product.price)}</strong>
+                      {!!product.original_price && (
+                        <span className="ml-2 text-xs text-[#77777c] line-through">
+                          {formatPrice(product.original_price)}
+                        </span>
+                      )}
+                    </div>
+                    <Link href="/loja" className="secondary-button min-h-10 px-3.5">
+                      Ver
+                    </Link>
                   </div>
                 </div>
-              </motion.div>
+              </article>
             ))}
           </div>
+        </section>
 
-<motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mt-2"
-          >
-            <Link
-              href="/loja"
-              className="inline-flex items-center gap-2 border border-[#e50914]/50 text-[#e50914] px-5 py-2 rounded font-semibold hover:bg-[#e50914]/10 transition-colors text-sm"
-            >
-              Ver Loja Completa
-              <ChevronRight className="w-4 h-4" />
+        <section className="section-block">
+          <div className="section-heading">
+            <div>
+              <span className="eyebrow">Canal</span>
+              <h2 className="section-title mt-2">Últimos vídeos</h2>
+              <p className="mt-1 text-sm text-[#96969b]">Conteúdo recente do canal @Jcgamerofc.</p>
+            </div>
+            <Link href="/canal" className="inline-flex items-center gap-1 text-sm font-bold text-[#d2d2d5] hover:text-white">
+              Abrir canal <ChevronRight className="h-4 w-4" />
             </Link>
-          </motion.div>
-        </section>
-
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-3"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#e50914]/40 bg-[#e50914]/10 mb-3">
-              <Youtube className="w-4 h-4 text-[#e50914]" />
-              <span className="text-xs font-semibold tracking-wider uppercase text-[#e50914]">
-                Canal
-              </span>
-            </div>
-            <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-white">
-              Últimos Vídeos
-            </h2>
-            <p className="text-[#a0a0a0] text-sm mt-1">
-              Confira os conteúdos mais recentes do <strong>@Jcgamerofc</strong>
-            </p>
-          </motion.div>
-
-          <LatestVideos />
-
-<motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mt-1"
-          >
-            <a
-              href="https://www.youtube.com/@Jcgamerofc/videos"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 border border-[#e50914]/50 text-[#e50914] px-5 py-2 rounded font-semibold hover:bg-[#e50914]/10 transition-colors text-sm"
-            >
-              <Youtube className="w-4 h-4" />
-              Ver Todos os Vídeos
-              <ChevronRight className="w-4 h-4" />
-            </a>
-          </motion.div>
-        </section>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="h-px bg-gradient-to-r from-transparent via-[#e50914]/30 to-transparent" />
-        </div>
-
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#e50914]/40 bg-[#e50914]/10 mb-3">
-              <Download className="w-4 h-4 text-[#e50914]" />
-              <span className="text-xs font-semibold tracking-wider uppercase text-[#e50914]">
-                App
-              </span>
-            </div>
-            <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-white mb-2">
-              Baixe o {downloadTitle}
-            </h2>
-            <p className="text-[#a0a0a0] text-sm max-w-xl mx-auto mb-6">
-              Baixe o app e transforme seu celular em uma máquina de precisão.
-            </p>
-            <a
-              href={
-                downloadUrl ||
-                "https://play.google.com/store/apps/details?id=com.zjx.ztezscreenshot&pcampaignid=web_share"
-              }
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-[#e50914] text-white px-6 py-2.5 rounded font-semibold hover:bg-[#f40612] transition-colors"
-            >
-              <Download className="w-4 h-4" />
-              Baixar {downloadTitle}
-            </a>
-          </motion.div>
-        </section>
-      </main>
-    </div>
-  );
-}
-
-function LatestVideos() {
-  const [videos, setVideos] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("/api/youtube")
-      .then((res) => res.json())
-      .then((data) => {
-        setVideos(data.videos || []);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div
-            key={i}
-            className="bg-[#0d0d0d] border border-[#222] rounded-lg overflow-hidden animate-pulse"
-          >
-            <div className="aspect-video bg-[#1a1a1a]" />
-            <div className="p-3 space-y-1.5">
-              <div className="h-4 bg-[#1a1a1a] rounded w-3/4" />
-              <div className="h-3 bg-[#1a1a1a] rounded w-1/2" />
-            </div>
           </div>
-        ))}
+
+          {videos.length > 0 ? (
+            <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
+              {videos.map((video) => (
+                <a
+                  key={video.id}
+                  href={`https://www.youtube.com/watch?v=${video.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="compact-panel group overflow-hidden"
+                >
+                  <div className="relative aspect-video overflow-hidden bg-[#111]">
+                    <Image
+                      src={video.thumbnail}
+                      alt={video.title}
+                      fill
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      unoptimized
+                    />
+                    <span className="absolute inset-0 flex items-center justify-center bg-black/10 transition-colors group-hover:bg-black/40">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ff2530]">
+                        <Play className="h-3.5 w-3.5 fill-white text-white" />
+                      </span>
+                    </span>
+                  </div>
+                  <div className="p-3">
+                    <h3 className="line-clamp-2 text-sm font-bold leading-snug text-white">{video.title}</h3>
+                  </div>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <div className="compact-panel flex flex-col items-center justify-center px-4 py-8 text-center">
+              <Youtube className="h-6 w-6 text-[#ff5962]" />
+              <p className="mt-2 text-sm text-[#9d9da2]">Veja os vídeos mais recentes diretamente no canal.</p>
+              <a
+                href="https://www.youtube.com/@Jcgamerofc/videos"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="secondary-button mt-3"
+              >
+                Ver vídeos
+              </a>
+            </div>
+          )}
+        </section>
+
+        <section className="panel section-block flex flex-col items-start justify-between gap-4 p-5 sm:flex-row sm:items-center sm:p-6">
+          <div>
+            <span className="eyebrow">Download</span>
+            <h2 className="section-title mt-2">Central de downloads</h2>
+            <p className="mt-2 text-sm text-[#9d9da2]">
+              Aplicativos e ferramentas JCGAMER reunidos em uma página limpa.
+            </p>
+          </div>
+          <Link href="/download" className="primary-button shrink-0">
+            <Download className="h-3.5 w-3.5" />
+            Abrir downloads
+          </Link>
+        </section>
       </div>
-    );
-  }
-
-  return (
-    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-      {videos.slice(0, 4).map((video: any, index: number) => (
-        <motion.a
-          key={video.id}
-          href={`https://youtube.com/watch?v=${video.id}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: index * 0.06 }}
-          className="bg-[#0d0d0d] border border-[#222] rounded-lg overflow-hidden group hover:border-[#e50914]/50 transition-all"
-        >
-          <div className="relative aspect-video bg-[#111] overflow-hidden">
-            <Image
-              src={video.thumbnail}
-              alt={video.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-              unoptimized
-            />
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center">
-              <div className="w-10 h-10 rounded-full bg-[#e50914]/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100">
-                <Play className="w-4 h-4 text-white ml-0.5" />
-              </div>
-            </div>
-          </div>
-          <div className="p-3">
-            <h3 className="text-white text-sm font-semibold leading-tight line-clamp-2 group-hover:text-[#e50914] transition-colors">
-              {video.title}
-            </h3>
-          </div>
-        </motion.a>
-      ))}
     </div>
   );
 }
