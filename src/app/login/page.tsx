@@ -19,7 +19,7 @@ export default function LoginPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-[#000000]">
-        <div className="w-8 h-8 border-2 border-[#e50914] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[#118cff] border-t-transparent rounded-full animate-spin" />
       </div>
     }>
       <LoginForm />
@@ -132,16 +132,16 @@ function LoginForm() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#000000]">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,#1a0306_0%,#000000_55%)] z-0" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,#020a20_0%,#000000_55%)] z-0" />
       <div className="max-w-md w-full mx-auto px-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-[#0d0d0d] border border-[#222] rounded-lg p-8"
+          className="bg-[#060c1a] border border-[#222] rounded-lg p-8"
         >
           <div className="text-center mb-8">
-            <div className="w-16 h-16 rounded-2xl bg-[#e50914]/10 flex items-center justify-center mx-auto mb-4 border border-[#e50914]/30">
-              <Gamepad2 className="w-8 h-8 text-[#e50914]" />
+            <div className="w-16 h-16 rounded-2xl bg-[#118cff]/10 flex items-center justify-center mx-auto mb-4 border border-[#118cff]/30">
+              <Gamepad2 className="w-8 h-8 text-[#118cff]" />
             </div>
             <h1 className="text-2xl font-bold text-white">
               {isLogin ? "ENTRAR" : "CRIAR CONTA"}
@@ -193,7 +193,7 @@ function LoginForm() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Seu nome"
-                      className="w-full bg-[#111] border border-[#333] rounded-lg pl-10 pr-4 py-3 text-white text-sm placeholder:text-gray-500 focus:outline-none focus:border-[#e50914] transition-colors"
+                      className="w-full bg-[#111] border border-[#333] rounded-lg pl-10 pr-4 py-3 text-white text-sm placeholder:text-gray-500 focus:outline-none focus:border-[#118cff] transition-colors"
                     />
                   </div>
                 </motion.div>
@@ -209,7 +209,7 @@ function LoginForm() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="seu@email.com"
-                  className="w-full bg-[#111] border border-[#333] rounded-lg pl-10 pr-4 py-3 text-white text-sm placeholder:text-gray-500 focus:outline-none focus:border-[#e50914] transition-colors"
+                  className="w-full bg-[#111] border border-[#333] rounded-lg pl-10 pr-4 py-3 text-white text-sm placeholder:text-gray-500 focus:outline-none focus:border-[#118cff] transition-colors"
                 />
               </div>
             </div>
@@ -223,7 +223,7 @@ function LoginForm() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Sua senha"
-                  className="w-full bg-[#111] border border-[#333] rounded-lg pl-10 pr-10 py-3 text-white text-sm placeholder:text-gray-500 focus:outline-none focus:border-[#e50914] transition-colors"
+                  className="w-full bg-[#111] border border-[#333] rounded-lg pl-10 pr-10 py-3 text-white text-sm placeholder:text-gray-500 focus:outline-none focus:border-[#118cff] transition-colors"
                 />
                 <button
                   type="button"
@@ -242,7 +242,7 @@ function LoginForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#e50914] text-white py-3 rounded-lg font-semibold hover:bg-[#f40612] transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full bg-[#118cff] text-white py-3 rounded-lg font-semibold hover:bg-[#35b8ff] transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
