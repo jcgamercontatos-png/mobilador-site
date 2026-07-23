@@ -154,7 +154,7 @@ export default function Home() {
             transition={{ delay: 0.08 }}
             className="compact-panel flex min-h-64 flex-col items-center justify-center p-5 text-center lg:min-h-[360px]"
           >
-            <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-[#ff2530]/[0.55] bg-[radial-gradient(circle,#291012_0%,#0b0b0d_65%)] shadow-[0_0_34px_rgba(255,37,48,0.18)] sm:h-28 sm:w-28">
+            <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-[#118cff]/[0.55] bg-[radial-gradient(circle,#071f5c_0%,#050b1d_65%)] shadow-[0_0_34px_rgba(17,140,255,0.18)] sm:h-28 sm:w-28">
               <img
                 src={siteSettings.profileImage || "/images/jcgamer-profile.png"}
                 alt={`Foto de perfil ${siteSettings.siteName}`}
@@ -179,7 +179,7 @@ export default function Home() {
             { value: "10K+", label: "Inscritos no canal" },
             { value: "100+", label: "Vídeos publicados" },
           ].map((stat) => (
-            <article key={stat.label} className="compact-panel border-l-2 border-l-[#ff2530] p-3.5 sm:p-4">
+            <article key={stat.label} className="compact-panel border-l-2 border-l-[#118cff] p-3.5 sm:p-4">
               <strong className="font-['Oxanium'] text-lg font-extrabold sm:text-xl">{stat.value}</strong>
               <p className="mt-1 text-xs leading-snug text-[#96969b] sm:text-sm">{stat.label}</p>
             </article>
@@ -217,11 +217,11 @@ export default function Home() {
                       unoptimized
                     />
                   ) : (
-                    <ShoppingBag className="h-10 w-10 text-[#ff5962]/[0.35]" />
+                    <ShoppingBag className="h-10 w-10 text-[#35b8ff]/[0.35]" />
                   )}
                 </div>
                 <div className="flex flex-1 flex-col p-4">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#ff656d]">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#3ec2ff]">
                     {product.category}
                   </p>
                   <div className="mt-2 flex flex-wrap gap-1.5">
@@ -294,7 +294,7 @@ export default function Home() {
                       unoptimized
                     />
                     <span className="absolute inset-0 flex items-center justify-center bg-black/10 transition-colors group-hover:bg-black/40">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ff2530]">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#118cff]">
                         <Play className="h-3.5 w-3.5 fill-white text-white" />
                       </span>
                     </span>
@@ -307,7 +307,7 @@ export default function Home() {
             </div>
           ) : (
             <div className="compact-panel flex flex-col items-center justify-center px-4 py-8 text-center">
-              <Youtube className="h-6 w-6 text-[#ff5962]" />
+              <Youtube className="h-6 w-6 text-[#35b8ff]" />
               <p className="mt-2 text-sm text-[#9d9da2]">Veja os vídeos mais recentes diretamente no canal.</p>
               <a
                 href="https://www.youtube.com/@Jcgamerofc/videos"

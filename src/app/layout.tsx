@@ -67,7 +67,7 @@ export default function RootLayout({
       <head>
         <meta name="google-adsense-account" content="ca-pub-6149055817227270" />
       </head>
-      <body className="min-h-screen overflow-x-hidden bg-[#000000] text-[#FFFFFF]">
+      <body className="min-h-screen overflow-x-hidden bg-[#020617] text-[#FFFFFF]">
         <AdSenseScript />
         <Providers>
           <SiteChrome>{children}</SiteChrome>

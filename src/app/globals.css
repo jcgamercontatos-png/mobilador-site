@@ -5,10 +5,10 @@
 @tailwind utilities;
 
 :root {
-  --accent: #ff2530;
-  --accent-dark: #d40d17;
-  --surface: #0d0d0f;
-  --surface-soft: #141416;
+  --accent: #118cff;
+  --accent-dark: #0754d9;
+  --surface: #060b18;
+  --surface-soft: #0b1428;
   --line: rgba(255, 255, 255, 0.09);
   --muted: #a6a6aa;
   --page-width: 1180px;
@@ -21,7 +21,7 @@
 }
 
 html {
-  background: #030303;
+  background: #020617;
   scroll-behavior: smooth;
   overflow-x: clip;
 }
@@ -29,8 +29,8 @@ html {
 body {
   min-width: 320px;
   background:
-    radial-gradient(circle at 50% 0%, rgba(255, 37, 48, 0.12), transparent 26rem),
-    linear-gradient(90deg, #020202 0%, #130304 50%, #020202 100%);
+    radial-gradient(circle at 50% 0%, rgba(17, 140, 255, 0.12), transparent 26rem),
+    linear-gradient(90deg, #01040e 0%, #020a20 50%, #01040e 100%);
   color: #f7f7f8;
   font-family: "Rajdhani", "Arial Narrow", Arial, sans-serif;
   font-size: 16px;
@@ -62,12 +62,12 @@ iframe {
 }
 
 ::selection {
-  background: rgba(255, 37, 48, 0.35);
+  background: rgba(17, 140, 255, 0.35);
   color: #fff;
 }
 
 :focus-visible {
-  outline: 2px solid #ff5a62;
+  outline: 2px solid #4cc9ff;
   outline-offset: 3px;
 }
 
@@ -84,15 +84,15 @@ iframe {
 
   .panel {
     background:
-      radial-gradient(circle at 100% 45%, rgba(255, 37, 48, 0.13), transparent 34%),
-      linear-gradient(180deg, rgba(18, 18, 20, 0.98), rgba(8, 8, 9, 0.98));
+      radial-gradient(circle at 100% 45%, rgba(17, 140, 255, 0.13), transparent 34%),
+      linear-gradient(180deg, rgba(8, 16, 34, 0.98), rgba(3, 8, 20, 0.98));
     border: 1px solid var(--line);
     border-radius: 18px;
     box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
   }
 
   .compact-panel {
-    background: linear-gradient(180deg, rgba(17, 17, 19, 0.98), rgba(9, 9, 10, 0.98));
+    background: linear-gradient(180deg, rgba(9, 18, 38, 0.98), rgba(3, 8, 20, 0.98));
     border: 1px solid var(--line);
     border-radius: 16px;
   }
@@ -103,10 +103,10 @@ iframe {
     gap: 0.4rem;
     min-height: 1.75rem;
     padding: 0.25rem 0.7rem;
-    border: 1px solid rgba(255, 37, 48, 0.28);
+    border: 1px solid rgba(17, 140, 255, 0.28);
     border-radius: 999px;
-    background: rgba(255, 37, 48, 0.08);
-    color: #ff737a;
+    background: rgba(17, 140, 255, 0.08);
+    color: #59ceff;
     font-family: "Oxanium", Arial, sans-serif;
     font-size: 0.68rem;
     font-weight: 800;
@@ -182,9 +182,9 @@ iframe {
   }
 
   .primary-button {
-    background: linear-gradient(180deg, #ff3b46, var(--accent-dark));
+    background: linear-gradient(180deg, #18a8ff, var(--accent-dark));
     color: #fff;
-    box-shadow: 0 10px 24px rgba(213, 13, 24, 0.18);
+    box-shadow: 0 10px 24px rgba(7, 84, 217, 0.18);
   }
 
   .secondary-button {
@@ -199,8 +199,8 @@ iframe {
   }
 
   .secondary-button:hover {
-    border-color: rgba(255, 37, 48, 0.55);
-    background: rgba(255, 37, 48, 0.07);
+    border-color: rgba(17, 140, 255, 0.55);
+    background: rgba(17, 140, 255, 0.07);
   }
 
   .product-card {
@@ -208,22 +208,22 @@ iframe {
     min-width: 0;
     flex-direction: column;
     overflow: hidden;
-    border: 1px solid rgba(255, 45, 56, 0.35);
+    border: 1px solid rgba(17, 140, 255, 0.35);
     border-radius: 16px;
-    background: linear-gradient(180deg, rgba(18, 18, 20, 0.98), rgba(8, 8, 9, 0.98));
+    background: linear-gradient(180deg, rgba(8, 16, 34, 0.98), rgba(3, 8, 20, 0.98));
     transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
   }
 
   .product-card:hover {
     transform: translateY(-3px);
-    border-color: rgba(255, 45, 56, 0.7);
+    border-color: rgba(17, 140, 255, 0.7);
     box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
   }
 
   .glass-card {
     border: 1px solid var(--line);
     border-radius: 16px;
-    background: linear-gradient(180deg, rgba(18, 18, 20, 0.98), rgba(8, 8, 9, 0.98));
+    background: linear-gradient(180deg, rgba(8, 16, 34, 0.98), rgba(3, 8, 20, 0.98));
     box-shadow: 0 16px 42px rgba(0, 0, 0, 0.2);
   }
 
@@ -233,7 +233,7 @@ iframe {
     align-items: center;
     justify-content: center;
     border-radius: 999px;
-    background: linear-gradient(180deg, #ff3b46, var(--accent-dark));
+    background: linear-gradient(180deg, #18a8ff, var(--accent-dark));
     color: white;
     font-family: "Oxanium", Arial, sans-serif;
     font-size: 0.74rem;
@@ -249,7 +249,7 @@ iframe {
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, #fff 5%, #ff2530 80%);
+    background: linear-gradient(135deg, #fff 5%, #118cff 80%);
     background-clip: text;
     color: transparent;
     -webkit-background-clip: text;
@@ -257,14 +257,14 @@ iframe {
 
   .neon-border,
   .neon-border-purple {
-    border-color: rgba(255, 37, 48, 0.48);
-    box-shadow: 0 0 30px rgba(255, 37, 48, 0.09);
+    border-color: rgba(17, 140, 255, 0.48);
+    box-shadow: 0 0 30px rgba(17, 140, 255, 0.09);
   }
 
   .neon-text,
   .neon-text-purple {
-    color: #ff4a54;
-    text-shadow: 0 0 20px rgba(255, 37, 48, 0.22);
+    color: #25a9ff;
+    text-shadow: 0 0 20px rgba(17, 140, 255, 0.22);
   }
 
   .product-media {
@@ -275,8 +275,8 @@ iframe {
     justify-content: center;
     overflow: hidden;
     background:
-      radial-gradient(circle at 50% 45%, rgba(255, 37, 48, 0.09), transparent 58%),
-      #101012;
+      radial-gradient(circle at 50% 45%, rgba(17, 140, 255, 0.09), transparent 58%),
+      #07101f;
     padding: 1rem;
   }
 
@@ -301,15 +301,15 @@ iframe {
     min-height: 2.65rem;
     border: 1px solid var(--line);
     border-radius: 11px;
-    background: #111113;
+    background: #081121;
     color: white;
     padding: 0.65rem 0.8rem;
     transition: border-color 180ms ease, background 180ms ease;
   }
 
   .input-dark:focus {
-    border-color: rgba(255, 37, 48, 0.68);
-    background: #151517;
+    border-color: rgba(17, 140, 255, 0.68);
+    background: #0b1427;
     outline: none;
   }
 
@@ -320,7 +320,7 @@ iframe {
   .skeleton {
     position: relative;
     overflow: hidden;
-    background: #151517;
+    background: #0b1427;
   }
 
   .skeleton::after {
