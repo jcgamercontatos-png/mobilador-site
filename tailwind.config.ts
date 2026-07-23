@@ -10,22 +10,22 @@ const config: Config = {
     extend: {
       colors: {
         neon: {
-          blue: "#00d4ff",
+          blue: "#118cff",
           purple: "#a855f7",
           green: "#22c55e",
           red: "#ef4444",
           pink: "#ec4899",
         },
         dark: {
-          900: "#0a0a0f",
-          800: "#0f0f1a",
-          700: "#151525",
-          600: "#1a1a2e",
-          500: "#16213e",
+          900: "#020617",
+          800: "#07101f",
+          700: "#0b1428",
+          600: "#0e1b36",
+          500: "#112a52",
         },
       },
       fontFamily: {
-        orbitron: ["Orbitron", "sans-serif"],
+        orbitron: ["Oxanium", "sans-serif"],
         rajdhani: ["Rajdhani", "sans-serif"],
         inter: ["Inter", "sans-serif"],
       },
