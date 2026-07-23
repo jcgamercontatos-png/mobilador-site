@@ -6,8 +6,9 @@ import { useEffect, useState } from "react";
 
 const links = [
   { label: "Início", href: "/" },
-  { label: "Produtos", href: "/produtos" },
-  { label: "Periféricos", href: "/loja" },
+  { label: "Loja", href: "/loja" },
+  { label: "Periféricos", href: "/loja?categoria=Perif%C3%A9ricos" },
+  { label: "Free Fire", href: "/loja?categoria=Free%20Fire" },
   { label: "Download", href: "/download" },
   { label: "Canal", href: "/canal" },
 ];
@@ -76,7 +77,7 @@ export function Footer() {
 
           <div>
             <h2 className="font-['Oxanium'] text-xs font-extrabold uppercase tracking-[0.12em] text-[#59ceff]">
-              Conteúdo
+              Loja e conteúdo
             </h2>
             <nav className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 md:grid-cols-1" aria-label="Links do rodapé">
               {links.map((link) => (
