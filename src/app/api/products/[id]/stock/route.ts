@@ -1,76 +1,58 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { prisma } from "@/lib/prisma";
-import { authOptions } from "@/lib/auth";
+import { isAdminAuthenticated } from "@/lib/admin-session";
+import {
+  adjustStoredProductStock,
+  getProductStore,
+  getStoredProductMovements,
+} from "@/lib/product-store";
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
+type RouteContext = { params: { id: string } };
+
+export async function POST(request: NextRequest, { params }: RouteContext) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session || (session.user as any).role !== "ADMIN") {
+    if (!isAdminAuthenticated()) {
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
-    const { id } = await params;
     const body = await request.json();
-    const { quantity, type, reason, orderId } = body;
+    const quantity = Number.parseInt(String(body.quantity), 10);
+    const { type, reason, orderId } = body;
 
     if (!quantity || quantity <= 0) {
       return NextResponse.json({ error: "Quantidade inválida" }, { status: 400 });
     }
-
     if (!["ADD", "REMOVE", "SET"].includes(type)) {
       return NextResponse.json({ error: "Tipo inválido" }, { status: 400 });
     }
 
-    const product = await prisma.product.findUnique({ where: { id } });
+    const data = await getProductStore();
+    const product = data.products.find((item) => item.id === params.id);
     if (!product) {
       return NextResponse.json({ error: "Produto não encontrado" }, { status: 404 });
     }
 
-    let newStock: number;
-    let quantityChanged: number;
-
-    if (type === "SET") {
-      newStock = quantity;
-      quantityChanged = quantity - product.stock;
-    } else if (type === "ADD") {
-      newStock = product.stock + quantity;
-      quantityChanged = quantity;
-    } else {
+    let newStock = product.stock;
+    if (type === "SET") newStock = quantity;
+    else if (type === "ADD") newStock = product.stock + quantity;
+    else {
       if (product.stock < quantity) {
         return NextResponse.json(
           { error: `Estoque insuficiente. Disponível: ${product.stock}` },
-          { status: 400 }
+          { status: 400 },
         );
       }
       newStock = product.stock - quantity;
-      quantityChanged = -quantity;
     }
 
-    const updatedProduct = await prisma.$transaction(async (tx) => {
-      const updated = await tx.product.update({
-        where: { id },
-        data: { stock: newStock },
-      });
-
-      await tx.stockMovement.create({
-        data: {
-          productId: id,
-          quantidadeAnterior: product.stock,
-          quantidadeFinal: newStock,
-          quantidadeAlterada: quantityChanged,
-          motivo: reason || "Ajuste manual",
-          pedidoId: orderId,
-          usuarioAdminId: (session.user as any).id,
-        },
-      });
-
-      return updated;
-    });
-
+    const updatedProduct = await adjustStoredProductStock(
+      params.id,
+      newStock,
+      String(reason || "Ajuste manual"),
+      orderId ? String(orderId) : null,
+    );
     return NextResponse.json({ product: updatedProduct });
   } catch (error) {
     console.error("Error adjusting stock:", error);
@@ -78,24 +60,19 @@ export async function POST(
   }
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(_request: NextRequest, { params }: RouteContext) {
   try {
-    const { id } = await params;
-    const movements = await prisma.stockMovement.findMany({
-      where: { productId: id },
-      orderBy: { createdAt: "desc" },
-      include: {
-        user: { select: { id: true, name: true, email: true } },
-        order: { select: { id: true, total: true, status: true } },
-      },
-    });
+    if (!isAdminAuthenticated()) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
 
+    const movements = await getStoredProductMovements(params.id);
     return NextResponse.json({ movements });
   } catch (error) {
     console.error("Error fetching stock movements:", error);
-    return NextResponse.json({ error: "Erro ao buscar movimentações" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erro ao buscar movimentações" },
+      { status: 500 },
+    );
   }
 }
