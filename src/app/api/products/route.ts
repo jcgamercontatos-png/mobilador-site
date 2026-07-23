@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
+import { isAdminAuthenticated } from "@/lib/admin-session";
 import { prisma } from "@/lib/prisma";
-import { authOptions } from "@/lib/auth";
+import { getSiteControl } from "@/lib/site-control";
+import {
+  decodeProductBadge,
+  encodeProductBadge,
+  normalizeProductCondition,
+} from "@/lib/product-meta";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,26 +17,21 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get("search");
     const sort = searchParams.get("sort");
     const featured = searchParams.get("featured");
-    const active = searchParams.get("active") !== "false";
+    const includeInactive =
+      searchParams.get("includeInactive") === "true" && isAdminAuthenticated();
     const limit = searchParams.get("limit");
     const page = searchParams.get("page");
 
-    const where: any = { active };
-    
-    if (category && category !== "Todos") {
-      where.category = category;
-    }
-    
+    const where: any = includeInactive ? {} : { active: true };
+
+    if (category && category !== "Todos") where.category = category;
     if (search) {
       where.OR = [
         { name: { contains: search, mode: "insensitive" } },
         { description: { contains: search, mode: "insensitive" } },
       ];
     }
-    
-    if (featured === "true") {
-      where.featured = true;
-    }
+    if (featured === "true") where.featured = true;
 
     let orderBy: any = { createdAt: "desc" };
     if (sort === "price-low") orderBy = { price: "asc" };
@@ -37,10 +39,11 @@ export async function GET(request: NextRequest) {
     else if (sort === "rating") orderBy = { rating: "desc" };
     else if (sort === "stock-low") orderBy = { stock: "asc" };
 
-    const take = limit ? parseInt(limit) : undefined;
-    const skip = page && limit ? (parseInt(page) - 1) * parseInt(limit) : undefined;
+    const take = limit ? Number.parseInt(limit, 10) : undefined;
+    const currentPage = page ? Math.max(1, Number.parseInt(page, 10)) : 1;
+    const skip = take ? (currentPage - 1) * take : undefined;
 
-    const [products, total] = await Promise.all([
+    const [products, total, control] = await Promise.all([
       prisma.product.findMany({
         where,
         orderBy,
@@ -64,13 +67,32 @@ export async function GET(request: NextRequest) {
         },
       }),
       prisma.product.count({ where }),
+      getSiteControl(),
     ]);
 
-    return NextResponse.json({ 
-      products, 
+    const enrichedProducts = products.map((product) => {
+      const storedBadge = decodeProductBadge(product.badge);
+      const metadata = storedBadge.metadata || control.productMeta[product.id] || {
+        condition: "NEW",
+        unit: "unidade",
+      };
+      return {
+        ...product,
+        badge: storedBadge.badge,
+        ...metadata,
+        image: product.images[0] || "",
+        original_price: product.originalPrice,
+        short_desc: product.description,
+        reviews: product.reviewCount,
+        is_active: product.active,
+      };
+    });
+
+    return NextResponse.json({
+      products: enrichedProducts,
       total,
-      page: page ? parseInt(page) : 1,
-      totalPages: take ? Math.ceil(total / take) : 1,
+      page: currentPage,
+      totalPages: take ? Math.max(1, Math.ceil(total / take)) : 1,
     });
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -80,8 +102,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session || (session.user as any).role !== "ADMIN") {
+    if (!isAdminAuthenticated()) {
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
@@ -97,52 +118,89 @@ export async function POST(request: NextRequest) {
       badge,
       stock,
       featured,
+      active,
+      condition,
+      unit,
     } = body;
 
-    if (!name || price === undefined) {
-      return NextResponse.json({ error: "Nome e preço são obrigatórios" }, { status: 400 });
+    if (!name || price === undefined || !category) {
+      return NextResponse.json(
+        { error: "Nome, preço e categoria são obrigatórios" },
+        { status: 400 },
+      );
     }
 
-    if (stock !== undefined && (isNaN(parseInt(stock)) || parseInt(stock) < 0)) {
-      return NextResponse.json({ error: "Estoque deve ser um número inteiro >= 0" }, { status: 400 });
+    const parsedStock = Number.parseInt(String(stock || 0), 10);
+    if (!Number.isInteger(parsedStock) || parsedStock < 0) {
+      return NextResponse.json(
+        { error: "Estoque deve ser um número inteiro igual ou maior que zero" },
+        { status: 400 },
+      );
     }
 
-    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    const baseSlug =
+      String(name)
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "") || `produto-${Date.now()}`;
+    const existingSlug = await prisma.product.findUnique({ where: { slug: baseSlug } });
+    const slug = existingSlug ? `${baseSlug}-${Date.now()}` : baseSlug;
 
-    const existingSlug = await prisma.product.findUnique({ where: { slug } });
-    const finalSlug = existingSlug ? `${slug}-${Date.now()}` : slug;
-
-    const product = await prisma.product.create({
-      data: {
-        name,
-        slug: finalSlug,
-        description,
-        price: parseFloat(price),
-        originalPrice: originalPrice ? parseFloat(originalPrice) : null,
-        category,
-        subcategory,
-        images: images || [],
-        badge,
-        stock: parseInt(stock) || 0,
-        featured: featured || false,
-      },
-    });
-
-    if (stock && parseInt(stock) > 0) {
-      const session = await getServerSession(authOptions);
-      await prisma.stockMovement.create({
+    const normalizedCondition = normalizeProductCondition(condition);
+    const normalizedUnit = String(unit || "unidade").trim() || "unidade";
+    const product = await prisma.$transaction(async (database) => {
+      const createdProduct = await database.product.create({
         data: {
-          productId: product.id,
-          quantidadeAlterada: parseInt(stock),
-          quantidadeAnterior: 0,
-          quantidadeFinal: parseInt(stock),
-          motivo: "Cadastro inicial do produto",
-          usuarioAdminId: (session?.user as any)?.id,
+          name: String(name),
+          slug,
+          description: String(description || ""),
+          price: Number.parseFloat(String(price)),
+          originalPrice:
+            originalPrice === null || originalPrice === ""
+              ? null
+              : Number.parseFloat(String(originalPrice)),
+          category: String(category),
+          subcategory: subcategory ? String(subcategory) : null,
+          images: Array.isArray(images) ? images.filter(Boolean) : [],
+          badge: encodeProductBadge(
+            badge,
+            normalizedCondition,
+            normalizedUnit,
+          ),
+          stock: parsedStock,
+          featured: Boolean(featured),
+          active: active !== false,
         },
       });
-    }
 
-    return NextResponse.json({ product }, { status: 201 });
+      if (parsedStock > 0) {
+        await database.stockMovement.create({
+          data: {
+            productId: createdProduct.id,
+            quantidadeAlterada: parsedStock,
+            quantidadeAnterior: 0,
+            quantidadeFinal: parsedStock,
+            motivo: "Cadastro inicial do produto",
+          },
+        });
+      }
+
+      return createdProduct;
+    });
+
+    return NextResponse.json(
+      {
+        product: {
+          ...product,
+          badge: String(badge || "").trim() || null,
+          condition: normalizedCondition,
+          unit: normalizedUnit,
+        },
+      },
+      { status: 201 },
+    );
   } catch (error) {
     console.error("Error creating product:", error);
     return NextResponse.json({ error: "Erro ao criar produto" }, { status: 500 });
