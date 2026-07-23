@@ -1,4 +1,9 @@
-import { get, put } from "@vercel/blob";
+import type {
+  Product as DatabaseProduct,
+  StockMovement as DatabaseStockMovement,
+} from "@prisma/client";
+import { encodeProductBadge } from "@/lib/product-meta";
+import { prisma } from "@/lib/prisma";
 
 export type StoredProduct = {
   id: string;
@@ -39,104 +44,153 @@ type ProductStoreData = {
   movements: StockMovement[];
 };
 
-const BLOB_PATH = "jcgamer-products.json";
-const EMPTY_STORE: ProductStoreData = { products: [], movements: [] };
+const DEFAULT_PRODUCTS = [
+  {
+    name: "Headset Gamer FIFINE H9",
+    slug: "headset-gamer-fifine-h9",
+    description: "Áudio limpo e conforto para jogar por horas.",
+    price: 299.9,
+    originalPrice: null,
+    category: "Periféricos",
+    subcategory: "Headset",
+    images: ["/images/headset-fifine-h9.jpg"],
+    badge: "Destaque",
+    stock: 10,
+    featured: true,
+    active: true,
+    rating: 5,
+    reviewCount: 48,
+  },
+  {
+    name: "Webcam EMEET",
+    slug: "webcam-emeet",
+    description: "Imagem nítida para conteúdo, live e chamadas.",
+    price: 249.9,
+    originalPrice: null,
+    category: "Periféricos",
+    subcategory: "Webcam",
+    images: ["/images/webcam-emeet.png"],
+    badge: "Setup",
+    stock: 10,
+    featured: true,
+    active: true,
+    rating: 5,
+    reviewCount: 31,
+  },
+  {
+    name: "Pack de Setas JCGAMER",
+    slug: "pack-de-setas-jcgamer",
+    description: "Conteúdo para Free Fire pronto para completar sua configuração.",
+    price: 19.9,
+    originalPrice: null,
+    category: "Free Fire",
+    subcategory: "Download",
+    images: ["/images/download_pack_setas_800x800.png"],
+    badge: "Digital",
+    stock: 999,
+    featured: true,
+    active: true,
+    rating: 5,
+    reviewCount: 76,
+  },
+] as const;
 
-function normalizeStore(value: Partial<ProductStoreData> | null): ProductStoreData {
+function serializeProduct(product: DatabaseProduct): StoredProduct {
   return {
-    products: Array.isArray(value?.products) ? value.products : [],
-    movements: Array.isArray(value?.movements) ? value.movements : [],
+    ...product,
+    createdAt: product.createdAt.toISOString(),
+    updatedAt: product.updatedAt.toISOString(),
   };
 }
 
-export async function getProductStore(): Promise<ProductStoreData> {
-  try {
-    const result = await get(BLOB_PATH, {
-      access: "private",
-      useCache: false,
-    });
-    if (!result || result.statusCode !== 200 || !result.stream) {
-      return structuredClone(EMPTY_STORE);
-    }
-
-    return normalizeStore(await new Response(result.stream).json());
-  } catch {
-    return structuredClone(EMPTY_STORE);
-  }
+function serializeMovement(movement: DatabaseStockMovement): StockMovement {
+  return {
+    ...movement,
+    createdAt: movement.createdAt.toISOString(),
+    user: null,
+    order: null,
+  };
 }
 
-async function saveProductStore(data: ProductStoreData) {
-  const normalized = normalizeStore(data);
-  await put(BLOB_PATH, JSON.stringify(normalized), {
-    access: "private",
-    addRandomSuffix: false,
-    allowOverwrite: true,
-    contentType: "application/json",
+async function ensureDefaultProducts() {
+  const slugs = DEFAULT_PRODUCTS.map((product) => product.slug);
+  const existing = await prisma.product.findMany({
+    where: { slug: { in: slugs } },
+    select: { slug: true },
   });
-  return normalized;
+  const existingSlugs = new Set(existing.map((product) => product.slug));
+  const missing = DEFAULT_PRODUCTS.filter(
+    (product) => !existingSlugs.has(product.slug),
+  );
+
+  if (!missing.length) return;
+
+  await prisma.product.createMany({
+    data: missing.map((product) => ({
+      ...product,
+      images: [...product.images],
+      badge: encodeProductBadge(product.badge, "NEW", "unidade"),
+    })),
+    skipDuplicates: true,
+  });
+}
+
+export async function getProductStore(): Promise<ProductStoreData> {
+  await ensureDefaultProducts();
+  const products = await prisma.product.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+  return {
+    products: products.map(serializeProduct),
+    movements: [],
+  };
 }
 
 export async function createStoredProduct(
   input: Omit<StoredProduct, "id" | "createdAt" | "updatedAt">,
 ) {
-  const data = await getProductStore();
-  const now = new Date().toISOString();
-  const product: StoredProduct = {
-    ...input,
-    id: crypto.randomUUID(),
-    createdAt: now,
-    updatedAt: now,
-  };
-
-  data.products.unshift(product);
-  if (product.stock > 0) {
-    data.movements.unshift({
-      id: crypto.randomUUID(),
-      productId: product.id,
-      quantidadeAnterior: 0,
-      quantidadeAlterada: product.stock,
-      quantidadeFinal: product.stock,
-      motivo: "Cadastro inicial do produto",
-      pedidoId: null,
-      usuarioAdminId: null,
-      createdAt: now,
-      user: null,
-      order: null,
-    });
-  }
-
-  await saveProductStore(data);
-  return product;
+  const product = await prisma.product.create({
+    data: {
+      ...input,
+      stockMovements:
+        input.stock > 0
+          ? {
+              create: {
+                quantidadeAnterior: 0,
+                quantidadeAlterada: input.stock,
+                quantidadeFinal: input.stock,
+                motivo: "Cadastro inicial do produto",
+              },
+            }
+          : undefined,
+    },
+  });
+  return serializeProduct(product);
 }
 
 export async function updateStoredProduct(
   id: string,
   updates: Partial<Omit<StoredProduct, "id" | "createdAt">>,
 ) {
-  const data = await getProductStore();
-  const index = data.products.findIndex((product) => product.id === id);
-  if (index < 0) return null;
+  const exists = await prisma.product.findUnique({
+    where: { id },
+    select: { id: true },
+  });
+  if (!exists) return null;
 
-  data.products[index] = {
-    ...data.products[index],
-    ...updates,
-    id,
-    createdAt: data.products[index].createdAt,
-    updatedAt: new Date().toISOString(),
-  };
-  await saveProductStore(data);
-  return data.products[index];
+  const product = await prisma.product.update({
+    where: { id },
+    data: {
+      ...updates,
+      updatedAt: new Date(),
+    },
+  });
+  return serializeProduct(product);
 }
 
 export async function deleteStoredProduct(id: string) {
-  const data = await getProductStore();
-  const exists = data.products.some((product) => product.id === id);
-  if (!exists) return false;
-
-  data.products = data.products.filter((product) => product.id !== id);
-  data.movements = data.movements.filter((movement) => movement.productId !== id);
-  await saveProductStore(data);
-  return true;
+  const result = await prisma.product.deleteMany({ where: { id } });
+  return result.count > 0;
 }
 
 export async function adjustStoredProductStock(
@@ -145,38 +199,34 @@ export async function adjustStoredProductStock(
   reason: string,
   orderId?: string | null,
 ) {
-  const data = await getProductStore();
-  const index = data.products.findIndex((product) => product.id === id);
-  if (index < 0) return null;
+  const current = await prisma.product.findUnique({ where: { id } });
+  if (!current) return null;
 
-  const previousStock = data.products[index].stock;
-  const now = new Date().toISOString();
-  data.products[index] = {
-    ...data.products[index],
-    stock: newStock,
-    updatedAt: now,
-  };
-  data.movements.unshift({
-    id: crypto.randomUUID(),
-    productId: id,
-    quantidadeAnterior: previousStock,
-    quantidadeAlterada: newStock - previousStock,
-    quantidadeFinal: newStock,
-    motivo: reason || "Ajuste manual",
-    pedidoId: orderId || null,
-    usuarioAdminId: null,
-    createdAt: now,
-    user: null,
-    order: null,
+  const product = await prisma.$transaction(async (transaction) => {
+    const updated = await transaction.product.update({
+      where: { id },
+      data: { stock: newStock },
+    });
+    await transaction.stockMovement.create({
+      data: {
+        productId: id,
+        quantidadeAnterior: current.stock,
+        quantidadeAlterada: newStock - current.stock,
+        quantidadeFinal: newStock,
+        motivo: reason || "Ajuste manual",
+        pedidoId: orderId || null,
+      },
+    });
+    return updated;
   });
 
-  await saveProductStore(data);
-  return data.products[index];
+  return serializeProduct(product);
 }
 
 export async function getStoredProductMovements(productId: string) {
-  const data = await getProductStore();
-  return data.movements
-    .filter((movement) => movement.productId === productId)
-    .sort((left, right) => right.createdAt.localeCompare(left.createdAt));
+  const movements = await prisma.stockMovement.findMany({
+    where: { productId },
+    orderBy: { createdAt: "desc" },
+  });
+  return movements.map(serializeMovement);
 }

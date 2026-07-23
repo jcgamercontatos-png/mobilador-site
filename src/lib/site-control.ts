@@ -104,6 +104,7 @@ export async function saveSiteControl(data: SiteControlData) {
   await put(BLOB_PATH, JSON.stringify(normalized), {
     access: "private",
     addRandomSuffix: false,
+    allowOverwrite: true,
     contentType: "application/json",
   });
   return normalized;
