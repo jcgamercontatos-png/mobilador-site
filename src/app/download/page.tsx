@@ -1,114 +1,117 @@
 "use client";
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Download, Smartphone, Shield, Gamepad2, Star } from "lucide-react";
-import Link from "next/link";
+
+import { Download, ExternalLink } from "lucide-react";
 import Image from "next/image";
-import AdBanner from "@/components/AdBanner";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const API = "https://mobilador-api.vercel.app/api/site/downloads";
 
 type DownloadItem = {
-  id: number;
+  id: number | string;
   title: string;
-  description: string;
+  description?: string;
   url: string;
-  version: string;
-  file_size: string;
-  icon: string;
-  image: string;
-  is_active: boolean;
+  version?: string;
+  file_size?: string;
+  image?: string;
+  is_active?: boolean;
 };
 
+const fallbackDownloads: DownloadItem[] = [
+  {
+    id: "gg-mouse-pro",
+    title: "GG Mouse Pro",
+    description: "Aplicativo para configurar sua experiência com teclado e mouse no celular.",
+    url: "https://play.google.com/store/apps/details?id=com.zjx.ztezscreenshot&pcampaignid=web_share",
+  },
+];
+
 export default function DownloadPage() {
-  const [downloads, setDownloads] = useState<DownloadItem[]>([]);
+  const [downloads, setDownloads] = useState<DownloadItem[]>(fallbackDownloads);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch(API)
-      .then(r => r.json())
-      .then(data => {
-        setDownloads(data.filter((d: DownloadItem) => d.is_active));
-        setLoading(false);
+      .then((response) => (response.ok ? response.json() : Promise.reject()))
+      .then((data) => {
+        if (!Array.isArray(data)) return;
+        const activeDownloads = data.filter((item: DownloadItem) => item.is_active !== false);
+        if (activeDownloads.length) setDownloads(activeDownloads);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   return (
-    <div className="min-h-screen pt-8 lg:pt-12 pb-6 lg:pb-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-6 lg:mb-8">
-          <h1 className="text-[clamp(2rem,5vw,3rem)] font-bold text-white mb-3">
-            Central de <span className="text-[#e50914]">Downloads</span>
-          </h1>
-          <p className="text-[#a0a0a0] text-sm md:text-base max-w-2xl mx-auto">
-            Baixe todos os APKs, mods e ferramentas do JCGAMER.
+    <div className="site-page">
+      <div className="page-shell">
+        <section className="text-center">
+          <span className="eyebrow">
+            <Download className="h-3 w-3" />
+            Download
+          </span>
+          <h1 className="route-title mx-auto mt-3 max-w-3xl">Central de downloads</h1>
+          <p className="body-copy mx-auto mt-3 max-w-2xl">
+            Aplicativos, APKs e ferramentas JCGAMER reunidos em uma página simples e sem distrações.
           </p>
-        </motion.div>
+        </section>
 
-        {loading ? (
-          <div className="text-center text-[#a0a0a0] py-6">Carregando...</div>
-        ) : downloads.length > 0 ? (
-          <>
-            <section className="max-w-7xl mx-auto mb-4 lg:mb-6">
-              <AdBanner layout="responsive" />
-            </section>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
-            {downloads.map((item, i) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.04 }}
-                className="bg-[#0d0d0d] border border-[#222] rounded-lg overflow-hidden group hover:border-[#e50914]/50 transition-all"
-              >
-                <div className="relative aspect-square bg-[#111] p-2 lg:p-3 flex items-center justify-center">
-                  {item.image ? (
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      width={80}
-                      height={80}
-                      className="object-contain opacity-90 group-hover:opacity-100 transition-opacity"
-                      unoptimized
-                    />
-                  ) : (
-                    <Download className="w-8 h-8 lg:w-10 lg:h-10 text-[#e50914]/40" />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-2">
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-[#e50914] text-white text-xs lg:text-sm py-1.5 px-3 lg:px-4 rounded font-semibold hover:bg-[#f40612] transition-colors"
-                    >
-                      Baixar
-                    </a>
-                  </div>
+        <section className="mx-auto mt-6 grid max-w-4xl gap-3 sm:grid-cols-2">
+          {downloads.map((item) => (
+            <article key={item.id} className="product-card">
+              <div className="product-media min-h-44 sm:min-h-56">
+                {item.image ? (
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    width={300}
+                    height={220}
+                    className="h-full w-full object-contain"
+                    unoptimized
+                  />
+                ) : (
+                  <span className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[#118cff]/30 bg-[#118cff]/[0.08] shadow-[0_0_28px_rgba(17,140,255,.12)]">
+                    <Download className="h-7 w-7 text-[#35b8ff]" />
+                  </span>
+                )}
+              </div>
+              <div className="flex flex-1 flex-col p-4 sm:p-5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="eyebrow min-h-6 px-2 py-1">Download</span>
+                  {item.version && <span className="text-xs text-[#85858b]">Versão {item.version}</span>}
+                  {item.file_size && <span className="text-xs text-[#85858b]">• {item.file_size}</span>}
                 </div>
+                <h2 className="mt-3 text-xl font-extrabold text-white">{item.title}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-[#9d9da2]">
+                  {item.description || "Arquivo disponível para download."}
+                </p>
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="primary-button mt-5 w-full"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  Baixar agora
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
+            </article>
+          ))}
+        </section>
 
-                <div className="p-2 lg:p-3">
-                  <p className="text-xs text-[#e50914] uppercase tracking-wider mb-1">
-                    Download
-                  </p>
-                  <h3 className="font-semibold text-white text-sm lg:text-base mb-1 group-hover:text-[#e50914] transition-colors line-clamp-1">
-                    {item.title}
-                  </h3>
-                </div>
-              </motion.div>
-            ))}
-            </div>
-          </>
-        ) : (
-          <div className="text-center text-[#a0a0a0] py-6">
-            <p>Nenhum download disponível no momento.</p>
-          </div>
+        {loading && (
+          <p className="mt-3 text-center text-xs text-[#77777d]" role="status">
+            Atualizando a lista de downloads…
+          </p>
         )}
 
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="text-center mt-4 lg:mt-6">
-          <Link href="/" className="text-[#a0a0a0] hover:text-white transition-colors text-sm">← Voltar para o início</Link>
-        </motion.div>
+        <div className="mt-5 text-center">
+          <Link href="/" className="text-sm font-bold text-[#a8a8ad] hover:text-white">
+            ← Voltar para o início
+          </Link>
+        </div>
       </div>
     </div>
   );
