@@ -8,6 +8,7 @@ import { useCart } from "@/lib/cart";
 import { ManagedAd } from "@/components/ManagedAd";
 
 const API = "/api/products?limit=100";
+const STORE_CATEGORIES = ["Todos", "Periféricos", "Free Fire"] as const;
 
 type Product = {
   id: number | string;
@@ -34,6 +35,12 @@ const formatPrice = (value: number) =>
     currency: "BRL",
   }).format(value);
 
+function storeCategory(category: string) {
+  return category.trim().toLocaleLowerCase("pt-BR") === "free fire"
+    ? "Free Fire"
+    : "Periféricos";
+}
+
 export default function StorePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,6 +52,18 @@ export default function StorePage() {
   const { addToCart } = useCart();
 
   useEffect(() => {
+    const requestedCategory = new URLSearchParams(window.location.search).get(
+      "categoria",
+    );
+    if (
+      requestedCategory &&
+      STORE_CATEGORIES.includes(
+        requestedCategory as (typeof STORE_CATEGORIES)[number],
+      )
+    ) {
+      setCategory(requestedCategory);
+    }
+
     fetch(API)
       .then((response) => (response.ok ? response.json() : Promise.reject()))
       .then((data) => {
@@ -65,16 +84,11 @@ export default function StorePage() {
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [selectedProduct]);
 
-  const categories = useMemo(
-    () => ["Todos", ...Array.from(new Set(products.map((product) => product.category).filter(Boolean)))],
-    [products],
-  );
-
   const filteredProducts = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase("pt-BR");
     const visible = products.filter(
       (product) =>
-        (category === "Todos" || product.category === category) &&
+        (category === "Todos" || storeCategory(product.category) === category) &&
         (!normalizedQuery || product.name.toLocaleLowerCase("pt-BR").includes(normalizedQuery)),
     );
 
@@ -109,13 +123,35 @@ export default function StorePage() {
     <div className="site-page">
       <div className="page-shell">
         <section className="panel p-5 sm:p-6">
-          <span className="eyebrow">Periféricos</span>
+          <span className="eyebrow">Loja</span>
           <h1 className="route-title mt-3">
             Loja <span className="text-[#118cff]">JCGAMER</span>
           </h1>
           <p className="body-copy mt-3 max-w-2xl">
-            Encontre periféricos para seu setup, filtre rapidamente e compre com estoque visível.
+            Escolha entre periféricos para seu setup e conteúdos de Free Fire.
           </p>
+          <div className="mt-4 grid max-w-md grid-cols-2 gap-2">
+            <a
+              href="/loja?categoria=Perif%C3%A9ricos"
+              className={`rounded-xl border px-4 py-3 text-center font-['Oxanium'] text-sm font-extrabold transition-colors ${
+                category === "Periféricos"
+                  ? "border-[#118cff]/60 bg-[#118cff]/15 text-white"
+                  : "border-white/[0.08] bg-white/[0.025] text-[#b7b7bc] hover:text-white"
+              }`}
+            >
+              Periféricos
+            </a>
+            <a
+              href="/loja?categoria=Free%20Fire"
+              className={`rounded-xl border px-4 py-3 text-center font-['Oxanium'] text-sm font-extrabold transition-colors ${
+                category === "Free Fire"
+                  ? "border-[#118cff]/60 bg-[#118cff]/15 text-white"
+                  : "border-white/[0.08] bg-white/[0.025] text-[#b7b7bc] hover:text-white"
+              }`}
+            >
+              Free Fire
+            </a>
+          </div>
         </section>
 
         <ManagedAd placement="STORE_TOP" />
@@ -139,7 +175,7 @@ export default function StorePage() {
                 Categorias
               </p>
               <div className="mt-2 flex gap-1.5 overflow-x-auto pb-1 lg:grid lg:overflow-visible">
-                {categories.map((item) => (
+                {STORE_CATEGORIES.map((item) => (
                   <button
                     key={item}
                     type="button"
