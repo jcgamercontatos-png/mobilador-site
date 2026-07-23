@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
@@ -38,18 +39,24 @@ const recentOrders = [
 ];
 
 const sidebarItems = [
-  { icon: LayoutDashboard, label: "Dashboard", active: true },
-  { icon: Package, label: "Produtos", active: false },
-  { icon: ShoppingCart, label: "Vendas", active: false },
-  { icon: Users, label: "Usuários", active: false },
-  { icon: FileText, label: "Blog", active: false },
-  { icon: BarChart3, label: "Métricas", active: false },
-  { icon: Settings, label: "Configurações", active: false },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
+  { icon: Package, label: "Produtos", path: "/admin/produtos" },
+  { icon: ShoppingCart, label: "Chaves", path: "/admin/chaves" },
 ];
 
 export default function AdminPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
+  const [isMounted, setIsMounted] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen pt-16 bg-dark-900">
@@ -70,6 +77,7 @@ export default function AdminPage() {
                   onClick={() => {
                     setActiveSection(item.label.toLowerCase());
                     setSidebarOpen(false);
+                    router.push(item.path);
                   }}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all ${
                     activeSection === item.label.toLowerCase()
@@ -79,9 +87,9 @@ export default function AdminPage() {
                 >
                   <item.icon className="w-5 h-5" />
                   {item.label}
-                </button>
+               </button>
               ))}
-            </nav>
+           </nav>
           </div>
 
           <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-white/5">
@@ -205,20 +213,19 @@ export default function AdminPage() {
               </h2>
               <div className="space-y-3">
                 {[
-                  { label: "Novo Produto", icon: Plus, color: "text-neon-blue" },
-                  { label: "Escrever Post", icon: FileText, color: "text-neon-purple" },
-                  { label: "Ver Relatórios", icon: BarChart3, color: "text-neon-green" },
-                  { label: "Gerenciar Usuários", icon: Users, color: "text-yellow-400" },
+                  { label: "Novo Produto", icon: Plus, color: "text-neon-blue", path: "/admin/produtos" },
+                  { label: "Gerenciar Chaves", icon: FileText, color: "text-neon-purple", path: "/admin/chaves" },
                 ].map((action, i) => (
                   <button
                     key={i}
+                    onClick={() => router.push(action.path)}
                     className="w-full flex items-center gap-3 p-3 rounded-lg glass hover:bg-white/5 transition-all text-left"
                   >
                     <action.icon className={`w-5 h-5 ${action.color}`} />
                     <span className="text-sm">{action.label}</span>
-                  </button>
+                 </button>
                 ))}
-              </div>
+            </div>
             </div>
           </div>
         </main>
