@@ -111,7 +111,7 @@ export default function StorePage() {
         <section className="panel p-5 sm:p-6">
           <span className="eyebrow">Periféricos</span>
           <h1 className="route-title mt-3">
-            Loja <span className="text-[#ff2530]">JCGAMER</span>
+            Loja <span className="text-[#118cff]">JCGAMER</span>
           </h1>
           <p className="body-copy mt-3 max-w-2xl">
             Encontre periféricos para seu setup, filtre rapidamente e compre com estoque visível.
@@ -135,7 +135,7 @@ export default function StorePage() {
             </div>
 
             <div className="mt-3">
-              <p className="font-['Oxanium'] text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#ff6a72]">
+              <p className="font-['Oxanium'] text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#43c7ff]">
                 Categorias
               </p>
               <div className="mt-2 flex gap-1.5 overflow-x-auto pb-1 lg:grid lg:overflow-visible">
@@ -146,7 +146,7 @@ export default function StorePage() {
                     onClick={() => setCategory(item)}
                     className={`shrink-0 rounded-lg border px-3 py-2 text-left text-sm font-bold transition-colors ${
                       category === item
-                        ? "border-[#ff2530]/[0.45] bg-[#ff2530]/[0.12] text-white"
+                        ? "border-[#118cff]/[0.45] bg-[#118cff]/[0.12] text-white"
                         : "border-white/[0.07] bg-white/[0.02] text-[#9f9fa5] hover:text-white"
                     }`}
                   >
@@ -157,7 +157,7 @@ export default function StorePage() {
             </div>
 
             <label className="mt-3 block">
-              <span className="font-['Oxanium'] text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#ff6a72]">
+              <span className="font-['Oxanium'] text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#43c7ff]">
                 Ordenar por
               </span>
               <select
@@ -203,13 +203,13 @@ export default function StorePage() {
               </div>
             ) : loadError ? (
               <div className="compact-panel px-4 py-10 text-center">
-                <ShoppingBag className="mx-auto h-6 w-6 text-[#ff5962]" />
+                <ShoppingBag className="mx-auto h-6 w-6 text-[#35b8ff]" />
                 <h2 className="mt-3 font-bold text-white">Não foi possível carregar a loja</h2>
                 <p className="mt-1 text-sm text-[#99999f]">Tente novamente em alguns instantes.</p>
               </div>
             ) : filteredProducts.length === 0 ? (
               <div className="compact-panel px-4 py-10 text-center">
-                <Search className="mx-auto h-6 w-6 text-[#ff5962]" />
+                <Search className="mx-auto h-6 w-6 text-[#35b8ff]" />
                 <h2 className="mt-3 font-bold text-white">Nenhum produto encontrado</h2>
                 <button
                   type="button"
@@ -255,12 +255,12 @@ export default function StorePage() {
                             unoptimized
                           />
                         ) : (
-                          <ShoppingBag className="h-8 w-8 text-[#ff5962]/40" />
+                          <ShoppingBag className="h-8 w-8 text-[#35b8ff]/40" />
                         )}
                       </button>
 
                       <div className="flex flex-1 flex-col p-3.5 sm:p-4">
-                        <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#ff6870]">
+                        <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#43c7ff]">
                           {product.category}
                         </p>
                         <h2 className="mt-1 line-clamp-2 text-base font-bold leading-tight text-white sm:text-lg">
@@ -332,7 +332,7 @@ export default function StorePage() {
               initial={{ opacity: 0, y: 18, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 12, scale: 0.98 }}
-              className="fixed inset-x-2.5 bottom-2.5 z-[56] max-h-[calc(100vh-1.25rem)] overflow-y-auto rounded-2xl border border-white/[0.1] bg-[#0d0d0f] p-4 shadow-2xl sm:inset-auto sm:left-1/2 sm:top-1/2 sm:w-[min(760px,calc(100%-2rem))] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:p-5"
+              className="fixed inset-x-2.5 bottom-2.5 z-[56] max-h-[calc(100vh-1.25rem)] overflow-y-auto rounded-2xl border border-white/[0.1] bg-[#060b18] p-4 shadow-2xl sm:inset-auto sm:left-1/2 sm:top-1/2 sm:w-[min(760px,calc(100%-2rem))] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:p-5"
             >
               <button
                 type="button"
@@ -343,7 +343,7 @@ export default function StorePage() {
                 <X className="h-4 w-4" />
               </button>
               <div className="grid gap-4 sm:grid-cols-[0.85fr_1.15fr]">
-                <div className="flex min-h-52 items-center justify-center overflow-hidden rounded-xl bg-[#151517] p-4">
+                <div className="flex min-h-52 items-center justify-center overflow-hidden rounded-xl bg-[#0b1427] p-4">
                   {selectedProduct.image ? (
                     <Image
                       src={selectedProduct.image}
@@ -354,7 +354,7 @@ export default function StorePage() {
                       unoptimized
                     />
                   ) : (
-                    <ShoppingBag className="h-10 w-10 text-[#ff5962]/40" />
+                    <ShoppingBag className="h-10 w-10 text-[#35b8ff]/40" />
                   )}
                 </div>
                 <div className="flex flex-col">
@@ -379,7 +379,7 @@ export default function StorePage() {
                     <ul className="mt-3 grid gap-1.5 text-sm text-[#b7b7bc] sm:grid-cols-2">
                       {selectedProduct.specs.slice(0, 6).map((spec) => (
                         <li key={spec} className="flex items-start gap-2">
-                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#ff2530]" />
+                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#118cff]" />
                           {spec}
                         </li>
                       ))}
