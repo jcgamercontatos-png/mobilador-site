@@ -51,13 +51,15 @@ function normalizeStore(value: Partial<ProductStoreData> | null): ProductStoreDa
 
 export async function getProductStore(): Promise<ProductStoreData> {
   try {
-    const result = await get(BLOB_PATH, { access: "private" });
-    if (!result) return structuredClone(EMPTY_STORE);
+    const result = await get(BLOB_PATH, {
+      access: "private",
+      useCache: false,
+    });
+    if (!result || result.statusCode !== 200 || !result.stream) {
+      return structuredClone(EMPTY_STORE);
+    }
 
-    const response = await fetch(result.blob.downloadUrl, { cache: "no-store" });
-    if (!response.ok) return structuredClone(EMPTY_STORE);
-
-    return normalizeStore(await response.json());
+    return normalizeStore(await new Response(result.stream).json());
   } catch {
     return structuredClone(EMPTY_STORE);
   }

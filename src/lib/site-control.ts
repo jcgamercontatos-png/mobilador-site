@@ -85,13 +85,15 @@ function normalizeData(value: Partial<SiteControlData> | null): SiteControlData 
 
 export async function getSiteControl(): Promise<SiteControlData> {
   try {
-    const result = await get(BLOB_PATH, { access: "private" });
-    if (!result) return structuredClone(DEFAULT_DATA);
+    const result = await get(BLOB_PATH, {
+      access: "private",
+      useCache: false,
+    });
+    if (!result || result.statusCode !== 200 || !result.stream) {
+      return structuredClone(DEFAULT_DATA);
+    }
 
-    const response = await fetch(result.blob.downloadUrl, { cache: "no-store" });
-    if (!response.ok) return structuredClone(DEFAULT_DATA);
-
-    return normalizeData(await response.json());
+    return normalizeData(await new Response(result.stream).json());
   } catch {
     return structuredClone(DEFAULT_DATA);
   }
