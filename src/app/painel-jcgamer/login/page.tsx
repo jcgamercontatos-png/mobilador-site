@@ -37,16 +37,16 @@ export default function DashboardLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#050505] px-4 py-10 text-white">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,#28070a_0%,#050505_48%)]" />
+    <div className="flex min-h-screen items-center justify-center bg-[#020714] px-4 py-10 text-white">
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,#28070a_0%,#020714_48%)]" />
       <form
         onSubmit={handleSubmit}
-        className="relative w-full max-w-sm rounded-2xl border border-white/10 bg-[#0d0d0f]/95 p-5 shadow-2xl sm:p-7"
+        className="relative w-full max-w-sm rounded-2xl border border-white/10 bg-[#060b18]/95 p-5 shadow-2xl sm:p-7"
       >
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#ff2530]/35 bg-[#ff2530]/10">
-          <ShieldCheck className="h-5 w-5 text-[#ff5962]" />
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#118cff]/35 bg-[#118cff]/10">
+          <ShieldCheck className="h-5 w-5 text-[#35b8ff]" />
         </div>
-        <p className="mt-5 font-['Oxanium'] text-xs font-extrabold uppercase tracking-[0.14em] text-[#ff6870]">
+        <p className="mt-5 font-['Oxanium'] text-xs font-extrabold uppercase tracking-[0.14em] text-[#43c7ff]">
           Acesso exclusivo
         </p>
         <h1 className="mt-2 font-['Oxanium'] text-2xl font-extrabold">
