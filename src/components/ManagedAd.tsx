@@ -28,7 +28,7 @@ export function ManagedAd({ placement }: { placement: Placement }) {
   if (!advertisement) return null;
 
   const content = (
-    <div className="group relative overflow-hidden rounded-2xl border border-[#ff2530]/25 bg-[#111113]">
+    <div className="group relative overflow-hidden rounded-2xl border border-[#118cff]/25 bg-[#081121]">
       {advertisement.imageUrl && (
         <img
           src={advertisement.imageUrl}
@@ -36,10 +36,10 @@ export function ManagedAd({ placement }: { placement: Placement }) {
           className="absolute inset-0 h-full w-full object-cover opacity-35 transition-transform duration-500 group-hover:scale-[1.02]"
         />
       )}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0b0b0d] via-[#0b0b0d]/90 to-[#0b0b0d]/35" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#050b1d] via-[#050b1d]/90 to-[#050b1d]/35" />
       <div className="relative flex min-h-28 items-center justify-between gap-4 p-4 sm:min-h-32 sm:p-5">
         <div className="min-w-0">
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.13em] text-[#ff6870]">
+          <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.13em] text-[#43c7ff]">
             <Megaphone className="h-3 w-3" />
             Anúncio
           </span>
@@ -53,7 +53,7 @@ export function ManagedAd({ placement }: { placement: Placement }) {
           )}
         </div>
         {advertisement.targetUrl && (
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#ff2530] text-white">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#118cff] text-white">
             <ExternalLink className="h-4 w-4" />
           </span>
         )}
@@ -74,4 +74,3 @@ export function ManagedAd({ placement }: { placement: Placement }) {
     <div className="mt-3">{content}</div>
   );
 }
-

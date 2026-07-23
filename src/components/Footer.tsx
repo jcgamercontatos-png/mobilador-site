@@ -1,101 +1,123 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Youtube,
-  Instagram,
-  MessageCircle,
-  Mail,
-} from "lucide-react";
+import { Instagram, Mail, MessageCircle, Youtube } from "lucide-react";
+import { useEffect, useState } from "react";
 
-
-const footerLinks = {
-  conteudo: [
-    { label: "YouTube", href: "https://www.youtube.com/@Jcgamerofc" },
-    { label: "Loja", href: "/loja" },
-    { label: "Download", href: "/download" },
-  ],
-  suporte: [
-    { label: "jcgamercontatos@gmail.com", href: "mailto:jcgamercontatos@gmail.com" },
-    { label: "WhatsApp", href: "https://wa.me/5521973199886" },
-  ],
-};
+const links = [
+  { label: "Início", href: "/" },
+  { label: "Produtos", href: "/produtos" },
+  { label: "Periféricos", href: "/loja" },
+  { label: "Download", href: "/download" },
+  { label: "Canal", href: "/canal" },
+];
 
 export function Footer() {
-  return (
-    <footer className="bg-[#000000] border-t border-[#333333] mt-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded bg-[#e50914] flex items-center justify-center">
-                <span className="text-white font-bold text-lg">J</span>
-              </div>
-              <span className="font-bold text-lg text-white">JCGAMER</span>
-            </Link>
-            <p className="text-[#CCCCCC] text-sm leading-relaxed mb-6 max-w-md">
-              Periféricos gamer selecionados para elevar seu gameplay. Acesse nossa loja e inscreva-se no canal @Jcgamerofc!
-            </p>
+  const [settings, setSettings] = useState({
+    siteName: "JCGAMER",
+    profileImage: "",
+    heroDescription:
+      "Produtos digitais, periféricos e conteúdo para melhorar seu gameplay no Free Fire.",
+    youtubeUrl: "https://www.youtube.com/@Jcgamerofc",
+    instagramUrl: "https://www.instagram.com/jcgamerofc/",
+    whatsappUrl: "https://wa.me/5521973199886",
+  });
 
-            <div className="flex gap-4">
+  useEffect(() => {
+    fetch("/api/site/settings")
+      .then((response) => (response.ok ? response.json() : Promise.reject()))
+      .then((data) => {
+        if (data.settings) {
+          setSettings((current) => ({ ...current, ...data.settings }));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  return (
+    <footer className="border-t border-white/[0.08] bg-[#020714]">
+      <div className="page-shell py-8 md:py-10">
+        <div className="grid gap-7 md:grid-cols-[1.45fr_0.8fr_1fr]">
+          <div>
+            <Link href="/" className="inline-flex items-center gap-2" aria-label="JCGAMER - Início">
+              <span className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg border border-[#118cff]/[0.45] bg-[#118cff]/10 font-['Oxanium'] text-sm font-extrabold">
+                {settings.profileImage ? (
+                  <img src={settings.profileImage} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  "JC"
+                )}
+              </span>
+              <span className="font-['Oxanium'] text-base font-extrabold tracking-[0.1em]">
+                {settings.siteName}
+              </span>
+            </Link>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-[#9b9ba0]">
+              {settings.heroDescription}
+            </p>
+            <div className="mt-4 flex gap-2">
               {[
-                { icon: Youtube, href: "https://www.youtube.com/@Jcgamerofc" },
-                { icon: Instagram, href: "https://www.instagram.com/jcgamerofc/" },
-                { icon: MessageCircle, href: "https://wa.me/5521973199886" },
-              ].map((social, i) => (
+                { label: "YouTube", icon: Youtube, href: settings.youtubeUrl },
+                { label: "Instagram", icon: Instagram, href: settings.instagramUrl },
+                { label: "WhatsApp", icon: MessageCircle, href: settings.whatsappUrl },
+              ].map(({ label, icon: Icon, href }) => (
                 <a
-                  key={i}
-                  href={social.href}
+                  key={label}
+                  href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-8 h-8 rounded bg-[#1a1a1a] flex items-center justify-center text-[#CCCCCC] hover:text-[#ffffff] transition-colors"
+                  aria-label={label}
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.025] text-[#b7b7bb] transition-colors hover:border-[#118cff]/[0.45] hover:text-white"
                 >
-                  <social.icon className="w-4 h-4" />
+                  <Icon className="h-3.5 w-3.5" />
                 </a>
               ))}
             </div>
           </div>
 
-          {Object.entries(footerLinks).map(([title, links]) => (
-            <div key={title}>
-              <h3 className="font-semibold text-sm uppercase tracking-wider text-white mb-3">
-                {title === "conteudo" ? "Conteúdo" : "Suporte"}
-              </h3>
-              <ul className="space-y-2">
-                {links.map((link) => (
-                  <li key={link.label}>
-                    {link.href.startsWith("mailto:") || link.href.startsWith("http") ? (
-                      <a
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-[#CCCCCC] hover:text-[#ffffff] transition-colors"
-                      >
-                        {link.label}
-                      </a>
-                    ) : (
-                      <Link
-                        href={link.href}
-                        className="text-sm text-[#CCCCCC] hover:text-[#ffffff] transition-colors"
-                      >
-                        {link.label}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
+          <div>
+            <h2 className="font-['Oxanium'] text-xs font-extrabold uppercase tracking-[0.12em] text-[#59ceff]">
+              Conteúdo
+            </h2>
+            <nav className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 md:grid-cols-1" aria-label="Links do rodapé">
+              {links.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm text-[#a7a7ab] transition-colors hover:text-white"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          <div>
+            <h2 className="font-['Oxanium'] text-xs font-extrabold uppercase tracking-[0.12em] text-[#59ceff]">
+              Contato
+            </h2>
+            <div className="mt-3 space-y-2.5">
+              <a
+                href="mailto:jcgamercontatos@gmail.com"
+                className="flex min-w-0 items-center gap-2 text-sm text-[#a7a7ab] hover:text-white"
+              >
+                <Mail className="h-3.5 w-3.5 shrink-0 text-[#35b8ff]" />
+                <span className="truncate">jcgamercontatos@gmail.com</span>
+              </a>
+              <a
+                href={settings.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm text-[#a7a7ab] hover:text-white"
+              >
+                <MessageCircle className="h-3.5 w-3.5 text-[#35b8ff]" />
+                WhatsApp
+              </a>
             </div>
-          ))}
+          </div>
         </div>
 
-<div className="mt-8 pt-6 border-t border-[#333333] flex flex-col md:flex-row items-center justify-between gap-4">
-<div className="flex items-center gap-2 text-xs text-[#777777]">
-            <Mail className="w-3 h-3" />
-            <a href="mailto:jcgamercontatos@gmail.com" className="text-[#777777] hover:text-[#ffffff] transition-colors">jcgamercontatos@gmail.com</a>
-          </div>
-          <p className="text-xs text-[#777777] text-center">
-            © 2026 JCGAMER. Todos os direitos reservados.
-          </p>
+        <div className="mt-7 border-t border-white/[0.07] pt-4 text-center text-xs text-[#727278] md:text-left">
+          © 2026 {settings.siteName}. Todos os direitos reservados.
         </div>
       </div>
     </footer>

@@ -1,11 +1,23 @@
 "use client";
 
-import { SessionProvider } from "next-auth/react";
+import { Toaster } from "react-hot-toast";
+import { CartProvider } from "@/lib/cart";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <SessionProvider>
+    <CartProvider>
       {children}
-    </SessionProvider>
+      <Toaster
+        position="bottom-center"
+        toastOptions={{
+          style: {
+            background: "#0b1427",
+            border: "1px solid rgba(255,255,255,.1)",
+            color: "#fff",
+            fontSize: "14px",
+          },
+        }}
+      />
+    </CartProvider>
   );
 }
